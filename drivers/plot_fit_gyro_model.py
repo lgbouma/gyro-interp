@@ -11,8 +11,6 @@ outdir = PLOTDIR
 # many clusters, overplotted
 #
 
-modelid = "fitgyro_v5_gridlogB"
-modelid = "fitgyro_v6_zeroB"
-modelid = "fitgyro_v7_zeroB_denser"
+modelid = "fitgyro_v10_zeroB_zeroA_N2M"
 
 ap.plot_fit_gyro_model(outdir, modelid)

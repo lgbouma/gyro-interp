@@ -1185,8 +1185,8 @@ def _given_params_plot_imshow(ax, xkey, ykey, df, vmin, i, j, map_row):
         for iy, y in enumerate(grid_dict[ykey]):
 
             sel = (
-                (df[xkey].round(1) == np.round(x,1)) &
-                (df[ykey].round(1) == np.round(y,1))
+                (df[xkey].round(2) == np.round(x,2)) &
+                (df[ykey].round(2) == np.round(y,2))
             )
 
             try:
@@ -1224,15 +1224,70 @@ def _given_params_plot_imshow(ax, xkey, ykey, df, vmin, i, j, map_row):
             fig.colorbar(_p, cax=cax)
 
     else:
-
         pass
-        # NOTE might wanna step
-        #ax.plot(grid_dict[xkey], min_chisq[0,:])
 
 
 def plot_fit_gyro_model(outdir, modelid):
     """
     Corner plot showing chi^2 surface
+    """
+
+    Bstr = 'logB' if 'zeroB' not in modelid else 'B'
+
+    param_list = f"C,C_y0,logk0,logk2".split(',')
+    N_params = len(param_list)
+
+    csvpath = os.path.join(RESULTSDIR, "fit_gyro_model",
+                           f'{modelid}_concatenated_chi_squared_results.csv')
+
+    # from write-temp.py
+    df = pd.read_csv(
+        csvpath, names=f"A,{Bstr},C,C_y0,logk0,k1,l1,logk2,chi_sq_red,BIC,n,k".split(',')
+    )
+    df['logk1'] = np.log(df.k1)
+    df = df.drop(['k1'], axis='columns')
+
+    print(df.sort_values(by='chi_sq_red').head(n=20))
+
+    map_row = df.sort_values(by='chi_sq_red').head(n=1)
+    outpath = os.path.join(outdir, f"map_row_{modelid}.csv")
+    map_row.to_csv(outpath, index=False)
+    print(f"Wrote {outpath}")
+
+    vmin = np.nanmin(df.chi_sq_red)
+
+    # Make plot
+    set_style("clean")
+
+    # Each mean model gets its own (data-model) vs Teff axis
+    fig, axs = plt.subplots(figsize=(8,8), nrows=N_params-1, ncols=N_params-1)
+
+    for i in range(N_params):
+        for j in range(N_params):
+            xkey = param_list[i]
+            ykey = param_list[j]
+            if j>i:
+                _given_params_plot_imshow(
+                    axs[j-1,i], xkey, ykey, df, vmin, i, j, map_row
+                )
+
+    # clean up axes
+    for i in range(N_params-1):
+        for j in range(N_params-1):
+            if i < j:
+                axs[i,j].axis("off")
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    outpath = join(outdir, f'fit_gyro_model_{modelid}.png')
+    savefig(fig, outpath, dpi=400, writepdf=False)
+
+
+def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
+    """
+    DEPRECATED
+
+    Corner plot showing chi^2 surface, sampling over A,B,C,C_y0,logk0,logk2.
     """
 
     Bstr = 'logB' if 'zeroB' not in modelid else 'B'

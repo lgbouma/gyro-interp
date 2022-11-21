@@ -13,7 +13,7 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
 
 ```
 import numpy as np
-from agetools import gyro_age_posterior
+from gyroemp import gyro_age_posterior
 Prot, Prot_err = 6, 0.05
 Teff, Teff_err = 5500, 100
 age_grid = np.linspace(0, 2600, 100)
@@ -29,7 +29,7 @@ ui.adsabs.harvard.edu/abs/2007ApJ...665L.155M/, and has been borne out by more
 data since then.
 
 ```
-from agetools.binary_checker import (
+from gyroemp.binary_checker import (
     given_source_ids_return_possible_binarity
 )
 

@@ -52,19 +52,19 @@ def main():
 
     is_logB = False # set this
 
-    modelid = "fitgyro_v7_zeroB_denser"
+    modelid = "fitgyro_v10_zeroB_zeroA_N2M"
     outdir = os.path.join(LOCALDIR, "young-KOIs", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
-    A_grid = np.arange(0.1, 2.1, 0.2)
+    A_grid = np.array([1])
     if is_logB:
         logB_grid = np.arange(-6, 2.0, 1.0)
     else:
-        B_grid = [0]
-    C_grid = np.arange(0.5, 2.1, 0.2)
-    C_y0_grid = np.arange(0.2, 0.9, 0.1)
-    logk0_grid = np.arange(-6,-3.9,0.5)
-    logk2_grid = np.arange(-8,-3.9,0.5)
+        B_grid = np.array([0])
+    C_grid = np.arange(1.1, 5.1, 0.1)
+    C_y0_grid = np.arange(0.2, 0.9, 0.01)
+    logk0_grid = np.arange(-6,-3.9,0.1)
+    logk2_grid = np.arange(-8,-4.5,0.1)
 
     sigma_period = 0.51
     l1 = -2*sigma_period

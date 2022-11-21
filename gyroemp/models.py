@@ -145,14 +145,14 @@ def slow_sequence_residual(
     if parameters == "default":
         # from fitgyro_v8_zeroB_N330k
         # note all best fits have C/A ~= 2.91 +/- 0.02
-        A = 1.1
+        A = 1
         B = 0
-        C = 3.2
-        C_y0 = 0.6
-        k0 = np.e**-5.4
+        C = 2.9
+        C_y0 = 0.66
+        k0 = np.e**-5.5
         l1 = -2*sigma_period
         k1 = np.e**1
-        k2 = np.e**-6.4
+        k2 = np.e**-6.3
 
     elif isinstance(parameters, dict):
 
