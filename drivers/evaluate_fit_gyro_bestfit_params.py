@@ -44,5 +44,3 @@ _df['-1sigma'] = _df['50%'] - _df['16%']
 
 stat_df = _df.T
 print(stat_df)
-
-import IPython; IPython.embed()
