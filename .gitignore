@@ -16,3 +16,5 @@ results/fit_gyro_model/*csv
 *.log
 *.out
 *.synctex.gz
+data/interim/*/*glu
+data/interim/*/*png
