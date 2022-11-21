@@ -12,7 +12,7 @@ bounds_error = 'limit'
 age_grid = np.linspace(0, 2600, 500)
 
 for Teff in [4500, 5500]:
-    for Prot in np.arange(5,13):
+    for Prot in np.arange(5,15):
         ap.plot_age_posterior(
             Prot, Teff, outdir, age_grid=age_grid, bounds_error=bounds_error
         )

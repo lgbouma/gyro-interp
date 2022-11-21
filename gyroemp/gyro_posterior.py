@@ -142,6 +142,9 @@ def gyro_age_posterior_worker(task):
         teff_grid, age, verbose=False, bounds_error=bounds_error
     )
 
+    assert y_grid.ndim == 1
+    assert resid_obs_grid.ndim == 1
+
     gaussian_Prots = gaussian_pdf_broadcaster(
         y_grid, resid_obs_grid, Prot_err
     )
@@ -263,9 +266,8 @@ def gyro_age_posterior(
     # calculate the posterior
     #
 
-    # Define the gaussian probability density function in y (see
-    # doc/20220919_width_of_slow_sequence.txt).  Have the grid
-    # dimensions be 1 different from each other to ease debugging.
+    # Define the gaussian probability density function in y := Prot - μ.  Have
+    # the grid dimensions be 1 different from each other to ease debugging.
     teff_grid = np.linspace(3800, 6200, N_grid-1)
     y_grid = np.linspace(-14, 6, N_grid)
 
@@ -283,6 +285,9 @@ def gyro_age_posterior(
         p_ages.append(p_age)
 
     p_ages = np.vstack(p_ages).flatten()
+
+    # return a normalized probability distribution.
+    p_ages /= np.trapz(p_ages, age_grid)
 
     return p_ages
 

@@ -28,7 +28,7 @@ def logistic(x, x0, L=1, k=0.1):
     return num / denom
 
 
-def teff_0(age, bounds_error='nan'):
+def teff_0(age, bounds_error='limit'):
     """
     Midpoint of how the slow sequence taper moves with age
     Defined for age from 120 to 1000 Myr.
@@ -52,7 +52,7 @@ def teff_0(age, bounds_error='nan'):
 
     return teff0
 
-def C_uniform(age, bounds_error='nan', y0=1/2):
+def C_uniform(age, bounds_error='limit', y0=1/2):
     """
     How the third uniform component amplitude from slow_sequence_residual
     decreases with age Full amplitude at 120 Myr.  `y0` amplitude by 300 Myr
@@ -96,7 +96,7 @@ def slow_sequence_residual(
     reference_ages=[120, 300, 670, 1000],
     parameters='default',
     verbose=True,
-    bounds_error='nan'):
+    bounds_error='limit'):
     """
     Given an effective temperature and an age, return the 2-D distribution of
     residuals around and underneath the slow sequence, sampled onto grids of
@@ -272,7 +272,7 @@ def slow_sequence(
     ],
     reference_ages=[120, 300, 670, 1000, 2600],
     verbose=True,
-    bounds_error='nan'):
+    bounds_error='limit'):
     """
     Predicts a star's rotation period based on its age and those of reference
     clusters with known ages. Assumes that the star is on the slow sequence and
@@ -334,7 +334,6 @@ def slow_sequence(
     # Evaluate each polynomial fit at the given Teff values, to get period
     # estimates for each star in the sample, if it were the age of the
     # reference cluster
-
     Prot_model_at_known_age = []
     for model_id in reference_model_ids:
         Prot_model = reference_cluster_slow_sequence(
@@ -411,7 +410,12 @@ def slow_sequence(
 
             periods.append(period)
 
-    return np.array(periods)
+    return_arr = np.array(periods)
+
+    if return_arr.shape[-1] == 1:
+        return_arr = return_arr.flatten()
+
+    return return_arr
 
 
 def reference_cluster_slow_sequence(

@@ -82,13 +82,13 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     models.reference_cluster_slow_sequence.  Any of:
 
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-        'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr']
+        'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr']
 
     poly_order: integer polynomial order for the reference cluster mean model.
     Default is 7, which seems to do the best job across all clusters.
 
     slow_seq_ages: optional list of ages, in Myr, for slow sequence models
-    to underplot (e.g., [115, 150, 200, 250]).
+    to underplot (e.g., [120, 150, 200, 250]).
     """
     # Get data
     N_colors = 4 if 'Ruprecht-147' not in reference_clusters else 5
@@ -196,14 +196,14 @@ def plot_prot_vs_teff_residual(
     model_ids: iterable of strings, to be called by
     models.reference_cluster_slow_sequence.  Any of:
 
-        ['Praesepe', 'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr']
+        ['Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr']
 
     poly_order: integer polynomial order for the reference cluster mean model.
     Default is 7, which seems to do the best job across all clusters.
     """
 
     allowed_model_ids = [
-        'Praesepe', 'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr'
+        'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr'
     ]
     for model_id in model_ids:
         if model_id not in allowed_model_ids:
@@ -266,7 +266,7 @@ def plot_cdf_fast_slow_ratio(
 
     # model_ids: iterable of strings, to be called by
     # models.reference_cluster_slow_sequence.
-    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                           'Group-X', 'Praesepe', 'NGC-6811']
 
@@ -293,9 +293,9 @@ def plot_cdf_fast_slow_ratio(
 
         # Get the data
         sel_teff_range = [3800, 6200]
-        if model_id == '115-Myr':
-            set_115myr = {k for k,v in d.items() if "115" in v[2]}
-            set_toplot = set_115myr.intersection(set(reference_clusters))
+        if model_id == '120-Myr':
+            set_120myr = {k for k,v in d.items() if "120" in v[2]}
+            set_toplot = set_120myr.intersection(set(reference_clusters))
             sel_teff_range = [4500, 6200]
         elif model_id == '300-Myr':
             set_300myr = {k for k,v in d.items() if "300" in v[2]}
@@ -306,7 +306,7 @@ def plot_cdf_fast_slow_ratio(
             set_toplot = {'NGC-6811'}
 
         # collect effective temperatures for both slow and fast sequences, and
-        # the model-ids specified above (default 115 Myr, 300 Myr,
+        # the model-ids specified above (default 120 Myr, 300 Myr,
         # 670Myr/Praesepe)
         teff_ss, teff_fs = [], []
 
@@ -478,9 +478,9 @@ def _plot_prot_vs_teff_residual(
 
     # Get the data
     sel_teff_range = [3800, 6200]
-    if model_id == '115-Myr':
-        set_115myr = {k for k,v in d.items() if "115" in v[2]}
-        set_toplot = set_115myr.intersection(set(reference_clusters))
+    if model_id == '120-Myr':
+        set_120myr = {k for k,v in d.items() if "120" in v[2]}
+        set_toplot = set_120myr.intersection(set(reference_clusters))
         sel_teff_range = [4500, 6200]
     elif model_id == '300-Myr':
         set_300myr = {k for k,v in d.items() if "300" in v[2]}
@@ -555,7 +555,7 @@ def _plot_prot_vs_teff_residual(
             zorder=zorder-1
         )
 
-        if model_id in ['115-Myr', '300-Myr']:
+        if model_id in ['120-Myr', '300-Myr']:
             _Teff = np.linspace(3800, 6200, 1000)
             _Prot_model = reference_cluster_slow_sequence(
                 _Teff, model_id, poly_order=poly_order
@@ -604,11 +604,11 @@ def _get_model_histogram(age, bounds_error='limit', parameters='default'):
     for ix, teff_midpoint in enumerate(teff_midway):
 
         # NOTE OMITTING teff_limit, in order to play fast and loose with the
-        # "slow vs fast sequence" for <4500 K at 115 Myr.  (we want just some
+        # "slow vs fast sequence" for <4500 K at 120 Myr.  (we want just some
         # rough agreement between the "-2<y/day<2" and "y/day < -2" subsets)
 
-        #if age in [115, 300]:
-        #    if age == 115:
+        #if age in [120, 300]:
+        #    if age == 120:
         #        teff_limit = 4500
         #    elif age == 300:
         #        teff_limit = 3800
@@ -641,7 +641,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     """
     9-panel plot.  Requires: having previously run plot_cdf_fast_slow_ratio.
 
-    Top row: Data-Mean actual stars for 115Myr,300Myr,670Myr
+    Top row: Data-Mean actual stars for 120Myr,300Myr,670Myr
         i.e., plot_prot_vs_teff_residual
     Middle row: The smooth 2d model, same ages
         i.e., plot_slow_sequence_residual
@@ -654,7 +654,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
 
     # model_ids: iterable of strings, to be called by
     # models.reference_cluster_slow_sequence.
-    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                           'Group-X', 'Praesepe', 'NGC-6811']
 
@@ -679,7 +679,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     # TOP ROW (same as plot_prot_vs_teff_residual)
     #
     axs = [axd['0'], axd['1'], axd['2']]
-    titles = ['115 Myr', '300 Myr', '670 Myr']
+    titles = ['120 Myr', '300 Myr', '670 Myr']
     for ax, model_id, title in zip(axs, model_ids, titles):
         _plot_prot_vs_teff_residual(
             ax, model_id, d, reference_clusters, poly_order, showtxt=0,
@@ -692,7 +692,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     #
     axs = [axd['3'], axd['4'], axd['5']]
     resid_Teffs = []
-    ages = [115, 300, 670]
+    ages = [120, 300, 670]
     bounds_error = 'limit'
     for ax, age in zip(axs, ages):
         resid_Teffs, teff_grid = _plot_slow_sequence_residual(
@@ -705,7 +705,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     #
     axs = [axd['6'], axd['7'], axd['8']]
     cachedir = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio')
-    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
 
     chi_sqs = []
     for ax, age, model_id in zip(axs, ages, model_ids):
@@ -784,8 +784,8 @@ def _plot_slow_sequence_residual(
         verbose=False, parameters=parameters
     )
 
-    if age in [115, 300]:
-        if age == 115:
+    if age in [120, 300]:
+        if age == 120:
             teff_limit = 4500
             # ratio from /doc/20220919_width_of_slow_sequence.txt should be
             # ~=13/127
@@ -1048,7 +1048,7 @@ def plot_sub_praesepe_selection_cut(mdf5, poly_order=7):
 
 def plot_age_posterior(
     Prot, Teff, outdir,
-    age_grid=np.linspace(115, 1000, 100),
+    age_grid=np.linspace(0, 2600, 500),
     bounds_error='nan'
     ):
 
@@ -1086,15 +1086,24 @@ def plot_age_posterior(
         cumulative /= cumulative[-1]
 
         # consider different possible estimators for age
-        fn = interp1d(cumulative, age_grid, kind='quadratic',
-                      bounds_error=True, fill_value=np.nan)
+        if np.sum(cumulative == 1) > 1:
+            # well-covered PDF
+            end_ix = np.argwhere(cumulative == 1)[0]
+            sel = slice(0,int(end_ix)+1)
+            fn = interp1d(cumulative[sel], age_grid[sel], kind='quadratic',
+                          bounds_error=True, fill_value=np.nan)
+        else:
+            print("WRN! Got a pdf with an age grid that doesn't sample "
+                  "all likely ages.")
+            fn = interp1d(cumulative, age_grid, kind='quadratic',
+                          bounds_error=True, fill_value=np.nan)
 
-        if age_peak >= 115:
+        if age_peak >= 120:
             age_med = int(fn(0.5))
             age_lower = int(age_med - fn(0.5-0.34))
             age_upper = int(fn(0.5+0.34) - age_med)
             agestr = f"age = {age_med} +{age_upper} -{age_lower} myr"
-        elif age_peak < 115:
+        elif age_peak < 120:
             age_twosig = int(fn(0.9545))
             age_threesig = int(fn(0.9973))
             agestr = f"age < {age_twosig} myr (2σ), age < {age_threesig} myr (3σ)"
@@ -1129,9 +1138,8 @@ def plot_age_posterior(
 
     ax.update({
         'xlabel': 'Age [Myr]',
-        'ylabel': 'Relative probability',
-        #'ylim': [0,20],
-        #'xlim': [6500, 3600]
+        'ylabel': 'Probability density (Myr$^{-1}$)',
+        'xlim': [0, 1500]
     })
 
     fig.savefig(outpath, dpi=350, bbox_inches='tight')
