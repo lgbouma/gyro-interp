@@ -1,3 +1,7 @@
+"""
+Contents:
+    get_chi_sq_red
+"""
 import numpy as np, pandas as pd
 import os
 from gyroemp.paths import RESULTSDIR

@@ -4,7 +4,7 @@ Contents:
     parallel_gyro_age_posterior
 
 Under-the-hood:
-    gyro_age_posterior_worker
+    _gyro_age_posterior_worker
 """
 import os, pickle
 from gyroemp.paths import DATADIR
@@ -96,7 +96,7 @@ def parallel_gyro_age_posterior(
     ]
 
     pool = mp.Pool(nworkers,maxtasksperchild=maxworkertasks)
-    results = pool.map(gyro_age_posterior_worker, tasks)
+    results = pool.map(_gyro_age_posterior_worker, tasks)
     pool.close()
     pool.join()
 
@@ -120,7 +120,7 @@ def gaussian_pdf_broadcaster(x, mu, sigma):
     return factor * val
 
 
-def gyro_age_posterior_worker(task):
+def _gyro_age_posterior_worker(task):
     """
     Worker that, for a given true age (and given all the relevant grids)
     evaluates the gyro posterior.
@@ -280,7 +280,7 @@ def gyro_age_posterior(
             age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
             y_grid, bounds_error
         )
-        p_age = gyro_age_posterior_worker(task)
+        p_age = _gyro_age_posterior_worker(task)
 
         p_ages.append(p_age)
 
