@@ -1,0 +1,1288 @@
+"""
+Catch-all file for plotting scripts.  Contents:
+
+    plot_prot_vs_teff
+    plot_prot_vs_teff_residual
+    plot_sub_praesepe_selection_cut
+    plot_slow_sequence_residual
+    plot_age_posterior
+    plot_cdf_fast_slow_ratio
+    plot_data_vs_model_prot
+    plot_fit_gyro_model
+
+Helpers:
+    _given_ax_append_spectral_types
+
+    Sub-plot makers, to prevent code duplication:
+        _plot_slow_sequence_residual
+        _plot_prot_vs_teff_residual
+"""
+import os
+from os.path import join
+import numpy as np, pandas as pd, matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.colors import LogNorm, Normalize
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.lines import Line2D
+
+from numpy import array as nparr
+
+from agetools.paths import DATADIR, RESULTSDIR
+from agetools.models import (
+    reference_cluster_slow_sequence, slow_sequence, slow_sequence_residual
+)
+from agetools.getters import _get_cluster_Prot_Teff_data
+from agetools.gyro_posterior import gyro_age_posterior
+from scipy.interpolate import interp1d
+
+# pip install aesthetic
+from aesthetic.plot import set_style, savefig
+
+###########
+# helpers #
+###########
+def _given_ax_append_spectral_types(ax):
+    # Append SpTypes (ignoring reddening)
+    from cdips.utils.mamajek import get_SpType_Teff_correspondence
+
+    tax = ax.twiny()
+    xlim = ax.get_xlim()
+    getter = get_SpType_Teff_correspondence
+    sptypes, xtickvals = getter(
+        ['F2V','F5V','G2V','K0V','K5V','M0V','M3V']
+    )
+    print(sptypes)
+    print(xtickvals)
+
+    xvals = np.linspace(min(xlim), max(xlim), 100)
+    tax.plot(xvals, np.ones_like(xvals), c='k', lw=0) # hidden, but fixes axis.
+    tax.set_xlim(xlim)
+    ax.set_xlim(xlim)
+
+    tax.set_xticks(xtickvals)
+    tax.set_xticklabels(sptypes, fontsize='medium')
+
+    tax.xaxis.set_ticks_position('top')
+    tax.tick_params(axis='x', which='minor', top=False)
+    tax.get_yaxis().set_tick_params(which='both', direction='in')
+
+
+############
+# plotters #
+############
+def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
+                      model_ids=None, poly_order=7,
+                      slow_seq_ages=None):
+    """
+    reference_clusters: list containing any of
+        ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
+        'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+
+    model_ids: iterable of strings, to be called by
+    models.reference_cluster_slow_sequence.  Any of:
+
+        ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
+        'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr']
+
+    poly_order: integer polynomial order for the reference cluster mean model.
+    Default is 7, which seems to do the best job across all clusters.
+
+    slow_seq_ages: optional list of ages, in Myr, for slow sequence models
+    to underplot (e.g., [115, 150, 200, 250]).
+    """
+    # Get data
+    N_colors = 4 if 'Ruprecht-147' not in reference_clusters else 5
+    d = _get_cluster_Prot_Teff_data(N_colors=N_colors)
+
+    # Make plot
+    set_style("science")
+
+    fig, ax = plt.subplots()
+
+    for reference_cluster in reference_clusters:
+
+        df = d[reference_cluster][0]
+        color = d[reference_cluster][1]
+        label = d[reference_cluster][2]
+        zorder = d[reference_cluster][3]
+
+        sel = df.flag_benchmark_period
+
+        ax.scatter(
+            df[sel].Teff_Curtis20, df[sel].Prot, color=color, alpha=1,
+            s=25, rasterized=False, label=label, marker='o', edgecolors='k',
+            linewidths=0.3, zorder=zorder
+        )
+
+        if show_binaries:
+
+            sel = df.flag_possible_binary & ~pd.isnull(df.Teff_Curtis20)
+
+            ax.scatter(
+                df[sel].Teff_Curtis20, df[sel].Prot, color=color, alpha=0.5,
+                s=12, rasterized=False, marker='o', edgecolors='k',
+                linewidths=0., zorder=zorder-1
+            )
+
+    if isinstance(model_ids, list):
+        Teff = np.linspace(3800, 6200, int(1e3))
+        for model_id in model_ids:
+            color = d[model_id][1]
+            Prot = reference_cluster_slow_sequence(
+                Teff, model_id, poly_order=poly_order
+            )
+            ax.plot(
+                Teff, Prot, color=color, linewidth=1, zorder=-1
+            )
+
+    if isinstance(slow_seq_ages, list):
+        Teff = np.linspace(3800, 6200, 100)
+        for slow_seq_age in slow_seq_ages:
+            Prot = slow_sequence(
+                Teff, slow_seq_age, poly_order=poly_order
+            )
+            ax.plot(
+                Teff, Prot, color='lightgray', linewidth=1, zorder=-1
+            )
+
+    ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
+              borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+              frameon=False)
+
+    ax.set_xlabel("Effective Temperature [K]")
+    ax.set_ylabel("Rotation Period [days]")
+
+    ax.set_xlim([7100, 2900])
+    ax.set_xticks([7000, 6000, 5000, 4000, 3000])
+    minor_xticks = np.arange(3000, 7100, 100)[::-1]
+    ax.set_xticks(minor_xticks, minor=True)
+
+    ax.set_ylim([-0.5, 16])
+    ax.set_yticks([0, 5, 10, 15])
+    if 'Ruprecht-147' in reference_clusters:
+        ax.set_ylim([-0.5, 28])
+        ax.set_yticks([0, 5, 10, 15, 20, 25])
+
+    _given_ax_append_spectral_types(ax)
+
+    basename = "_".join(reference_clusters)
+    s = ''
+    if show_binaries:
+        s += '_showbinaries'
+    b = ''
+    if len(reference_clusters) == 1:
+        b = 'singlecluster_'
+    m = ''
+    if isinstance(model_ids, list):
+        m = f"_models_poly{poly_order}_" + "_".join(model_ids)
+    ss = ''
+    if isinstance(slow_seq_ages, list):
+        slow_seq_ages = np.array(slow_seq_ages).astype(str)
+        m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
+
+    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}.png')
+
+    savefig(fig, outpath, dpi=400, writepdf=False)
+
+
+def plot_prot_vs_teff_residual(
+    outdir, reference_clusters, model_ids, poly_order=7
+    ):
+    """
+    reference_clusters: list containing any of
+        ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
+        'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+
+    model_ids: iterable of strings, to be called by
+    models.reference_cluster_slow_sequence.  Any of:
+
+        ['Praesepe', 'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr']
+
+    poly_order: integer polynomial order for the reference cluster mean model.
+    Default is 7, which seems to do the best job across all clusters.
+    """
+
+    allowed_model_ids = [
+        'Praesepe', 'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr'
+    ]
+    for model_id in model_ids:
+        if model_id not in allowed_model_ids:
+            errmsg = f"Got model_id {model_id} - not implemented in this plot!"
+            raise ValueError(errmsg)
+
+    # Get data
+    d = _get_cluster_Prot_Teff_data()
+
+    # Make plot
+    set_style("clean")
+
+    # Each mean model gets its own (data-model) vs Teff axis
+    factor = 0.8
+    fig = plt.figure(figsize=(factor*3.3*2, factor*1.5*2.5))
+    axd = fig.subplot_mosaic(
+        """
+        AB
+        CD
+        """
+    )
+    axs = [axd['A'], axd['B'], axd['C'], axd['D']]
+
+    for ax, model_id in zip(axs, model_ids):
+
+        _plot_prot_vs_teff_residual(
+            ax, model_id, d, reference_clusters, poly_order
+        )
+
+    fig.text(-0.01, 0.5, "Rotation Period Data - Model [days]", va='center',
+             rotation=90, fontsize='large')
+    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
+             fontsize='large')
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    basename = "_".join(reference_clusters)
+    b = ''
+    if len(reference_clusters) == 1:
+        b = 'singlecluster_'
+    m = ''
+    if isinstance(model_ids, list):
+        m = f"_models_poly{poly_order}_" + "_".join(model_ids)
+
+    outpath = join(outdir, f'{b}prot_vs_teff_residual_{basename}{m}.png')
+
+    savefig(fig, outpath, dpi=400, writepdf=False)
+
+
+def plot_cdf_fast_slow_ratio(
+    outdir, poly_order=7
+    ):
+    """
+    Plot: RATIO of cumulative distribution functions, showing the cdf(Teff) for
+    the fast and slow sequence at various times.
+
+    poly_order: integer polynomial order for the reference cluster mean model.
+    Default is 7, which seems to do the best job across all clusters.
+    """
+
+    # model_ids: iterable of strings, to be called by
+    # models.reference_cluster_slow_sequence.
+    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                          'Group-X', 'Praesepe', 'NGC-6811']
+
+    # Get data
+    d = _get_cluster_Prot_Teff_data()
+
+    # Make plot
+    set_style("clean")
+
+    # Each mean model gets its own (data-model) vs Teff axis
+    factor = 0.8
+    fig = plt.figure(figsize=(factor*3.3*3, factor*1.5*1.5*2.5))
+    axd = fig.subplot_mosaic(
+        """
+        ABC
+        012
+        345
+        """
+    )
+    axs = [axd['A'], axd['B'], axd['C']]
+
+    ix = 0
+    for ax, model_id in zip(axs, model_ids):
+
+        # Get the data
+        sel_teff_range = [3800, 6200]
+        if model_id == '115-Myr':
+            set_115myr = {k for k,v in d.items() if "115" in v[2]}
+            set_toplot = set_115myr.intersection(set(reference_clusters))
+            sel_teff_range = [4500, 6200]
+        elif model_id == '300-Myr':
+            set_300myr = {k for k,v in d.items() if "300" in v[2]}
+            set_toplot = set_300myr.intersection(set(reference_clusters))
+        elif model_id == 'Praesepe':
+            set_toplot = {'Praesepe'}
+        elif model_id == 'NGC-6811':
+            set_toplot = {'NGC-6811'}
+
+        # collect effective temperatures for both slow and fast sequences, and
+        # the model-ids specified above (default 115 Myr, 300 Myr,
+        # 670Myr/Praesepe)
+        teff_ss, teff_fs = [], []
+
+        for reference_cluster in set_toplot:
+
+            df = d[reference_cluster][0]
+            color = d[reference_cluster][1]
+            label = d[reference_cluster][2]
+            zorder = d[reference_cluster][3]
+
+            sel = df.flag_benchmark_period
+
+            Teff = nparr(df[sel].Teff_Curtis20)
+            Prot = nparr(df[sel].Prot)
+            Prot_model = reference_cluster_slow_sequence(
+                Teff, model_id, poly_order=poly_order
+            )
+            Prot_residual = Prot - Prot_model
+
+            # Selection for "slow sequence"
+            sel_prot = (Prot_residual > -2) & (Prot_residual < 2)
+            #sel_teff = (Teff > sel_teff_range[0]) & (Teff < sel_teff_range[1])
+            sel_ss = sel_prot# & sel_teff
+
+            # Selection for "fast sequence"
+            sel_prot_fs = (Prot_residual < -2)
+            #sel_teff_fs = (Teff > 3800) & (Teff < 6200)
+            sel_fs = sel_prot_fs# & sel_teff_fs
+
+            teff_ss.append(Teff[sel_ss])
+            teff_fs.append(Teff[sel_fs])
+
+        teff_ss = np.hstack(teff_ss)
+        teff_fs = np.hstack(teff_fs)
+        teff_all = np.hstack([teff_ss, teff_fs])
+
+        teff_continuous_bins = np.linspace(3800, 6200, int(1e4))
+        # 3800, 4150, 4500, 4850, 5200, 5550, 5900, 6250
+        teff_chunk_bins = np.arange(3800, 6200+350, 350)
+
+        #
+        # cumulative count distributions
+        #
+        c_vals_ss, _, patches_ss = ax.hist(
+            teff_ss, teff_continuous_bins, density=False, histtype='step',
+            cumulative=-1, label='Slow seq.', linewidth=0.5, fill=False,
+            color='C0'
+        )
+        c_vals_fs, _, patches_ss = ax.hist(
+            teff_fs, teff_continuous_bins, density=False, histtype='step',
+            cumulative=-1, label='Fast seq.', linewidth=0.5, fill=False,
+            color='C1'
+        )
+        c_vals_all, _, patches_all = ax.hist(
+            teff_all, teff_continuous_bins, density=False, histtype='step',
+            cumulative=-1, label='Slow + Fast', linewidth=0.5, fill=False,
+            color='C2'
+        )
+        ax.update({
+            'ylabel': 'Count',
+            'title': " ".join(label.split(" ")[:-1]),
+            'xlim': [6300, 3700],
+        })
+
+        custom_lines = [Line2D([0], [0], color='C0', lw=0.5),
+                        Line2D([0], [0], color='C1', lw=0.5),
+                        Line2D([0], [0], color='C2', lw=0.5)]
+        ax.legend(custom_lines, ['Slow', 'Fast', 'Slow+Fast'],
+                  loc='upper left', fontsize='x-small', handletextpad=0.3,
+                  borderaxespad=1.0, borderpad=0.4)
+
+        #
+        # now HISTOGRAM
+        #
+        ax = axd[str(ix)]
+
+        h_vals_ss, _, _ = ax.hist(
+            teff_ss, teff_chunk_bins, density=False, histtype='step',
+            cumulative=False, label='Slow seq.', linewidth=2, fill=False,
+            color='C0', zorder=1
+        )
+        h_vals_fs, _, _ = ax.hist(
+            teff_fs, teff_chunk_bins, density=False, histtype='step',
+            cumulative=False, label='Fast seq.', linewidth=0.8, fill=False,
+            color='C1', zorder=2
+        )
+        #h_vals_all, _, _ = ax.hist(
+        #    teff_all, teff_chunk_bins, density=False, histtype='step',
+        #    cumulative=False, label='Slow + Fast', linewidth=0.5, fill=False,
+        #    color='C2'
+        #)
+        ax.update({
+            'ylabel': 'Stars per 350 K bin',
+            'xlim': [6300, 3700],
+        })
+
+        #
+        # now plot the RATIO of slow to fast
+        #
+        ax = axd[str(ix+3)]
+
+        midway = teff_chunk_bins[0:-1] + np.diff(teff_chunk_bins)/2
+        num = h_vals_fs
+        denom = (h_vals_fs+h_vals_ss)
+        ratio = num/denom
+
+        sigma_num = np.sqrt(num) / num
+        sigma_num[np.isnan(sigma_num)] = 0
+        sigma_denom = np.sqrt(denom) / denom
+        sigma_denom[np.isnan(sigma_denom)] = 0
+
+        sigma_ratio = np.sqrt( sigma_num**2 + sigma_denom**2 )
+        sigma_ratio_abs = sigma_ratio * ratio
+        sigma_ratio_abs_hi = sigma_ratio_abs
+        sigma_ratio_abs_lo = sigma_ratio_abs
+
+        # define upper limits
+        sel = sigma_ratio_abs_hi == 0.
+        sigma_ratio_abs_hi[sel] = sigma_denom[sel]
+
+        sigma_plot = np.vstack([sigma_ratio_abs_lo, sigma_ratio_abs_hi])
+
+        ax.errorbar(
+            midway, ratio, yerr=sigma_plot, c='k', ls='--', marker='o'
+        )
+        ax.update({
+            'ylabel': 'Fast/(Slow+Fast)',
+            'ylim': [-0.03, 1.03],
+            'xlim': [6300, 3700],
+        })
+
+        outdf = pd.DataFrame({
+            'Teff_midpoints': midway,
+            'ratio': h_vals_fs/(h_vals_fs+h_vals_ss),
+            'ratio_err_lo': sigma_ratio_abs_lo,
+            'ratio_err_hi': sigma_ratio_abs_hi,
+            'count_fast_seq': h_vals_fs,
+            'count_slow_seq': h_vals_ss,
+        })
+        csvpath = os.path.join(outdir, f'{model_id}_cdf_fast_slow_ratio_data.csv')
+        outdf.to_csv(csvpath, index=False)
+        print(f"Wrote {csvpath}")
+
+        ix += 1
+
+    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
+             fontsize='large')
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    basename = "_".join(reference_clusters)
+    b = ''
+    if len(reference_clusters) == 1:
+        b = 'singlecluster_'
+    m = ''
+    if isinstance(model_ids, list):
+        m = f"_models_poly{poly_order}_" + "_".join(model_ids)
+
+    outpath = join(outdir, f'{b}cdf_fast_slow_ratio_{basename}{m}.png')
+
+    savefig(fig, outpath, dpi=400, writepdf=False)
+
+
+def _plot_prot_vs_teff_residual(
+    ax, model_id, d, reference_clusters, poly_order, showtxt=1, tefflim_ss=1
+    ):
+    # helper function that plots the DATA (residual) for the different open
+    # clusters, and their concatenations
+
+    # Get the data
+    sel_teff_range = [3800, 6200]
+    if model_id == '115-Myr':
+        set_115myr = {k for k,v in d.items() if "115" in v[2]}
+        set_toplot = set_115myr.intersection(set(reference_clusters))
+        sel_teff_range = [4500, 6200]
+    elif model_id == '300-Myr':
+        set_300myr = {k for k,v in d.items() if "300" in v[2]}
+        set_toplot = set_300myr.intersection(set(reference_clusters))
+    elif model_id == 'Praesepe':
+        set_toplot = {'Praesepe'}
+    elif model_id == 'NGC-6811':
+        set_toplot = {'NGC-6811'}
+    elif model_id == '2.6-Gyr':
+        set_2pt6gyr = {k for k,v in d.items() if "2.5" in v[2] or "2.7" in v[2]}
+        set_toplot = set_2pt6gyr.intersection(set(reference_clusters))
+
+    for reference_cluster in set_toplot:
+
+        df = d[reference_cluster][0]
+        color = d[reference_cluster][1]
+        label = d[reference_cluster][2]
+        zorder = d[reference_cluster][3]
+
+        sel = df.flag_benchmark_period
+
+        Teff = nparr(df[sel].Teff_Curtis20)
+        Prot = nparr(df[sel].Prot)
+        Prot_model = reference_cluster_slow_sequence(
+            Teff, model_id, poly_order=poly_order
+        )
+        Prot_residual = Prot - Prot_model
+
+        # Evalute the width of the "good" part of the residual
+        sel_prot = (Prot_residual > -2) & (Prot_residual < 2)
+        sel_teff = (Teff > sel_teff_range[0]) & (Teff < sel_teff_range[1])
+        if tefflim_ss:
+            sel = sel_teff & sel_prot
+        else:
+            sel = sel_prot
+        _prot_good_chunk = Prot_residual[sel]
+        N_good_chunk = len(_prot_good_chunk)
+        N_outlier = len(Prot_residual[sel_teff & ~sel_prot])
+        N_tot_sel_teff = len(Prot_residual[sel_teff])
+        N_tot_not_sel_teff = len(Prot_residual[~sel_teff])
+        std_good_chunk = np.std(_prot_good_chunk)
+        mad_good_chunk = np.median(
+            np.abs(_prot_good_chunk - np.median(_prot_good_chunk))
+        )
+        msg = (
+            f'poly {poly_order}.\n'
+            f'cluster: {reference_cluster}.\n'
+            f'Total stars in Teff {sel_teff_range[0]}-{sel_teff_range[1]}: {N_tot_sel_teff}.\n'
+            f'Ngood={N_good_chunk}.  Noutlier={N_outlier}.\n'
+            f'Nnotconverged={N_tot_not_sel_teff}.\n'
+            f'std_Prot: {std_good_chunk:.3f} d,  mad_good_chunk: {mad_good_chunk:.3f} d.'
+        )
+        print(msg)
+
+        age_txt = " ".join(label.split(" ")[:-1])
+        if tefflim_ss:
+            label_txt = (
+                label.split(" ")[-1] +
+                " (σ$_\mathrm{slow}$ = " + f"{std_good_chunk:.2f} d)"
+            )
+        else:
+            label_txt = label.split(" ")[-1]
+
+        ax.scatter(
+            Teff[sel], Prot_residual[sel], color=color, alpha=1, s=15,
+            rasterized=False, label=label_txt, marker='o', edgecolors='k',
+            linewidths=0.3, zorder=zorder
+        )
+        ax.scatter(
+            Teff[~sel], Prot_residual[~sel], color=color, alpha=0.8, s=15,
+            rasterized=False, marker='s', edgecolors='k', linewidths=0.3,
+            zorder=zorder-1
+        )
+
+        if model_id in ['115-Myr', '300-Myr']:
+            _Teff = np.linspace(3800, 6200, 1000)
+            _Prot_model = reference_cluster_slow_sequence(
+                _Teff, model_id, poly_order=poly_order
+            )
+            ax.plot(
+                _Teff, -_Prot_model,
+                color='lightgray', linewidth=1, zorder=-1
+            )
+
+    ax.hlines(
+        0, 1000, 10000, colors='darkgray', alpha=1,
+        linestyles='-', zorder=-2, linewidths=0.6
+    )
+
+    ax.legend(loc='lower left', fontsize='x-small', handletextpad=0.1,
+              borderaxespad=1.0, borderpad=0.4)
+
+    if showtxt:
+        ax.text(0.97, 0.97, age_txt, transform=ax.transAxes,
+                ha='right',va='top', color='k')
+
+    ax.set_xlim([6600, 3400])
+    ax.set_xticks([6000, 5500, 5000, 4500, 4000])
+
+    ax.set_ylim([-14, 6])
+    ax.set_yticks([-10, -5, 0, 5])
+
+
+def _get_model_histogram(age, bounds_error='limit', parameters='default'):
+
+    ymin, ymax = -14, 6
+    teffmin, teffmax = 3800, 6200
+    y_grid = np.linspace(ymin, ymax, 1000)
+    teff_grid = np.linspace(teffmin, teffmax, 1001)
+
+    resid_y_Teff = slow_sequence_residual(
+        age, y_grid=y_grid, teff_grid=teff_grid, bounds_error=bounds_error,
+        parameters=parameters, verbose=False
+    )
+
+    teff_chunk_bins = np.arange(3800, 6200+350, 350)
+    teff_midway = teff_chunk_bins[0:-1] + np.diff(teff_chunk_bins)/2
+
+    hist_ss_vals = []
+    hist_fs_vals = []
+    for ix, teff_midpoint in enumerate(teff_midway):
+
+        # NOTE OMITTING teff_limit, in order to play fast and loose with the
+        # "slow vs fast sequence" for <4500 K at 115 Myr.  (we want just some
+        # rough agreement between the "-2<y/day<2" and "y/day < -2" subsets)
+
+        #if age in [115, 300]:
+        #    if age == 115:
+        #        teff_limit = 4500
+        #    elif age == 300:
+        #        teff_limit = 3800
+        #    else:
+        #        teff_limit = 0
+
+        # Effective temperature subset
+        teff_lo = teff_chunk_bins[ix]
+        teff_hi = teff_chunk_bins[ix+1]
+        sel_teff = (teff_grid > teff_lo) & (teff_grid < teff_hi)
+
+        # "Slow sequence" selection
+        sel_ss = (y_grid > -2) & (y_grid < 2)
+
+        # "Fast sequence" selection
+        sel_fs = (y_grid < -2)
+
+        N_ss_teff = np.trapz(resid_y_Teff[sel_ss, :], y_grid[sel_ss], axis=0)
+        N_ss = np.trapz(N_ss_teff[sel_teff], teff_grid[sel_teff])
+        hist_ss_vals.append(N_ss)
+
+        N_fs_teff = np.trapz(resid_y_Teff[sel_fs, :], y_grid[sel_fs], axis=0)
+        N_fs = np.trapz(N_fs_teff[sel_teff], teff_grid[sel_teff])
+        hist_fs_vals.append(N_fs)
+
+    return np.array(hist_ss_vals), np.array(hist_fs_vals), teff_midway
+
+
+def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
+    """
+    9-panel plot.  Requires: having previously run plot_cdf_fast_slow_ratio.
+
+    Top row: Data-Mean actual stars for 115Myr,300Myr,670Myr
+        i.e., plot_prot_vs_teff_residual
+    Middle row: The smooth 2d model, same ages
+        i.e., plot_slow_sequence_residual
+    Bottom row: Comparison between data & smooth 2d model via dN/dTeff
+        i.e. plot_cdf_fast_slow_ratio
+
+    This is a dense plot that summarizes the entire modeling effort, as well as
+    how good our model is doing!
+    """
+
+    # model_ids: iterable of strings, to be called by
+    # models.reference_cluster_slow_sequence.
+    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                          'Group-X', 'Praesepe', 'NGC-6811']
+
+    # Get data
+    d = _get_cluster_Prot_Teff_data()
+
+    # Make plot
+    set_style("clean")
+
+    # Each mean model gets its own (data-model) vs Teff axis
+    factor = 0.8
+    fig = plt.figure(figsize=(factor*3.0*3, factor*1.5*1.5*2.5))
+    axd = fig.subplot_mosaic(
+        """
+        012
+        345
+        678
+        """
+    )
+
+    #
+    # TOP ROW (same as plot_prot_vs_teff_residual)
+    #
+    axs = [axd['0'], axd['1'], axd['2']]
+    titles = ['115 Myr', '300 Myr', '670 Myr']
+    for ax, model_id, title in zip(axs, model_ids, titles):
+        _plot_prot_vs_teff_residual(
+            ax, model_id, d, reference_clusters, poly_order, showtxt=0,
+            tefflim_ss=0
+        )
+        ax.set_title(title)
+
+    #
+    # MIDDLE ROW (same as plot_slow_sequence_residual)
+    #
+    axs = [axd['3'], axd['4'], axd['5']]
+    resid_Teffs = []
+    ages = [115, 300, 670]
+    bounds_error = 'limit'
+    for ax, age in zip(axs, ages):
+        resid_Teffs, teff_grid = _plot_slow_sequence_residual(
+            fig, ax, age, bounds_error, resid_Teffs, showtxt=0, showcolorbar=0,
+            parameters=parameters
+        )
+
+    #
+    # FINAL ROW: data vs the model
+    #
+    axs = [axd['6'], axd['7'], axd['8']]
+    cachedir = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio')
+    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+
+    chi_sqs = []
+    for ax, age, model_id in zip(axs, ages, model_ids):
+
+        csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
+                               f'{model_id}_cdf_fast_slow_ratio_data.csv')
+        df = pd.read_csv(csvpath)
+
+        ax.plot(df.Teff_midpoints, df.ratio, c='k', ls='--', marker='*',
+                label='Data', zorder=2)
+
+        # NOTE: could be plotted continuously, rather than at these specific
+        # teff bins, and ages.  for apples-to-apples, this is fine.
+        h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
+            age, parameters=parameters
+        )
+        model_ratio = h_vals_fs / (h_vals_fs + h_vals_ss)
+
+        ax.plot(teff_midway, model_ratio, c='darkgray', ls='-', marker='o',
+                label='Model', zorder=1)
+
+        data = np.array(df.ratio)
+        model = np.array(model_ratio)
+        sigma = 0.1 # uniform weighting across the 7 bins
+        chi_sq = np.sum( (data-model)**2 / sigma**2 )
+        chi_sqs.append(chi_sq)
+
+        ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
+                  borderaxespad=1.0, borderpad=0.4)
+        ax.set_ylim([-0.03, 1.03])
+
+    n = 14
+    k = 5
+    chi_sq_red = np.sum(chi_sqs) / (n-k)
+    print(f"this model params chi_sq_red: {chi_sq_red:.4f}")
+
+    # fix xlims
+    for _, ax in axd.items():
+        ax.set_xlim([6300, 3700])
+
+    fig.text(-0.01, 4/6-0.03, "Rotation Period Data - Model [days]", va='center',
+             rotation=90, fontsize='large')
+
+    fig.text(-0.01, 1/6+0.03/2, "Fast Fraction", va='center',
+             rotation=90, fontsize='large')
+
+    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
+             fontsize='large')
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    basename = "_".join(reference_clusters)
+    b = ''
+    if len(reference_clusters) == 1:
+        b = 'singlecluster_'
+    m = ''
+    if isinstance(model_ids, list):
+        m = f"_models_poly{poly_order}_" + "_".join(model_ids)
+
+    outpath = join(outdir, f'data_vs_model_{basename}{m}.png')
+    savefig(fig, outpath, dpi=400, writepdf=False)
+
+
+def _plot_slow_sequence_residual(
+    fig, ax, age, bounds_error, resid_Teffs, showtxt=1, showcolorbar=1,
+    parameters='default'
+    ):
+
+    ymin, ymax = -14, 6
+    teffmin, teffmax = 3800, 6200
+    y_grid = np.linspace(ymin, ymax, 1000)
+    teff_grid = np.linspace(teffmin, teffmax, 1001)
+
+    resid_y_Teff = slow_sequence_residual(
+        age, y_grid=y_grid, teff_grid=teff_grid, bounds_error=bounds_error,
+        verbose=False, parameters=parameters
+    )
+
+    if age in [115, 300]:
+        if age == 115:
+            teff_limit = 4500
+            # ratio from /doc/20220919_width_of_slow_sequence.txt should be
+            # ~=13/127
+            num, denom = 13, 127
+
+        elif age == 300:
+            teff_limit = 3800
+            # ratio higher at 300 myr, since we're shifting the definition of 
+            # where the slow sequence ends
+            num, denom = 26, 133
+
+        sel = (teff_grid > teff_limit)
+        resid_ygrid = np.trapz(resid_y_Teff[:,sel], teff_grid[sel], axis=1)
+
+        # sum of all counts within the "fast sequence" region
+        sel = (y_grid < -2)
+        s0 = np.trapz(resid_ygrid[sel], y_grid[sel], axis=0)
+
+        # sum of all counts in the slow sequence
+        s1 = np.trapz(resid_ygrid[~sel], y_grid[~sel], axis=0)
+
+        r_obs = num/denom
+        r_model = s0/(s0+s1)
+
+        msg = (
+            f'age {age} myr. teff > {teff_limit}. '
+            f'r_obs = {num}/{denom} = {r_obs:.2f}. '
+            f'r_model = {r_model:.2f}. '
+        )
+        print(msg)
+
+    resid_Teff = np.trapz(resid_y_Teff, y_grid, axis=0)
+    resid_Teffs.append(resid_Teff)
+
+    norm = LogNorm(vmin=1e-2, vmax=1)
+    #norm = Normalize(vmin=0, vmax=1)
+    _p = ax.imshow(
+        resid_y_Teff,
+        extent=(teffmin, teffmax, ymin, ymax),
+        aspect='auto',
+        cmap=cm.Greys,
+        origin='lower',
+        norm=norm
+    )
+    ax.set_xlim([6600, 3400])
+    ax.set_xticks([6000, 5500, 5000, 4500, 4000])
+
+    ax.set_ylim([-14, 6])
+    ax.set_yticks([-10, -5, 0, 5])
+
+    if age < 1000:
+        age_txt = str(age) + ' Myr'
+    else:
+        age_txt = str(int(age/1000)) + ' Gyr'
+
+    if showtxt:
+        ax.text(0.97, 0.97, age_txt, transform=ax.transAxes,
+                ha='right', va='top', color='k')
+
+    if showcolorbar:
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes('right', size='5%', pad=0.05)
+        fig.colorbar(_p, cax=cax)
+
+    return resid_Teffs, teff_grid
+
+
+def plot_slow_sequence_residual(outdir, ages, bounds_error='nan'):
+
+    # Each mean model gets its own (data-model) vs Teff axis
+    set_style('clean')
+
+    N_ages = len(ages)
+
+    factor = 0.8
+    xfactor = 1 if N_ages == 4 else 1.5
+
+    fig = plt.figure(figsize=(xfactor*factor*3.3*2, factor*1.5*2.5))
+    if N_ages == 4:
+        axd = fig.subplot_mosaic(
+            """
+            AB
+            CD
+            """
+        )
+        axs = [axd['A'], axd['B'], axd['C'], axd['D']]
+    elif N_ages == 6:
+        axd = fig.subplot_mosaic(
+            """
+            ABC
+            DEF
+            """
+        )
+        axs = [axd['A'], axd['B'], axd['C'], axd['D'], axd['E'], axd['F']]
+
+    resid_Teffs = []
+    for ax, age in zip(axs, ages):
+
+        resid_Teffs, teff_grid = _plot_slow_sequence_residual(
+            fig, ax, age, bounds_error, resid_Teffs
+        )
+
+    fig.text(-0.01, 0.5, "Rotation Period Residual [days]", va='center',
+             rotation=90, fontsize='large')
+    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
+             fontsize='large')
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    b = "_".join(np.array(ages).astype(str))
+
+    outpath = join(outdir, f'slow_sequence_residual_{b}.png')
+    savefig(fig, outpath, writepdf=False)
+
+    #
+    # Part 2: integrated over the residual
+    #
+    plt.close("all")
+
+    fig = plt.figure(figsize=(xfactor*factor*3.3*2, factor*1.5*2.5))
+    if N_ages == 4:
+        axd = fig.subplot_mosaic(
+            """
+            AB
+            CD
+            """
+        )
+        axs = [axd['A'], axd['B'], axd['C'], axd['D']]
+    elif N_ages == 6:
+        axd = fig.subplot_mosaic(
+            """
+            ABC
+            DEF
+            """
+        )
+        axs = [axd['A'], axd['B'], axd['C'], axd['D'], axd['E'], axd['F']]
+
+    for ax, age, resid_Teff in zip(axs, ages, resid_Teffs):
+
+        ax.plot(
+            teff_grid, resid_Teff, lw=1, c='k'
+        )
+
+        ax.set_xlim([6600, 3400])
+        ax.set_xticks([6000, 5500, 5000, 4500, 4000])
+
+        if age < 1000:
+            age_txt = str(age) + ' Myr'
+        else:
+            age_txt = str(int(age/1000)) + ' Gyr'
+
+        ax.text(0.97, 0.97, age_txt, transform=ax.transAxes,
+                ha='right',va='top', color='k')
+
+    fig.text(-0.01, 0.5, "Relative probability", va='center',
+             rotation=90, fontsize='large')
+    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
+             fontsize='large')
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    b = "_".join(np.array(ages).astype(str))
+    e = "_limitbounds" if bounds_error == 'limit' else ""
+
+    outpath = join(outdir, f'ymarginalized_slow_sequence_residual_{b}{e}.png')
+    savefig(fig, outpath, writepdf=False)
+
+
+
+def plot_sub_praesepe_selection_cut(mdf5, poly_order=7):
+    """
+    make figure showing which stars have rotation periods that are being
+    selected via "sub-praesepe"
+    (called from drivers/build_koi_table.py)
+    """
+
+    plt.close("all")
+    fig, ax = plt.subplots(figsize=(4,3))
+
+    csvpath = join(
+        DATADIR, 'interim', 'slow_sequence_manual_selection',
+        'Praesepe_slow_sequence.csv'
+    )
+    df_prae = pd.read_csv(csvpath)
+
+    teff_model = np.arange(3800, 6200+1, 1)
+    prot_model = reference_cluster_slow_sequence(
+        teff_model, "Praesepe", poly_order=poly_order
+    )
+
+    ax.scatter(
+        df_prae["Teff"], df_prae["Prot"], c='C0', marker='o', zorder=4,
+        s=3, linewidths=0.5, label='Praesepe'
+    )
+    ax.plot(
+        teff_model, prot_model, c='C0', ls='-', zorder=3, lw=1
+    )
+
+    period_cols = ['s19_Prot', 's21_Prot', 'm14_Prot', 'm15_Prot']
+
+    for period_col in period_cols:
+        # all KOIs
+        if period_col == 's19_Prot':
+            ax.scatter(
+                mdf5["adopted_Teff"], mdf5[period_col], c='darkgray', marker='o',
+                zorder=0, s=1, linewidths=0, label='KOIs'
+            )
+        else:
+            # legend label trick
+            ax.scatter(
+                mdf5["adopted_Teff"], mdf5[period_col], c='darkgray', marker='o',
+                zorder=0, s=1, linewidths=0
+            )
+
+        # KOIs below Praesepe
+        sel_teff_range = (
+            (mdf5["adopted_Teff"] >= 3800)
+            &
+            (mdf5["adopted_Teff"] <= 6200)
+        )
+
+        period_val = mdf5[period_col][sel_teff_range]
+        teff_val = mdf5["adopted_Teff"][sel_teff_range]
+
+        sel_below_Praesepe = (
+            period_val < reference_cluster_slow_sequence(
+                teff_val, "Praesepe", poly_order=poly_order
+            )
+        )
+
+        if period_col == 's19_Prot':
+            ax.scatter(
+                teff_val[sel_below_Praesepe], period_val[sel_below_Praesepe],
+                c='C1', marker='o', zorder=4, linewidths=0.5, s=2,
+                label='KOIs below Praesepe'
+            )
+        else:
+            # legend label trick
+            ax.scatter(
+                teff_val[sel_below_Praesepe], period_val[sel_below_Praesepe],
+                c='C1', marker='o', zorder=4, linewidths=0.5, s=2,
+            )
+
+    ax.legend(loc='upper left', fontsize='xx-small', framealpha=1)
+
+    ax.update({
+        'xlabel': 'B+20 Teff',
+        'ylabel': 'Prot [M14,M15,S19,S21]',
+        'ylim': [0,20],
+        'xlim': [6500, 3600]
+    })
+
+    outdir = join(RESULTSDIR, 'debug')
+    if not os.path.exists(outdir): os.mkdir(outdir)
+    outpath = join(
+        outdir, f"koi_table_sub_praesepe_selection_cut_poly{poly_order}.png"
+    )
+    fig.savefig(outpath, dpi=350, bbox_inches='tight')
+
+
+def plot_age_posterior(
+    Prot, Teff, outdir,
+    age_grid=np.linspace(115, 1000, 100),
+    bounds_error='nan'
+    ):
+
+    #
+    # Calculate the age posterior
+    #
+    Protstr = str(Prot).zfill(2)
+    if bounds_error == 'nan':
+        typestr = 'defaultgrid'
+    elif bounds_error == 'limit':
+        typestr = 'limitgrid'
+    cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teff}_{typestr}.csv")
+    if not os.path.exists(cachepath):
+        age_post = gyro_age_posterior(
+            Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+            verbose=False
+        )
+        df = pd.DataFrame({
+            'age_grid': age_grid,
+            'age_post': age_post
+        })
+        df.to_csv(cachepath)
+        print(f"Wrote {cachepath}")
+
+    df = pd.read_csv(cachepath)
+    age_grid = np.array(df.age_grid)
+    age_post = np.array(df.age_post)
+    age_peak = int(age_grid[np.argmax(age_post)])
+
+    if type(age_post[0]) != str:
+
+        cumulative = np.cumsum(age_post)
+
+        # normalize to 1
+        cumulative /= cumulative[-1]
+
+        # consider different possible estimators for age
+        fn = interp1d(cumulative, age_grid, kind='quadratic',
+                      bounds_error=True, fill_value=np.nan)
+
+        if age_peak >= 115:
+            age_med = int(fn(0.5))
+            age_lower = int(age_med - fn(0.5-0.34))
+            age_upper = int(fn(0.5+0.34) - age_med)
+            agestr = f"age = {age_med} +{age_upper} -{age_lower} myr"
+        elif age_peak < 115:
+            age_twosig = int(fn(0.9545))
+            age_threesig = int(fn(0.9973))
+            agestr = f"age < {age_twosig} myr (2σ), age < {age_threesig} myr (3σ)"
+        elif age_peak > 1000:
+            age_twosig = int(fn(1-0.9545))
+            age_threesig = int(fn(1-0.9973))
+            agestr = f"age > {age_twosig} myr (2σ), age > {age_threesig} myr (3σ)"
+
+        titlestr = (
+            f'Teff = {Teff} +- 50.  Prot = {Prot} +- 0.05.\n'
+            f'{agestr}'
+        )
+    else:
+        titlestr = (
+            f'Teff = {Teff} +- 50.  Prot = {Prot} +- 0.05.\n'
+            f'age = {age_peak}.'
+        )
+
+    outpath = os.path.join(outdir, f"age_posterior_Teff{Teff}_Prot{Protstr}.png")
+
+    #
+    # Plot it
+    #
+    plt.close("all")
+    set_style('clean')
+    fig, ax = plt.subplots()
+
+    ax.plot(age_grid, age_post, c='k', ls='-', lw=1)
+
+    if isinstance(titlestr, str):
+        ax.set_title(titlestr, fontsize='small')
+
+    ax.update({
+        'xlabel': 'Age [Myr]',
+        'ylabel': 'Relative probability',
+        #'ylim': [0,20],
+        #'xlim': [6500, 3600]
+    })
+
+    fig.savefig(outpath, dpi=350, bbox_inches='tight')
+
+
+def _given_params_plot_imshow(ax, xkey, ykey, df, vmin, i, j, map_row):
+
+    A_grid = np.array([1])
+    B_grid = np.array([0])
+    C_grid = np.arange(1.1, 5.1, 0.1)
+    C_y0_grid = np.arange(0.2, 0.9, 0.01)
+    logk0_grid = np.arange(-6,-3.9,0.1)
+    logk2_grid = np.arange(-8,-4.5,0.1)
+
+    #A_grid = np.arange(0.1, 1.6, 0.1)
+    #B_grid = np.array([0])
+    #C_grid = np.arange(0.5, 4.1, 0.1)
+    #C_y0_grid = np.arange(0.2, 0.9, 0.1)
+    #logk0_grid = np.arange(-6,-3.9,0.2)
+    #logk2_grid = np.arange(-8,-4.5,0.2)
+
+    #A_grid = np.arange(0.1, 2.1, 0.2)
+    #logB_grid = np.arange(-6, 2.0, 1.0)
+    #B_grid = np.array([0])
+    #C_grid = np.arange(0.5, 2.1, 0.2)
+    #C_y0_grid = np.arange(0.2, 0.9, 0.1)
+    #logk0_grid = np.arange(-6,-3.9,0.5)
+    #logk2_grid = np.arange(-8,-3.9,0.5)
+
+    grid_dict = {
+        "A":A_grid,
+        #"logB":logB_grid,
+        "B":B_grid,
+        "C":C_grid,
+        "C_y0":C_y0_grid,
+        "logk0":logk0_grid,
+        "logk2":logk2_grid
+    }
+
+    min_chisq = np.zeros((len(grid_dict[xkey]), len(grid_dict[ykey])))
+
+    for ix, x in enumerate(grid_dict[xkey]):
+        for iy, y in enumerate(grid_dict[ykey]):
+
+            sel = (
+                (df[xkey].round(1) == np.round(x,1)) &
+                (df[ykey].round(1) == np.round(y,1))
+            )
+
+            try:
+                min_chisq[ix, iy] = np.nanmin(df.loc[sel, 'chi_sq_red'])
+            except ValueError:
+                pass
+
+    if xkey != ykey:
+
+        norm = Normalize(vmin=vmin, vmax=vmin*2)
+        xmin, xmax = grid_dict[xkey].min(), grid_dict[xkey].max()
+        ymin, ymax = grid_dict[ykey].min(), grid_dict[ykey].max()
+        _p = ax.imshow(
+            min_chisq.T,
+            extent=(xmin, xmax, ymin, ymax),
+            aspect='auto',
+            cmap=cm.Greys,
+            origin='lower',
+            norm=norm
+        )
+
+        ax.scatter(
+            map_row[xkey], map_row[ykey], s=10, marker='*', c='k', zorder=10
+        )
+        ax.set_xlim((xmin, xmax))
+        ax.set_ylim((ymin, ymax))
+
+        ax.set_xlabel(xkey)
+        ax.set_ylabel(ykey)
+
+        showcolorbar = 0
+        if showcolorbar:
+            divider = make_axes_locatable(ax)
+            cax = divider.append_axes('right', size='5%', pad=0.05)
+            fig.colorbar(_p, cax=cax)
+
+    else:
+
+        pass
+        # NOTE might wanna step
+        #ax.plot(grid_dict[xkey], min_chisq[0,:])
+
+
+def plot_fit_gyro_model(outdir, modelid):
+    """
+    Corner plot showing chi^2 surface
+    """
+
+    Bstr = 'logB' if 'zeroB' not in modelid else 'B'
+
+    param_list = f"A,{Bstr},C,C_y0,logk0,logk2".split(',')
+    N_params = len(param_list)
+
+    csvpath = os.path.join(RESULTSDIR, "fit_gyro_model",
+                           f'{modelid}_concatenated_chi_squared_results.csv')
+
+    # from write-temp.py
+    df = pd.read_csv(
+        csvpath, names=f"A,{Bstr},C,C_y0,logk0,k1,l1,logk2,chi_sq_red,BIC".split(',')
+    )
+    df['logk1'] = np.log(df.k1)
+    df = df.drop(['k1'], axis='columns')
+
+    print(df.sort_values(by='chi_sq_red').head(n=20))
+
+    map_row = df.sort_values(by='chi_sq_red').head(n=1)
+    outpath = os.path.join(outdir, f"map_row_{modelid}.csv")
+    map_row.to_csv(outpath, index=False)
+    print(f"Wrote {outpath}")
+
+    vmin = np.nanmin(df.chi_sq_red)
+
+    # TODO sanity check...
+    DEBUG = 0
+    if DEBUG:
+        fig, ax = plt.subplots()
+        _given_params_plot_imshow(
+            ax, "A", "B", df, vmin, 0, 1, map_row
+        )
+        outpath = join(outdir, f'temp.png')
+        savefig(fig, outpath, dpi=400, writepdf=False)
+
+    # Make plot
+    set_style("clean")
+
+    # Each mean model gets its own (data-model) vs Teff axis
+    fig, axs = plt.subplots(figsize=(8,8), nrows=N_params-1, ncols=N_params-1)
+
+    for i in range(N_params):
+        for j in range(N_params):
+            xkey = param_list[i]
+            ykey = param_list[j]
+            if j>i:
+                _given_params_plot_imshow(
+                    axs[j-1,i], xkey, ykey, df, vmin, i, j, map_row
+                )
+
+    # clean up axes
+    for i in range(N_params-1):
+        for j in range(N_params-1):
+            if i < j:
+                axs[i,j].axis("off")
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
+    outpath = join(outdir, f'fit_gyro_model_{modelid}.png')
+    savefig(fig, outpath, dpi=400, writepdf=False)
