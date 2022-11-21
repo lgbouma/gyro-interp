@@ -1,0 +1,32 @@
+Planet Name & Cluster & Age & Planet radius & Orbital period & Provenance \\
+            &       & (Myr)  & $R_\Earth$   & d & \\ \hline
+AU Mic b & Beta Pictoris & 22 & 4.20 & 8.463 &  \citet{2020Natur.582..497P} \\
+AU Mic c & Beta Pictoris & 22 & 2.79 & 18.859 & \citet{Gilbert2022} \\ 
+DS Tuc A b & Tucana–Horologium	& 40 & 5.70	& 8.138 &  \citet{NewtonTESS2019} \\
+EPIC 211822797 b & Praesepe	& 700 & 2.20& 21.170 &  \citet{2017AJ....153...64M} \\
+HD 110082 b	& MELANGE-1	& 250 & 3.20	& 10.183 &  \cite{TofflemireTESS2021} \\
+HD 63433 b	& Ursa Major &  414	& 2.15 & 7.108 &  \citet{2020AJ....160..179M} \\
+HD 63433 c	& Ursa Major & 414	& 2.67 & 20.545 &  \citet{2020AJ....160..179M} \\
+HIP 67522 b	& Sco-Cen OB & 17 & 10.07 & 6.960 &  \cite{RizzutoTESS2020} \\
+K2-100 b & Praesepe	& 700 & 3.88 & 1.674 & \citet{Barrag2019} \\ 
+K2-101 b & Praesepe	& 700 & 2.00 & 14.677 &   \citet{2017AJ....153...64M} \\
+K2-102 b & Praesepe	& 700 & 1.30 & 9.916 &  \citet{2017AJ....153...64M} \\
+K2-104 b & Praesepe	& 700 & 1.90 & 1.974 &   \citet{2017AJ....153...64M}\\
+K2-136 b & Hyades & 700 & 0.99 & 7.975 &  \citet{2018AJ....155....4M} \\
+K2-136 c & Hyades & 700 & 2.91 & 17.307 &  \citet{2018AJ....155....4M} \\
+K2-136 d & Hyades & 700 & 1.45 & 25.575 &  \citet{2018AJ....155....4M} \\
+K2-25 b	& Hyades & 700 & 3.44 & 3.485 & \citet{Stefansson2020} \\ 
+K2-264 b & Praesepe	& 700 & 2.27 & 5.840 &  \citet{2018AJ....156..195R} \\
+K2-264 c & Praesepe	& 700 & 2.77 & 19.663 & \citet{2018AJ....156..195R} \\
+K2-33 b	& Upper Sco	& 9	& 5.04 & 5.425 & \citet{Mann2016} \\ 
+K2-95 b	& Praesepe	& 700 & 3.47 & 10.134 &  \citet{2016AJ....152..223O} \\
+Kepler-1627 b & Delta Lyra & 38 & 3.82 & 7.203 &  \citet{Bouma2022} \\ 
+TOI-1227 b & Epsilon Cha & 11 & 9.57 & 27.364 & \citet{2022AJ....163..156M} \\
+TOI-451 b & Pisces–Eridanus & 120 & 1.91 & 1.859 &  \citet{NewtonTESS2021} \\
+TOI-451 c & Pisces–Eridanus & 120 & 3.10 & 9.193 &  \citet{NewtonTESS2021} \\
+TOI-451 d & Pisces–Eridanus & 120 & 4.07 & 16.365 &  \citet{NewtonTESS2021} \\
+TOI-837 b & IC 2602 & 35 & 8.63 & 8.325 &  \citet{2020AJ....160..239B} \\
+V1298 Tau b	& Taurus & 23 & 10.27 & 24.140 & \cite{2019AJ....158...79D} \\
+V1298 Tau c	& Taurus & 23 & 5.59 & 8.250 & \cite{2019ApJ...885L..12D} \\
+V1298 Tau d	& Taurus & 23 & 6.41 & 12.403 & \cite{2019ApJ...885L..12D} \\
+V1298 Tau e	& Taurus & 23 & 8.74 & 60.000 &  \cite{2019ApJ...885L..12D} \\            
