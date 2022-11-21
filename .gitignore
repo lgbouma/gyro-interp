@@ -18,3 +18,4 @@ results/fit_gyro_model/*csv
 *.synctex.gz
 data/interim/*/*glu
 data/interim/*/*png
+results*
