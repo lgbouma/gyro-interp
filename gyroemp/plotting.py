@@ -27,12 +27,12 @@ from matplotlib.lines import Line2D
 
 from numpy import array as nparr
 
-from agetools.paths import DATADIR, RESULTSDIR
-from agetools.models import (
+from gyroemp.paths import DATADIR, RESULTSDIR
+from gyroemp.models import (
     reference_cluster_slow_sequence, slow_sequence, slow_sequence_residual
 )
-from agetools.getters import _get_cluster_Prot_Teff_data
-from agetools.gyro_posterior import gyro_age_posterior
+from gyroemp.getters import _get_cluster_Prot_Teff_data
+from gyroemp.gyro_posterior import gyro_age_posterior
 from scipy.interpolate import interp1d
 
 # pip install aesthetic

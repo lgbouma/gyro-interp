@@ -5,13 +5,13 @@ from gyroemp.plotting import _get_model_histogram
 
 def get_chi_sq_red(parameters, verbose=1):
 
-    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                           'Group-X', 'Praesepe', 'NGC-6811']
 
-    ages = [115, 300, 670]
+    ages = [120, 300, 670]
     cachedir = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio')
-    model_ids = ['115-Myr', '300-Myr', 'Praesepe']
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
 
     chi_sqs = []
     for age, model_id in zip(ages, model_ids):
@@ -31,7 +31,7 @@ def get_chi_sq_red(parameters, verbose=1):
         model_midpoints = teff_midway
         model_ratio = np.array( h_vals_fs / (h_vals_fs + h_vals_ss) )
 
-        if age in [115, 300]:
+        if age in [120, 300]:
             sigma = 0.1 # uniform weighting across the 7 bins
         elif age == 670:
             sigma = 0.01 # stricter requirement -- want it gonezo.

@@ -9,7 +9,7 @@ if not os.path.exists(PLOTDIR):
 outdir = PLOTDIR
 
 # figure 3 base sketch
-slow_seq_ages = [115, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500]
+slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500]
 ap.plot_prot_vs_teff(
     outdir, [], slow_seq_ages=slow_seq_ages
 )
@@ -32,7 +32,7 @@ ap.plot_prot_vs_teff(
     outdir, all_clusters
 )
 slow_seq_ages = list(np.arange(100, 1100, 100))
-slow_seq_ages = [115, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 ap.plot_prot_vs_teff(
     outdir, all_clusters, slow_seq_ages=slow_seq_ages
 )
@@ -41,14 +41,14 @@ ap.plot_prot_vs_teff(
 
 for poly_order in [2,3,4,5,6,7,8]:
     ap.plot_prot_vs_teff(outdir, all_clusters,
-                         model_ids=['115-Myr', '300-Myr', 'Praesepe', 'NGC-6811'],
+                         model_ids=['120-Myr', '300-Myr', 'Praesepe', 'NGC-6811'],
                          poly_order=poly_order)
 
 #
 # single clusters, with reference fits
 #
 list0 = ['Pleiades', 'Psc-Eri', 'Blanco-1', 'NGC-3532', 'Praesepe', 'NGC-6811']
-list1 = ['115-Myr', '115-Myr', '115-Myr', 'NGC-3532', 'Praesepe', 'NGC-6811']
+list1 = ['120-Myr', '120-Myr', '120-Myr', 'NGC-3532', 'Praesepe', 'NGC-6811']
 for reference_cluster, model_id in zip(list0, list1):
     for poly_order in [5,6,7]:
         ap.plot_prot_vs_teff(outdir, [reference_cluster], show_binaries=1,

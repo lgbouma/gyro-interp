@@ -31,34 +31,34 @@ def logistic(x, x0, L=1, k=0.1):
 def teff_0(age, bounds_error='nan'):
     """
     Midpoint of how the slow sequence taper moves with age
-    Defined for age from 115 to 1000 Myr.
+    Defined for age from 120 to 1000 Myr.
     """
 
     if isinstance(age, (float,int)):
         age = np.array([age])
 
     # units: kelvin per Myr
-    slope = (4500 - 4000) / (300 - 115)
+    slope = (4500 - 4000) / (300 - 120)
     c = 4500
 
-    teff0 = -(age-115) * slope + c
+    teff0 = -(age-120) * slope + c
 
-    bad = (age < 115) | (age > 1000)
+    bad = (age < 120) | (age > 1000)
     if bounds_error == 'nan':
         teff0[bad] = np.nan
     elif bounds_error == 'limit':
-        teff0[age < 115] = c
-        teff0[age > 1000] = -(1000-115) * slope + c
+        teff0[age < 120] = c
+        teff0[age > 1000] = -(1000-120) * slope + c
 
     return teff0
 
 def C_uniform(age, bounds_error='nan', y0=1/2):
     """
     How the third uniform component amplitude from slow_sequence_residual
-    decreases with age Full amplitude at 115 Myr.  `y0` amplitude by 300 Myr
+    decreases with age Full amplitude at 120 Myr.  `y0` amplitude by 300 Myr
     (eg. 1/2, 1/4, 1/6).
     Decreasing linearly thereafter, and floor at zero.  Defined for age from
-    115 to 1000 Myr.
+    120 to 1000 Myr.
     """
 
     if isinstance(age, (float,int)):
@@ -66,18 +66,18 @@ def C_uniform(age, bounds_error='nan', y0=1/2):
 
     # units: 1/Myr
     y1 = 1
-    slope = (y1 - y0) / (300 - 115)
+    slope = (y1 - y0) / (300 - 120)
     c = y1*1.
 
-    c_uniform = -(age-115) * slope + c
+    c_uniform = -(age-120) * slope + c
 
-    bad = (age < 115) | (age > 1000)
+    bad = (age < 120) | (age > 1000)
 
     if bounds_error == 'nan':
         c_uniform[bad] = np.nan
     elif bounds_error == 'limit':
-        c_uniform[age < 115] = c
-        c_uniform[age > 1000] = -(1000-115) * slope + c
+        c_uniform[age < 120] = c
+        c_uniform[age > 1000] = -(1000-120) * slope + c
 
     negative = c_uniform < 0
     c_uniform[negative] = 0
@@ -92,8 +92,8 @@ def slow_sequence_residual(
     y_grid=np.linspace(-14, 6, 1000),
     teff_grid = np.linspace(3800, 6200, 1001),
     poly_order=7, n=0.5,
-    reference_model_ids=['115-Myr', '300-Myr', 'Praesepe', 'NGC-6811'],
-    reference_ages=[115, 300, 670, 1000],
+    reference_model_ids=['120-Myr', '300-Myr', 'Praesepe', 'NGC-6811'],
+    reference_ages=[120, 300, 670, 1000],
     parameters='default',
     verbose=True,
     bounds_error='nan'):
@@ -126,7 +126,7 @@ def slow_sequence_residual(
 
         bounds_error: "nan" or "limit".  If "nan" then below the minimum
         reference age, returns nans.  If "limit", then return the limiting
-        residual distribution (usually that of the 115-Myr clusters, when below
+        residual distribution (usually that of the 120-Myr clusters, when below
         their sequence).
 
         parameters: (str) "default", or (dict) containing the parameters.  Keys
@@ -195,7 +195,7 @@ def slow_sequence_residual(
     gaussian_y = norm.pdf(y_grid, loc=0, scale=sigma_period)
 
     # Add the tapering cutoff over a Teff grid using a logistic function.
-    # Its midpoint, teff_0, is a function of time: at 115 Myr it is 4500 K.  By
+    # Its midpoint, teff_0, is a function of time: at 120 Myr it is 4500 K.  By
     # 300 Myr it is 4000 K, and at older times it goes below 3800 K.
     teff_logistic_taper = logistic(
         teff_grid, teff_0(age, bounds_error=bounds_error), L=1, k=k0
@@ -268,9 +268,9 @@ def slow_sequence_residual(
 def slow_sequence(
     Teff, age, poly_order=7, n=0.5,
     reference_model_ids=[
-        '115-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
+        '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
     ],
-    reference_ages=[115, 300, 670, 1000, 2600],
+    reference_ages=[120, 300, 670, 1000, 2600],
     verbose=True,
     bounds_error='nan'):
     """
@@ -296,9 +296,9 @@ def slow_sequence(
 
         reference_model_ids: list including any of
             ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-            'Praesepe', 'NGC-6811', '115-Myr', '300-Myr', '2.6-Gyr',
+            'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr',
             'NGC-6819', 'Ruprecht-147']
-        The sensible default is set.  115-Myr and 300-Myr are concenations of
+        The sensible default is set.  120-Myr and 300-Myr are concenations of
         the relevant clusters.
 
         reference_ages: iterable of ages corresponding to reference_model_ids.
@@ -430,8 +430,8 @@ def reference_cluster_slow_sequence(
 
         model_id (str): any of
             ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-            'Praesepe', 'NGC-6811', '115-Myr', '300-Myr']
-        where '115-Myr' will concatenate of Pleiades, Blanco-1, and
+            'Praesepe', 'NGC-6811', '120-Myr', '300-Myr']
+        where '120-Myr' will concatenate of Pleiades, Blanco-1, and
         Psc-Eri, and '300-Myr' will concatenate NGC-3532 and Group-X.
 
         poly_order (int): integer for the polynomial fit.
@@ -442,7 +442,7 @@ def reference_cluster_slow_sequence(
 
     allowed_model_ids = [
         'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-        'NGC-6811', '115-Myr', '300-Myr', 'NGC-6819', 'Ruprecht-147', '2.6-Gyr'
+        'NGC-6811', '120-Myr', '300-Myr', 'NGC-6819', 'Ruprecht-147', '2.6-Gyr'
     ]
     if model_id not in allowed_model_ids:
         raise ValueError(f"Got model_id {model_id} - not implemented!")
@@ -458,7 +458,7 @@ def reference_cluster_slow_sequence(
             'NGC-6811', 'NGC-6819', 'Ruprecht-147'
         ]
         combined_cluster_ids = {
-            '115-Myr': ['Pleiades', 'Blanco-1', 'Psc-Eri'],
+            '120-Myr': ['Pleiades', 'Blanco-1', 'Psc-Eri'],
             '300-Myr': ['NGC-3532', 'Group-X'],
             '2.6-Gyr': ['NGC-6819', 'Ruprecht-147'],
         }
@@ -523,5 +523,5 @@ if __name__ == "__main__":
     # debugging
     _ = reference_cluster_slow_sequence([4321], 'Pleiades')
     print(_)
-    _ = reference_cluster_slow_sequence([4321], '115-Myr')
+    _ = reference_cluster_slow_sequence([4321], '120-Myr')
     print(_)

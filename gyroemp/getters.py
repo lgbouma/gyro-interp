@@ -68,16 +68,16 @@ def _get_cluster_Prot_Teff_data(N_colors=4):
     # contents:
     # prot/teff dataframe, RGB color, label, zorder
     d = {
-        'Pleiades': [df_plei, cmap[0], '115 Myr Pleiades', 2],
-        'Blanco-1': [df_bla1, cmap[0], '115 Myr Blanco-1', 2],
-        'Psc-Eri': [df_psceri, cmap[0], '115 Myr Psc-Eri', 2],
+        'Pleiades': [df_plei, cmap[0], '120 Myr Pleiades', 2],
+        'Blanco-1': [df_bla1, cmap[0], '120 Myr Blanco-1', 2],
+        'Psc-Eri': [df_psceri, cmap[0], '120 Myr Psc-Eri', 2],
         'NGC-3532': [df_3532, cmap[1], '300 Myr NGC-3532', 4],
         'Group-X':  [df_grpx, cmap[1], '300 Myr Group-X', 4],
         'Praesepe': [df_prae, cmap[2], '670 Myr Praesepe', 6],
         'NGC-6811': [df_6811, cmap[3], '1 Gyr NGC-6811', 8],
         'NGC-6819': [df_6819, cmap[N_colors-1], '2.5 Gyr NGC-6819', 10],
         'Ruprecht-147': [df_r147, cmap[N_colors-1], '2.7 Gyr Rup-147', 10],
-        '115-Myr': [None, cmap[0], '', None],
+        '120-Myr': [None, cmap[0], '', None],
         '300-Myr': [None, cmap[1], '', None],
         '2.6-Gyr': [None, cmap[N_colors-1], '', None],
     }

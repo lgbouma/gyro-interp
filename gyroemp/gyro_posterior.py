@@ -21,7 +21,7 @@ import multiprocessing as mp
 
 def parallel_gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
-    age_grid=np.linspace(0, 2700, 500),
+    age_grid=np.linspace(0, 2600, 500),
     verbose=True,
     bounds_error='limit',
     N_grid=256,
@@ -54,12 +54,12 @@ def parallel_gyro_age_posterior(
     #
     # special return cases
     #
-    Prot_pleiades = slow_sequence(Teff, 115)
+    Prot_pleiades = slow_sequence(Teff, 120)
     Prot_ngc6811 = slow_sequence(Teff, 1000)
     Prot_rup147 = slow_sequence(Teff, 2600)
 
     if Prot < Prot_pleiades and Teff > 5000 and bounds_error == 'nan':
-        return '<115 Myr'
+        return '<120 Myr'
     if Prot < Prot_pleiades and Teff <= 5000 and bounds_error == 'nan':
         return '<300 Myr'
     #if Prot > Prot_ngc6811 and bounds_error == 'nan':
@@ -187,7 +187,7 @@ def gyro_age_posterior_worker(task):
 
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
-    age_grid=np.linspace(0, 2700, 500),
+    age_grid=np.linspace(0, 2600, 500),
     verbose=False,
     bounds_error='limit',
     N_grid=256
@@ -207,7 +207,7 @@ def gyro_age_posterior(
 
         age_grid: grid over which the age posterior is evaluated, units are
         fixed to be Myr.  A good choice if bounds_error == 'limit' is
-        np.linspace(0, 2700, 500).
+        np.linspace(0, 2600, 500).
 
         bounds_error: "nan" or "limit".  If "nan" ages below the minimum
         reference age return strings as described below.  If "limit", they
@@ -222,7 +222,7 @@ def gyro_age_posterior(
 
     Returns:
         * NaN if Teff outside [3800, 6200] K
-        * String of "<115 Myr" if Prot and Teff put the star below the Pleiades
+        * String of "<120 Myr" if Prot and Teff put the star below the Pleiades
           sequence, and the star is hotter than 5000 K.
         * String of "<300 Myr" if Prot and Teff put the star below the Pleiades
           sequence, and the star is cooler than 5000 K.
@@ -246,12 +246,12 @@ def gyro_age_posterior(
     #
     # special return cases
     #
-    Prot_pleiades = slow_sequence(Teff, 115)
+    Prot_pleiades = slow_sequence(Teff, 120)
     Prot_ngc6811 = slow_sequence(Teff, 1000)
     Prot_rup147 = slow_sequence(Teff, 2600)
 
     if Prot < Prot_pleiades and Teff > 5000 and bounds_error == 'nan':
-        return '<115 Myr'
+        return '<120 Myr'
     if Prot < Prot_pleiades and Teff <= 5000 and bounds_error == 'nan':
         return '<300 Myr'
     #if Prot > Prot_ngc6811 and bounds_error == 'nan':
@@ -291,5 +291,5 @@ if __name__ == "__main__":
     # testing
     Prot = 6
     Teff = 5500
-    age_grid = np.linspace(115, 1000, 50)
+    age_grid = np.linspace(120, 1000, 50)
     age_post = gyro_age_posterior(Prot, Teff, age_grid=age_grid)
