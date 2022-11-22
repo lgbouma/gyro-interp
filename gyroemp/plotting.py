@@ -1517,7 +1517,7 @@ def plot_empirical_limits_of_gyrochronology(
     # max width is 3.5 for single column
     if 'both' in imagestr:
         from matplotlib import gridspec
-        figsize = (6.9, 5)
+        figsize = (6.9, 4)
         fig = plt.figure(figsize=figsize)
         gs = gridspec.GridSpec(1,3, width_ratios=[4, 4, 0.2])
         axs = [plt.subplot(gs[0]), plt.subplot(gs[1]), plt.subplot(gs[2])]
@@ -1621,7 +1621,7 @@ def plot_empirical_limits_of_gyrochronology(
                 Teff, slow_seq_age, poly_order=poly_order
             )
             if slow_seq_age % 500 == 0:
-                linewidth = 2
+                linewidth = 1.5
                 linestyle = '-'
             else:
                 linewidth = 0.5
@@ -1637,7 +1637,7 @@ def plot_empirical_limits_of_gyrochronology(
                 Teff, slow_seq_age, poly_order=poly_order
             )
             if slow_seq_age % 500 == 0:
-                linewidth = 2
+                linewidth = 1.5
                 linestyle = '-'
             else:
                 linewidth = 0.5
