@@ -6,6 +6,7 @@ Catch-all file for plotting scripts.  Contents:
     plot_sub_praesepe_selection_cut
     plot_slow_sequence_residual
     plot_age_posterior
+    plot_age_posteriors
     plot_cdf_fast_slow_ratio
     plot_data_vs_model_prot
     plot_fit_gyro_model
@@ -38,6 +39,7 @@ from gyroemp.models import (
     reference_cluster_slow_sequence, slow_sequence, slow_sequence_residual
 )
 from gyroemp.getters import _get_cluster_Prot_Teff_data
+from gyroemp.helpers import given_grid_post_get_summary_statistics
 from gyroemp.gyro_posterior import gyro_age_posterior
 from scipy.interpolate import interp1d
 
@@ -1054,10 +1056,96 @@ def plot_sub_praesepe_selection_cut(mdf5, poly_order=7):
     fig.savefig(outpath, dpi=350, bbox_inches='tight')
 
 
+def plot_age_posteriors(
+    Prots, Teff, outdir,
+    age_grid=np.linspace(0, 2600, 500),
+    bounds_error='limit'
+    ):
+
+    #
+    # Calculate the age posterior
+    #
+
+    dfs, summary_dfs = [], []
+    for Prot in Prots:
+        Protstr = str(Prot).zfill(2)
+        if bounds_error == 'nan':
+            typestr = 'defaultgrid'
+        elif bounds_error == 'limit':
+            typestr = 'limitgrid'
+        cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teff}_{typestr}.csv")
+        if not os.path.exists(cachepath):
+            age_post = gyro_age_posterior(
+                Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                verbose=False
+            )
+            df = pd.DataFrame({
+                'age_grid': age_grid,
+                'age_post': age_post
+            })
+            df.to_csv(cachepath)
+            print(f"Wrote {cachepath}")
+
+        df = pd.read_csv(cachepath)
+        age_grid = np.array(df.age_grid)
+        age_post = np.array(df.age_post)
+
+        d = given_grid_post_get_summary_statistics(age_grid, age_post)
+        d['Prot'] = Prot
+        d['Teff'] = Teff
+        summary_df = pd.DataFrame(d, index=[0])
+
+        dfs.append(df)
+        summary_dfs.append(summary_df)
+
+    #
+    # make plot
+    #
+
+    outpath = os.path.join(
+        outdir,
+        f"age_posteriors_Teff{str(Teff)}_Prot{'_'.join(np.array(Prots).astype(str))}.png"
+    )
+
+    #
+    # Plot it
+    #
+    plt.close("all")
+    set_style('clean')
+    fig, ax = plt.subplots()
+
+    N_colors = len(Prots)
+    cmap = cm.viridis(np.linspace(0,1,N_colors))
+
+    for ix, Prot in enumerate(Prots):
+
+        df = dfs[ix]
+        color = cmap[ix]
+
+        label = r"P$_{\rm rot}=$"+f"{Prot:.1f}d"
+
+        ax.plot(df.age_grid, 1e3*df.age_post, color=color, ls='-', lw=1,
+                label=label)
+
+    ax.legend(loc='best', fontsize='x-small', handletextpad=0.1,
+              borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+              frameon=False)
+
+    ax.update({
+        'xlabel': 'Age [Myr]',
+        'ylabel': 'Probability density ($10^3$ Myr$^{-1}$)',
+        'xlim': [0, 1700],
+        'title': f'Teff {Teff}K'
+    })
+
+    fig.savefig(outpath, dpi=350, bbox_inches='tight')
+
+
+
 def plot_age_posterior(
     Prot, Teff, outdir,
     age_grid=np.linspace(0, 2600, 500),
-    bounds_error='nan'
+    bounds_error='limit'
     ):
 
     #
