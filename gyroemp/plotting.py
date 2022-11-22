@@ -9,6 +9,7 @@ Catch-all file for plotting scripts.  Contents:
     plot_cdf_fast_slow_ratio
     plot_data_vs_model_prot
     plot_fit_gyro_model
+    plot_empirical_limits_of_gyrochronology
 
 Helpers:
     _given_ax_append_spectral_types
@@ -18,16 +19,21 @@ Helpers:
         _plot_prot_vs_teff_residual
 """
 import os
+from glob import glob
 from os.path import join
+from itertools import product
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
+
+import matplotlib as mpl
 from matplotlib import cm
 from matplotlib.colors import LogNorm, Normalize
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 from numpy import array as nparr
 
-from gyroemp.paths import DATADIR, RESULTSDIR
+from gyroemp.paths import DATADIR, RESULTSDIR, LOCALDIR
 from gyroemp.models import (
     reference_cluster_slow_sequence, slow_sequence, slow_sequence_residual
 )
@@ -41,7 +47,9 @@ from aesthetic.plot import set_style, savefig
 ###########
 # helpers #
 ###########
-def _given_ax_append_spectral_types(ax):
+def _given_ax_append_spectral_types(
+    ax,
+    _sptypes=['F2V','F5V','G2V','K0V','K5V','M0V','M3V']):
     # Append SpTypes (ignoring reddening)
     from cdips.utils.mamajek import get_SpType_Teff_correspondence
 
@@ -49,7 +57,7 @@ def _given_ax_append_spectral_types(ax):
     xlim = ax.get_xlim()
     getter = get_SpType_Teff_correspondence
     sptypes, xtickvals = getter(
-        ['F2V','F5V','G2V','K0V','K5V','M0V','M3V']
+        _sptypes
     )
     print(sptypes)
     print(xtickvals)
@@ -847,8 +855,8 @@ def _plot_slow_sequence_residual(
 
     if showcolorbar:
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes('right', size='5%', pad=0.05)
-        fig.colorbar(_p, cax=cax)
+        cax = divider.append_axes('right', size='5%', pad=0.08)
+        fig.colorbar(_p, cax=cax, extend='both')
 
     return resid_Teffs, teff_grid
 
@@ -1348,4 +1356,150 @@ def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
     fig.tight_layout(h_pad=0.4, w_pad=0.4)
 
     outpath = join(outdir, f'fit_gyro_model_{modelid}.png')
+    savefig(fig, outpath, dpi=400, writepdf=False)
+
+
+def plot_empirical_limits_of_gyrochronology(
+    outdir, imagestr, poly_order=7, slow_seq_ages=None):
+    """
+    Map out precision of gyro posteriors as a function of Prot and Teff.
+
+    poly_order: integer polynomial order for the reference cluster mean model.
+    Default is 7, which seems to do the best job across all clusters.
+
+    slow_seq_ages: optional list of ages, in Myr, for slow sequence models
+    to underplot (e.g., [120, 150, 200, 250]).
+    """
+
+    #
+    # Get data
+    #
+
+    # from run_prot_teff_grid.py
+    teffmin, teffmax = 3800, 6200
+    protmin, protmax = 0, 23
+    Teff_grid = np.arange(teffmin, teffmax+50, 50)
+    Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
+    N_Teff = len(Teff_grid)
+    N_Prot = len(Prot_grid)
+
+    typestr = 'limitgrid'
+    cachedir = os.path.join(LOCALDIR, "gyroemp", "prot_teff_grid")
+    _fpaths = [
+        os.path.join(
+            cachedir,
+            f"Prot{float(Prot):.2f}_Teff{float(Teff):.1f}_{typestr}.csv"
+        )
+        for Prot, Teff in product(Prot_grid, Teff_grid)
+    ]
+    fpaths = [f for f in _fpaths if os.path.exists(f)]
+
+    df = pd.concat(( pd.read_csv(f) for f in fpaths ))
+
+    p1sig = np.zeros((N_Teff, N_Prot))
+    m1sig = np.zeros((N_Teff, N_Prot))
+
+    for ix, x in enumerate(Teff_grid):
+        for iy, y in enumerate(Prot_grid):
+
+            sel = (
+                (df['Teff'].round(2) == np.round(x,2)) &
+                (df['Prot'].round(3) == np.round(y,3))
+            )
+
+            if 'abs' not in imagestr:
+                p1sig[ix, iy] = df.loc[sel, '+1sigmapct']
+                m1sig[ix, iy] = df.loc[sel, '-1sigmapct']
+            else:
+                p1sig[ix, iy] = df.loc[sel, '+1sigma']
+                m1sig[ix, iy] = df.loc[sel, '-1sigma']
+
+            if y > slow_sequence(
+                x, 2600, poly_order=poly_order
+            ):
+                p1sig[ix, iy] = 99999
+                m1sig[ix, iy] = 99999
+
+    # Make plot
+    set_style("science")
+
+    fig, ax = plt.subplots()
+
+    if 'abs' not in imagestr:
+        norm = Normalize(vmin=0., vmax=1)
+    else:
+        norm = LogNorm(vmin=100, vmax=1000)
+        norm = Normalize(vmin=100, vmax=500)
+
+    if 'plus' in imagestr:
+        img = p1sig.T
+    elif 'minus' in imagestr:
+        img = m1sig.T
+
+    #viridis = mpl.colormaps['plasma'].resampled(256)
+    cmap = mpl.colormaps['plasma']
+    _cmap = cmap(np.arange(0,cmap.N))
+    white = np.array([256/256, 256/256, 256/256, 1])
+    _cmap[-1, :] = white
+    newcmp = ListedColormap(_cmap)
+
+    _p = ax.imshow(
+        img,
+        extent=(teffmin, teffmax, protmin, protmax),
+        aspect='auto',
+        #cmap=cm.plasma,
+        cmap=newcmp,
+        origin='lower',
+        norm=norm
+    )
+
+    cb = fig.colorbar(_p, extend='both')
+    if 'plus' in imagestr:
+        labelstr = "+"
+    elif 'minus' in imagestr:
+        labelstr = "-"
+    if "abs" not in imagestr:
+        cb.set_label(labelstr + '$\sigma_t/t$')
+    elif "abs" in imagestr:
+        cb.set_label(labelstr + '$\sigma_t$ [Myr]')
+
+    ax.set_ylim([0, 23])
+    ax.set_yticks([0, 5, 10, 15, 20])
+
+    if isinstance(slow_seq_ages, list):
+        Teff = np.linspace(3800, 6200, 100)
+        for slow_seq_age in slow_seq_ages:
+            Prot = slow_sequence(
+                Teff, slow_seq_age, poly_order=poly_order
+            )
+            if slow_seq_age % 500 == 0:
+                linewidth = 2
+                linestyle = '-'
+            else:
+                linewidth = 0.5
+                linestyle = ':'
+            ax.plot(
+                Teff, Prot, color='lightgray', linewidth=linewidth,
+                linestyle=linestyle, zorder=999
+            )
+
+    ax.set_xlabel("Effective Temperature [K]")
+    ax.set_ylabel("Rotation Period [days]")
+
+    ax.set_xlim([6200, 3800])
+    ax.set_xticks([6000, 5000, 4000])
+    minor_xticks = np.arange(3800, 6300, 100)[::-1]
+    ax.set_xticks(minor_xticks, minor=True)
+
+    _sptypes=['G2V','K0V','K5V','M0V']
+    _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
+
+    basename = "empirical_limits_of_gyrochronology"
+    s = ''
+    if isinstance(slow_seq_ages, list):
+        slow_seq_ages = np.array(slow_seq_ages).astype(str)
+        m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
+
+    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}.png')
+
     savefig(fig, outpath, dpi=400, writepdf=False)
