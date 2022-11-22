@@ -1112,31 +1112,34 @@ def plot_age_posteriors(
     #
     plt.close("all")
     set_style('clean')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(3.3, 2))
 
     N_colors = len(Prots)
-    cmap = cm.viridis(np.linspace(0,1,N_colors))
+    #cmap = cm.viridis(np.linspace(0,1,N_colors))
+    #cmap = cm.Spectral(np.linspace(0,1,N_colors))
+    cmap = cm.cividis(np.linspace(0,1,N_colors))
 
     for ix, Prot in enumerate(Prots):
 
         df = dfs[ix]
         color = cmap[ix]
 
-        label = r"P$_{\rm rot}=$"+f"{Prot:.1f}d"
+        #label = r"P$_{\rm rot}=$"+f"{Prot:.1f}d"
+        label = f"{Prot:.1f}"+"$\,$d"
 
         ax.plot(df.age_grid, 1e3*df.age_post, color=color, ls='-', lw=1,
                 label=label)
 
-    ax.legend(loc='best', fontsize='x-small', handletextpad=0.1,
+    ax.legend(loc='best', fontsize='small', handletextpad=0.2,
               borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
               frameon=False)
 
     ax.update({
         'xlabel': 'Age [Myr]',
-        'ylabel': 'Probability density ($10^3$ Myr$^{-1}$)',
+        'ylabel': 'Probability (Myr$^{-1}$)',
         'xlim': [0, 1700],
-        'title': f'Teff {Teff}K'
     })
+    ax.set_title(f'{Teff}'+'$\,$K', pad=-4)
 
     fig.savefig(outpath, dpi=350, bbox_inches='tight')
 
@@ -1234,7 +1237,7 @@ def plot_age_posterior(
 
     ax.update({
         'xlabel': 'Age [Myr]',
-        'ylabel': 'Probability density (Myr$^{-1}$)',
+        'ylabel': 'Probability (Myr$^{-1}$)',
         'xlim': [0, 1500]
     })
 
