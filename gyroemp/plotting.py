@@ -1428,8 +1428,8 @@ def plot_empirical_limits_of_gyrochronology(
     if 'abs' not in imagestr:
         norm = Normalize(vmin=0., vmax=1)
     else:
-        norm = LogNorm(vmin=100, vmax=1000)
-        norm = Normalize(vmin=100, vmax=500)
+        norm = LogNorm(vmin=50, vmax=500)
+        #norm = Normalize(vmin=50, vmax=500)
 
     if 'plus' in imagestr:
         img = p1sig.T
@@ -1440,7 +1440,9 @@ def plot_empirical_limits_of_gyrochronology(
     cmap = mpl.colormaps['plasma']
     _cmap = cmap(np.arange(0,cmap.N))
     white = np.array([256/256, 256/256, 256/256, 1])
+    green = np.array([0/256, 256/256, 0/256, 1])
     _cmap[-1, :] = white
+    #_cmap[0, :] = green
     newcmp = ListedColormap(_cmap)
 
     _p = ax.imshow(
@@ -1461,7 +1463,10 @@ def plot_empirical_limits_of_gyrochronology(
     if "abs" not in imagestr:
         cb.set_label(labelstr + '$\sigma_t/t$')
     elif "abs" in imagestr:
-        cb.set_label(labelstr + '$\sigma_t$ [Myr]')
+        cb.set_label(labelstr + '1$\sigma_t$ [Myr]')
+        cb.set_ticks([50, 100, 200, 400, 500])
+        cb.set_ticklabels([50, 100, 200, 400, 500])
+        cb.ax.minorticks_off()
 
     ax.set_ylim([0, 23])
     ax.set_yticks([0, 5, 10, 15, 20])
