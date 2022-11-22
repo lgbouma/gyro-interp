@@ -1505,13 +1505,21 @@ def plot_empirical_limits_of_gyrochronology(
             if y > slow_sequence(
                 x, 2600, poly_order=poly_order
             ):
-                p1sig[ix, iy] = 99999
-                m1sig[ix, iy] = 99999
+                p1sig[ix, iy] = np.nan
+                m1sig[ix, iy] = np.nan
 
     # Make plot
     set_style("science")
 
-    fig, ax = plt.subplots()
+    # max width is 3.5 for single column
+    if 'both' in imagestr:
+        from matplotlib import gridspec
+        figsize = (6.9, 5)
+        fig = plt.figure(figsize=figsize)
+        gs = gridspec.GridSpec(1,3, width_ratios=[4, 4, 0.2])
+        axs = [plt.subplot(gs[0]), plt.subplot(gs[1]), plt.subplot(gs[2])]
+    else:
+        fig, ax = plt.subplots()
 
     if 'abs' not in imagestr:
         norm = Normalize(vmin=0., vmax=1)
@@ -1523,31 +1531,67 @@ def plot_empirical_limits_of_gyrochronology(
         img = p1sig.T
     elif 'minus' in imagestr:
         img = m1sig.T
+    elif 'both' in imagestr:
+        img0 = p1sig.T
+        img1 = m1sig.T
 
     #viridis = mpl.colormaps['plasma'].resampled(256)
     cmap = mpl.colormaps['plasma']
     _cmap = cmap(np.arange(0,cmap.N))
-    white = np.array([256/256, 256/256, 256/256, 1])
-    green = np.array([0/256, 256/256, 0/256, 1])
-    _cmap[-1, :] = white
+
+    # # WHITE TOP OUTLIER
+    # white = np.array([256/256, 256/256, 256/256, 1])
+    # green = np.array([0/256, 256/256, 0/256, 1])
+    # _cmap[-1, :] = white
+
     #_cmap[0, :] = green
     newcmp = ListedColormap(_cmap)
 
-    _p = ax.imshow(
-        img,
-        extent=(teffmin, teffmax, protmin, protmax),
-        aspect='auto',
-        #cmap=cm.plasma,
-        cmap=newcmp,
-        origin='lower',
-        norm=norm
-    )
+    if 'minus' in imagestr or 'plus' in imagestr:
+        _p = ax.imshow(
+            img,
+            extent=(teffmin, teffmax, protmin, protmax),
+            aspect='auto',
+            cmap=newcmp,
+            origin='lower',
+            norm=norm
+        )
+    elif 'both' in imagestr:
+        _ = axs[0].imshow(
+            img0,
+            extent=(teffmin, teffmax, protmin, protmax),
+            aspect='auto',
+            cmap=newcmp,
+            origin='lower',
+            norm=norm
+        )
+        axs[0].text(0.03, 0.97, '+1$\sigma_t$', transform=axs[0].transAxes,
+                    ha='left', va='top', color='k')
 
-    cb = fig.colorbar(_p, extend='both')
+        _p = axs[1].imshow(
+            img1,
+            extent=(teffmin, teffmax, protmin, protmax),
+            aspect='auto',
+            cmap=newcmp,
+            origin='lower',
+            norm=norm
+        )
+        axs[1].text(0.03, 0.97, '-1$\sigma_t$', transform=axs[1].transAxes,
+                    ha='left', va='top', color='k')
+
+    if 'both' not in imagestr:
+        cb = fig.colorbar(_p, extend='both')
+    else:
+        # left/bottom/width/height, fractions of figwidth/height
+        #cax = fig.add_axes([0.95, 0.1, 0.03, 0.8])
+        cb = fig.colorbar(_p, cax=axs[-1], extend='both')
+
     if 'plus' in imagestr:
         labelstr = "+"
     elif 'minus' in imagestr:
         labelstr = "-"
+    elif 'both' in imagestr:
+        labelstr = '$\pm$'
     if "abs" not in imagestr:
         cb.set_label(labelstr + '$\sigma_t/t$')
     elif "abs" in imagestr:
@@ -1556,10 +1600,18 @@ def plot_empirical_limits_of_gyrochronology(
         cb.set_ticklabels([50, 100, 200, 400, 500])
         cb.ax.minorticks_off()
 
-    ax.set_ylim([0, 23])
-    ax.set_yticks([0, 5, 10, 15, 20])
+    if 'plus' in imagestr or 'minus' in imagestr:
+        ax.set_ylim([0, 23])
+        ax.set_yticks([0, 5, 10, 15, 20])
+    elif 'both' in imagestr:
+        for ax in axs[:-1]:
+            ax.set_ylim([0, 23])
+            ax.set_yticks([0, 5, 10, 15, 20])
+        axs[1].set_yticklabels([])
 
-    if isinstance(slow_seq_ages, list):
+    if isinstance(slow_seq_ages, list) and (
+        'plus' in imagestr or 'minus' in imagestr
+    ):
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
@@ -1575,17 +1627,47 @@ def plot_empirical_limits_of_gyrochronology(
                 Teff, Prot, color='lightgray', linewidth=linewidth,
                 linestyle=linestyle, zorder=999
             )
+    if isinstance(slow_seq_ages, list) and 'both' in imagestr:
+        Teff = np.linspace(3800, 6200, 100)
+        for slow_seq_age in slow_seq_ages:
+            Prot = slow_sequence(
+                Teff, slow_seq_age, poly_order=poly_order
+            )
+            if slow_seq_age % 500 == 0:
+                linewidth = 2
+                linestyle = '-'
+            else:
+                linewidth = 0.5
+                linestyle = ':'
+            for ax in axs[:-1]:
+                ax.plot(
+                    Teff, Prot, color='lightgray', linewidth=linewidth,
+                    linestyle=linestyle, zorder=999
+                )
 
-    ax.set_xlabel("Effective Temperature [K]")
-    ax.set_ylabel("Rotation Period [days]")
+    if 'plus' in imagestr or 'minus' in imagestr:
+        ax.set_xlabel("Effective Temperature [K]")
+        ax.set_ylabel("Rotation Period [days]")
 
-    ax.set_xlim([6200, 3800])
-    ax.set_xticks([6000, 5000, 4000])
-    minor_xticks = np.arange(3800, 6300, 100)[::-1]
-    ax.set_xticks(minor_xticks, minor=True)
+        ax.set_xlim([6200, 3800])
+        ax.set_xticks([6000, 5000, 4000])
+        minor_xticks = np.arange(3800, 6300, 100)[::-1]
+        ax.set_xticks(minor_xticks, minor=True)
 
-    _sptypes=['G2V','K0V','K5V','M0V']
-    _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
+        _sptypes=['G2V','K0V','K5V','M0V']
+        _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
+    elif 'both' in imagestr:
+        axs[0].set_ylabel("Rotation Period [days]")
+        for ax in axs[:-1]:
+            ax.set_xlabel("Effective Temperature [K]")
+
+            ax.set_xlim([6200, 3800])
+            ax.set_xticks([6000, 5000, 4000])
+            minor_xticks = np.arange(3800, 6300, 100)[::-1]
+            ax.set_xticks(minor_xticks, minor=True)
+
+            _sptypes=['G2V','K0V','K5V','M0V']
+            _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
 
     basename = "empirical_limits_of_gyrochronology"
     s = ''
@@ -1594,5 +1676,8 @@ def plot_empirical_limits_of_gyrochronology(
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
 
     outpath = join(outdir, f'{imagestr}_{basename}{s}{m}.png')
+
+    if 'both' in imagestr:
+        fig.tight_layout(h_pad=0.4, w_pad=0.4)
 
     savefig(fig, outpath, dpi=400, writepdf=False)

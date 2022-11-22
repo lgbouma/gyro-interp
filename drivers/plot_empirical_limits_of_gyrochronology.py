@@ -16,6 +16,10 @@ slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
                  2300, 2400, 2500, 2600]
 
 ap.plot_empirical_limits_of_gyrochronology(
+    outdir, 'both_abs', slow_seq_ages=slow_seq_ages
+)
+assert 0
+ap.plot_empirical_limits_of_gyrochronology(
     outdir, 'plus_abs', slow_seq_ages=slow_seq_ages
 )
 ap.plot_empirical_limits_of_gyrochronology(
