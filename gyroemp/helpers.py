@@ -4,6 +4,7 @@ Reusable functions.
     left_merge
     prepend_colstr
     given_dr2_get_dr3_dataframes
+    given_grid_post_get_summary_statistics
 """
 import os
 import numpy as np, pandas as pd
@@ -93,3 +94,49 @@ def given_dr2_get_dr3_dataframes(dr2_source_ids, runid_dr2, runid_dr3,
     s_dr3 = s_dr3[selcols]
 
     return gdf, s_dr3
+
+
+def given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
+    """
+    Given an age posterior over a grid, determine summary statistics (peak
+    location, +/-sigma intervals, etc).  Do this by sampling `N` times, with
+    replacement, from the posterior, weighting by the probability.
+
+    Returns:
+        dictionary containing the summary statistics.
+    """
+    age_peak = int(age_grid[np.argmax(age_post)])
+
+    df = pd.DataFrame({'age':age_grid, 'p':age_post})
+    sample_df = df.sample(n=N, replace=True, weights=df.p)
+
+    one_sig = 68.27/2
+    two_sig = 95.45/2
+    three_sig = 99.73/2
+
+    pct_50 = np.nanpercentile(sample_df.age, 50)
+
+    p1sig = np.nanpercentile(sample_df.age, 50+one_sig) - pct_50
+    m1sig = pct_50 - np.nanpercentile(sample_df.age, 50-one_sig)
+
+    p2sig = np.nanpercentile(sample_df.age, 50+two_sig) - pct_50
+    m2sig = pct_50 - np.nanpercentile(sample_df.age, 50-two_sig)
+
+    p3sig = np.nanpercentile(sample_df.age, 50+three_sig) - pct_50
+    m3sig = pct_50 - np.nanpercentile(sample_df.age, 50-three_sig)
+
+    outdict = {
+        'median': np.round(pct_50,2),
+        'peak': np.round(age_peak,2),
+        'mean': np.round(np.nanmean(sample_df.age),2),
+        '+1sigma': np.round(p1sig,2),
+        '-1sigma': np.round(m1sig,2),
+        '+2sigma': np.round(p2sig,2),
+        '-2sigma': np.round(m2sig,2),
+        '+3sigma': np.round(p3sig,2),
+        '-3sigma': np.round(m3sig,2),
+        '+1sigmapct': np.round(p1sig/pct_50,2),
+        '-1sigmapct': np.round(m1sig/pct_50,2),
+    }
+
+    return outdict
