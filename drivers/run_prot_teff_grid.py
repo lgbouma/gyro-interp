@@ -17,7 +17,7 @@ from gyroemp.helpers import given_grid_post_get_summary_statistics
 
 def get_age_posterior_worker(task):
 
-    Prot, Teff, age_grid, outdir = task
+    Prot, Teff, age_grid, outdir, n = task
 
     Protstr = f"{float(Prot):.2f}"
     Teffstr = f"{float(Teff):.1f}"
@@ -28,7 +28,7 @@ def get_age_posterior_worker(task):
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
             Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-            verbose=False
+            verbose=False, n=n
         )
         df = pd.DataFrame({
             'age_grid': age_grid,
@@ -52,11 +52,12 @@ def get_age_posterior_worker(task):
         return 1
 
 
-def main():
+def main(n=1.0):
 
     outdir = os.path.join(LOCALDIR, "gyroemp")
     if not os.path.exists(outdir): os.mkdir(outdir)
-    outdir = os.path.join(LOCALDIR, "gyroemp", "prot_teff_grid")
+
+    outdir = os.path.join(LOCALDIR, "gyroemp", f"prot_teff_grid_n{n}")
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     age_grid = np.linspace(0, 2600, 500)
@@ -65,7 +66,7 @@ def main():
     Teff_grid = np.arange(teffmin, teffmax+50, 50)
     Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
 
-    tasks = [(_prot, _teff, age_grid, outdir) for _prot, _teff in
+    tasks = [(_prot, _teff, age_grid, outdir, n) for _prot, _teff in
              product(Prot_grid, Teff_grid)]
 
     N_tasks = len(tasks)
@@ -86,4 +87,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(n=1.0)
+    main(n=0.2)
+    main(n=0.5)

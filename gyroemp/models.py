@@ -304,7 +304,7 @@ def slow_sequence(
         reference_ages: iterable of ages corresponding to reference_model_ids.
 
         n: braking index, defined by the spin-down power law Prot = C t^n. Default
-        is the literature-favored 0.65
+        is the canonical 0.5
 
         verbose: input True or False to choose whether to print error messages.
         Default is False

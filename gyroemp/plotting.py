@@ -1450,21 +1450,7 @@ def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
     savefig(fig, outpath, dpi=400, writepdf=False)
 
 
-def plot_empirical_limits_of_gyrochronology(
-    outdir, imagestr, poly_order=7, slow_seq_ages=None):
-    """
-    Map out precision of gyro posteriors as a function of Prot and Teff.
-
-    poly_order: integer polynomial order for the reference cluster mean model.
-    Default is 7, which seems to do the best job across all clusters.
-
-    slow_seq_ages: optional list of ages, in Myr, for slow sequence models
-    to underplot (e.g., [120, 150, 200, 250]).
-    """
-
-    #
-    # Get data
-    #
+def _get_empgyro_grid_data(imagestr, n, poly_order):
 
     # from run_prot_teff_grid.py
     teffmin, teffmax = 3800, 6200
@@ -1475,7 +1461,7 @@ def plot_empirical_limits_of_gyrochronology(
     N_Prot = len(Prot_grid)
 
     typestr = 'limitgrid'
-    cachedir = os.path.join(LOCALDIR, "gyroemp", "prot_teff_grid")
+    cachedir = os.path.join(LOCALDIR, "gyroemp", f"prot_teff_grid_n{n:.1f}")
     _fpaths = [
         os.path.join(
             cachedir,
@@ -1489,6 +1475,8 @@ def plot_empirical_limits_of_gyrochronology(
 
     p1sig = np.zeros((N_Teff, N_Prot))
     m1sig = np.zeros((N_Teff, N_Prot))
+    median = np.zeros((N_Teff, N_Prot))
+    peak = np.zeros((N_Teff, N_Prot))
 
     for ix, x in enumerate(Teff_grid):
         for iy, y in enumerate(Prot_grid):
@@ -1504,12 +1492,68 @@ def plot_empirical_limits_of_gyrochronology(
             else:
                 p1sig[ix, iy] = df.loc[sel, '+1sigma']
                 m1sig[ix, iy] = df.loc[sel, '-1sigma']
+            median[ix, iy] = df.loc[sel, 'median']
+            peak[ix, iy] = df.loc[sel, 'peak']
 
             if y > slow_sequence(
                 x, 2600, poly_order=poly_order
             ):
                 p1sig[ix, iy] = np.nan
                 m1sig[ix, iy] = np.nan
+                median[ix, iy] = np.nan
+                peak[ix, iy] = np.nan
+
+    return p1sig, m1sig, median, peak
+
+
+def plot_empirical_limits_of_gyrochronology(
+    outdir, imagestr, poly_order=7, n=0.5, slow_seq_ages=None):
+    """
+    Map out precision of gyro posteriors as a function of Prot and Teff.
+
+    poly_order: integer polynomial order for the reference cluster mean model.
+    Default is 7, which seems to do the best job across all clusters.
+
+    slow_seq_ages: optional list of ages, in Myr, for slow sequence models
+    to underplot (e.g., [120, 150, 200, 250]).
+    """
+
+    allowedstrs = [
+        'plus', 'minus', 'plus_abs', 'minus_abs', 'median', 'peak',
+        'both', 'both_abs', 'diff_median', 'diff_peak'
+    ]
+    assert imagestr in allowedstrs
+    singleaxstrs = [s for s in allowedstrs if 'both' not in s]
+
+    #
+    # Get data
+    #
+    p1sig, m1sig, median, peak = _get_empgyro_grid_data(
+        imagestr, n, poly_order
+    )
+    if imagestr in ['diff_median', 'diff_peak']:
+        npt5_p1sig, npt5_m1sig, npt5_median, npt5_peak = (
+            _get_empgyro_grid_data(
+                imagestr, 0.5, poly_order
+            )
+        )
+        dmedian = median - npt5_median
+        dpeak = peak - npt5_peak
+        sel = np.abs(dmedian) > 25
+        sel1 = np.abs(dmedian) > 40
+        msg = (
+            f"n={n}:\n"
+            f"mean: {np.nanmean(dmedian):.3f}\n"
+            f"mean of abs>25: {np.nanmean(dmedian[sel]):.3f}\n"
+            f"mean of abs>40: {np.nanmean(dmedian[sel1]):.3f}\n"
+            f"abs median: {np.nanmedian(np.abs(dmedian)):.3f}\n"
+            f"abs 25th: {np.nanpercentile(np.abs(dmedian),25):.3f}\n"
+            f"abs 75th: {np.nanpercentile(np.abs(dmedian),75):.3f}\n"
+            f"abs 95th: {np.nanpercentile(np.abs(dmedian),95):.3f}\n"
+            f"abs 99th: {np.nanpercentile(np.abs(dmedian),99):.3f}\n"
+        )
+        print(42*'-')
+        print(msg)
 
     # Make plot
     set_style("science")
@@ -1524,22 +1568,37 @@ def plot_empirical_limits_of_gyrochronology(
     else:
         fig, ax = plt.subplots()
 
-    if 'abs' not in imagestr:
+    if imagestr in ['plus', 'minus']:
         norm = Normalize(vmin=0., vmax=1)
-    else:
+    elif imagestr in ['plus_abs', 'minus_abs', 'both_abs']:
         norm = LogNorm(vmin=50, vmax=500)
-        #norm = Normalize(vmin=50, vmax=500)
+    elif imagestr in ['peak', 'median']:
+        norm = LogNorm(vmin=10, vmax=2600)
+    elif imagestr in ['diff_median', 'diff_peak']:
+        norm = Normalize(vmin=-100, vmax=100)
 
-    if 'plus' in imagestr:
+    if imagestr in ['plus', 'plus_abs']:
         img = p1sig.T
-    elif 'minus' in imagestr:
+    elif imagestr in ['minus', 'minus_abs']:
         img = m1sig.T
-    elif 'both' in imagestr:
+    elif imagestr in ['both_abs']:
         img0 = p1sig.T
         img1 = m1sig.T
+    elif imagestr in ['median']:
+        img = median.T
+    elif imagestr in ['peak']:
+        img = peak.T
+    elif imagestr in ['diff_median']:
+        img = dmedian.T
+    elif imagestr in ['diff_peak']:
+        img = dpeak.T
 
-    #viridis = mpl.colormaps['plasma'].resampled(256)
-    cmap = mpl.colormaps['plasma']
+    if 'diff' not in imagestr:
+        # sequential
+        cmap = mpl.colormaps['plasma']
+    else:
+        # divering
+        cmap = mpl.colormaps['bwr']
     _cmap = cmap(np.arange(0,cmap.N))
 
     # # WHITE TOP OUTLIER
@@ -1550,7 +1609,10 @@ def plot_empirical_limits_of_gyrochronology(
     #_cmap[0, :] = green
     newcmp = ListedColormap(_cmap)
 
-    if 'minus' in imagestr or 'plus' in imagestr:
+    teffmin, teffmax = 3800, 6200
+    protmin, protmax = 0, 23
+
+    if imagestr in singleaxstrs:
         _p = ax.imshow(
             img,
             extent=(teffmin, teffmax, protmin, protmax),
@@ -1586,7 +1648,6 @@ def plot_empirical_limits_of_gyrochronology(
         cb = fig.colorbar(_p, extend='both')
     else:
         # left/bottom/width/height, fractions of figwidth/height
-        #cax = fig.add_axes([0.95, 0.1, 0.03, 0.8])
         cb = fig.colorbar(_p, cax=axs[-1], extend='both')
 
     if 'plus' in imagestr:
@@ -1595,15 +1656,20 @@ def plot_empirical_limits_of_gyrochronology(
         labelstr = "-"
     elif 'both' in imagestr:
         labelstr = '$\pm$'
-    if "abs" not in imagestr:
+
+    if imagestr in ['plus', 'minus']:
         cb.set_label(labelstr + '$\sigma_t/t$')
     elif "abs" in imagestr:
         cb.set_label(labelstr + '1$\sigma_t$ [Myr]')
         cb.set_ticks([50, 100, 200, 400, 500])
         cb.set_ticklabels([50, 100, 200, 400, 500])
         cb.ax.minorticks_off()
+    elif imagestr in ['median', 'peak']:
+        cb.set_label('$t$ [Myr]')
+    elif imagestr in ['diff_median', 'diff_peak']:
+        cb.set_label('$\Delta t$ [Myr]')
 
-    if 'plus' in imagestr or 'minus' in imagestr:
+    if imagestr in singleaxstrs:
         ax.set_ylim([0, 23])
         ax.set_yticks([0, 5, 10, 15, 20])
     elif 'both' in imagestr:
@@ -1613,12 +1679,12 @@ def plot_empirical_limits_of_gyrochronology(
         axs[1].set_yticklabels([])
 
     if isinstance(slow_seq_ages, list) and (
-        'plus' in imagestr or 'minus' in imagestr
+        imagestr in singleaxstrs
     ):
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order
+                Teff, slow_seq_age, poly_order=poly_order, n=n
             )
             if slow_seq_age % 500 == 0:
                 linewidth = 1.5
@@ -1634,7 +1700,7 @@ def plot_empirical_limits_of_gyrochronology(
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order
+                Teff, slow_seq_age, poly_order=poly_order, n=n
             )
             if slow_seq_age % 500 == 0:
                 linewidth = 1.5
@@ -1648,7 +1714,7 @@ def plot_empirical_limits_of_gyrochronology(
                     linestyle=linestyle, zorder=999
                 )
 
-    if 'plus' in imagestr or 'minus' in imagestr:
+    if imagestr in singleaxstrs:
         ax.set_xlabel("Effective Temperature [K]")
         ax.set_ylabel("Rotation Period [days]")
 
@@ -1673,7 +1739,7 @@ def plot_empirical_limits_of_gyrochronology(
             _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
 
     basename = "empirical_limits_of_gyrochronology"
-    s = ''
+    s = f'_n{n:.1f}'
     if isinstance(slow_seq_ages, list):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)

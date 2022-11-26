@@ -127,7 +127,7 @@ def _gyro_age_posterior_worker(task):
     """
 
     (age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-     y_grid, bounds_error
+     y_grid, bounds_error, n
     ) = task
 
     if verbose:
@@ -139,7 +139,7 @@ def _gyro_age_posterior_worker(task):
     gaussian_Prots = []
 
     resid_obs_grid = Prot - slow_sequence(
-        teff_grid, age, verbose=False, bounds_error=bounds_error
+        teff_grid, age, verbose=False, bounds_error=bounds_error, n=n
     )
 
     assert y_grid.ndim == 1
@@ -172,7 +172,7 @@ def _gyro_age_posterior_worker(task):
     # y_grid X Teff_grid
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, verbose=False,
-        bounds_error=bounds_error
+        bounds_error=bounds_error, n=n
     )
     if verbose:
         print(f"{datetime.now().isoformat()} end 1")
@@ -193,7 +193,8 @@ def gyro_age_posterior(
     age_grid=np.linspace(0, 2600, 500),
     verbose=False,
     bounds_error='limit',
-    N_grid=256
+    N_grid=256,
+    n=0.5
     ):
     """
     Given a stellar rotation period and effective temperature, as well as their
@@ -249,9 +250,9 @@ def gyro_age_posterior(
     #
     # special return cases
     #
-    Prot_pleiades = slow_sequence(Teff, 120)
-    Prot_ngc6811 = slow_sequence(Teff, 1000)
-    Prot_rup147 = slow_sequence(Teff, 2600)
+    Prot_pleiades = slow_sequence(Teff, 120, n=n)
+    Prot_ngc6811 = slow_sequence(Teff, 1000, n=n)
+    Prot_rup147 = slow_sequence(Teff, 2600, n=n)
 
     if Prot < Prot_pleiades and Teff > 5000 and bounds_error == 'nan':
         return '<120 Myr'
@@ -278,7 +279,7 @@ def gyro_age_posterior(
 
         task = (
             age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-            y_grid, bounds_error
+            y_grid, bounds_error, n
         )
         p_age = _gyro_age_posterior_worker(task)
 
