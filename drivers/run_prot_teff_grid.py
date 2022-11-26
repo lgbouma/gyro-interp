@@ -57,7 +57,9 @@ def main(n=1.0):
     outdir = os.path.join(LOCALDIR, "gyroemp")
     if not os.path.exists(outdir): os.mkdir(outdir)
 
-    outdir = os.path.join(LOCALDIR, "gyroemp", f"prot_teff_grid_n{n}")
+    outdir = os.path.join(
+        LOCALDIR, "gyroemp", f"prot_teff_grid_n{n}_reluncpt1pct"
+    )
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     age_grid = np.linspace(0, 2600, 500)

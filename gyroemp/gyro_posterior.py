@@ -201,19 +201,24 @@ def gyro_age_posterior(
     optional uncertainties (all ints or floats), calculate the probability of a
     given age assuming the models.slow_sequence_residual model holds.
 
-    If Prot_err and Teff_err are not given, they are assumed to be 0.05 days and
-    50 K, respectively.
+    If Prot_err and Teff_err are not given, they are assumed to be 1% relative
+    and 50 K, respectively.  These are best-case defaults.  The suggested
+    effective temperature scale is implemented in gyrointerp.teff, in the
+    given_dr2_BpmRp_AV_get_Teff_Curtis2020 function.  This assumes you have an
+    accurate estimate for the reddening.  Spectroscopic temperatures are likely
+    the next-best option, though a 2% systematic uncertainty floor is expected
+    for them (see Tayar+2022, 2022ApJ...927...31T).
 
     Args:
 
         Prot, Teff, Prot_err, Teff_err: ints or floats, units of days and
-        degrees Kelvin.
+        degrees Kelvin.  Must be positive.
 
-        age_grid: grid over which the age posterior is evaluated, units are
-        fixed to be Myr.  A good choice if bounds_error == 'limit' is
+        age_grid (np.ndarray): grid over which the age posterior is evaluated,
+        units are fixed to be Myr.  A fine choice if bounds_error == 'limit' is
         np.linspace(0, 2600, 500).
 
-        bounds_error: "nan" or "limit".  If "nan" ages below the minimum
+        bounds_error: "limit" or "nan".  If "nan" ages below the minimum
         reference age return strings as described below.  If "limit", they
         return a prior-dominated number useable as an upper limit, based on the
         limiting rotation period at the closest cluster.  Default is "limit".
@@ -238,8 +243,16 @@ def gyro_age_posterior(
     #
     # handle input parameters
     #
+    if Prot <= 0 or Teff <= 0:
+        return np.nan*np.ones(len(age_grid))
+
+    for param in [Prot_err, Teff_err]:
+        if isinstance(param, (int, float)):
+            if param <=0:
+                return np.nan*np.ones(len(age_grid))
+
     if Prot_err is None:
-        Prot_err = 0.05
+        Prot_err = 0.01 * Prot
 
     if Teff_err is None:
         Teff_err = 50
@@ -258,8 +271,6 @@ def gyro_age_posterior(
         return '<120 Myr'
     if Prot < Prot_pleiades and Teff <= 5000 and bounds_error == 'nan':
         return '<300 Myr'
-    #if Prot > Prot_ngc6811 and bounds_error == 'nan':
-    #    return '>1000 Myr'
     if Prot > Prot_rup147 and bounds_error == 'nan':
         return '>2600 Myr'
 

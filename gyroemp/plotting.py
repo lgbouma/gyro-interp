@@ -1461,7 +1461,9 @@ def _get_empgyro_grid_data(imagestr, n, poly_order):
     N_Prot = len(Prot_grid)
 
     typestr = 'limitgrid'
-    cachedir = os.path.join(LOCALDIR, "gyroemp", f"prot_teff_grid_n{n:.1f}")
+    cachedir = os.path.join(
+        LOCALDIR, "gyroemp", f"prot_teff_grid_n{n:.1f}_reluncpt1pct"
+    )
     _fpaths = [
         os.path.join(
             cachedir,
