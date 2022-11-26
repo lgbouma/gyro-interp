@@ -192,7 +192,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
 
     outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}.png')
 
-    savefig(fig, outpath, dpi=400, writepdf=False)
+    savefig(fig, outpath, dpi=400, writepdf=1)
 
 
 def plot_prot_vs_teff_residual(
@@ -776,7 +776,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
         m = f"_models_poly{poly_order}_" + "_".join(model_ids)
 
     outpath = join(outdir, f'data_vs_model_{basename}{m}.png')
-    savefig(fig, outpath, dpi=400, writepdf=False)
+    savefig(fig, outpath, dpi=400, writepdf=1)
 
 
 def _plot_slow_sequence_residual(
@@ -1141,7 +1141,7 @@ def plot_age_posteriors(
     })
     ax.set_title(f'{Teff}'+'$\,$K', pad=-4)
 
-    fig.savefig(outpath, dpi=350, bbox_inches='tight')
+    savefig(fig, outpath, dpi=400, writepdf=1)
 
 
 
