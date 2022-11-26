@@ -1507,7 +1507,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order):
 
 
 def plot_empirical_limits_of_gyrochronology(
-    outdir, imagestr, poly_order=7, n=0.5, slow_seq_ages=None):
+    outdir, imagestr, poly_order=7, n=0.5, slow_seq_ages=None, writepdf=0):
     """
     Map out precision of gyro posteriors as a function of Prot and Teff.
 
@@ -1568,8 +1568,9 @@ def plot_empirical_limits_of_gyrochronology(
     else:
         fig, ax = plt.subplots()
 
-    if imagestr in ['plus', 'minus']:
-        norm = Normalize(vmin=0., vmax=1)
+    if imagestr in ['plus', 'minus', 'both']:
+        #norm = Normalize(vmin=0., vmax=1)
+        norm = LogNorm(vmin=0.03, vmax=3) #FIXME
     elif imagestr in ['plus_abs', 'minus_abs', 'both_abs']:
         norm = LogNorm(vmin=50, vmax=500)
     elif imagestr in ['peak', 'median']:
@@ -1581,7 +1582,7 @@ def plot_empirical_limits_of_gyrochronology(
         img = p1sig.T
     elif imagestr in ['minus', 'minus_abs']:
         img = m1sig.T
-    elif imagestr in ['both_abs']:
+    elif imagestr in ['both_abs', 'both']:
         img0 = p1sig.T
         img1 = m1sig.T
     elif imagestr in ['median']:
@@ -1630,7 +1631,8 @@ def plot_empirical_limits_of_gyrochronology(
             origin='lower',
             norm=norm
         )
-        axs[0].text(0.03, 0.97, '+1$\sigma_t$', transform=axs[0].transAxes,
+        l0 = '/$t$' if imagestr == 'both' else ''
+        axs[0].text(0.03, 0.97, '+1$\sigma_t$'+l0, transform=axs[0].transAxes,
                     ha='left', va='top', color='k')
 
         _p = axs[1].imshow(
@@ -1641,7 +1643,7 @@ def plot_empirical_limits_of_gyrochronology(
             origin='lower',
             norm=norm
         )
-        axs[1].text(0.03, 0.97, '-1$\sigma_t$', transform=axs[1].transAxes,
+        axs[1].text(0.03, 0.97, '-1$\sigma_t$'+l0, transform=axs[1].transAxes,
                     ha='left', va='top', color='k')
 
     if 'both' not in imagestr:
@@ -1657,8 +1659,13 @@ def plot_empirical_limits_of_gyrochronology(
     elif 'both' in imagestr:
         labelstr = '$\pm$'
 
-    if imagestr in ['plus', 'minus']:
-        cb.set_label(labelstr + '$\sigma_t/t$')
+    if imagestr in ['plus', 'minus', 'both']:
+        cb.set_label(labelstr + '$1\sigma_t/\mathrm{median}(t)$')
+        if imagestr == 'both':
+            cb.set_ticks([0.03, 0.1, 0.3, 1, 3])
+            cb.set_ticklabels([0.03, 0.1, 0.3, 1, 3])
+            cb.ax.minorticks_off()
+
     elif "abs" in imagestr:
         cb.set_label(labelstr + '1$\sigma_t$ [Myr]')
         cb.set_ticks([50, 100, 200, 400, 500])
@@ -1749,4 +1756,4 @@ def plot_empirical_limits_of_gyrochronology(
     if 'both' in imagestr:
         fig.tight_layout(h_pad=0.4, w_pad=0.4)
 
-    savefig(fig, outpath, dpi=400, writepdf=False)
+    savefig(fig, outpath, dpi=400, writepdf=writepdf)
