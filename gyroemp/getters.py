@@ -41,18 +41,17 @@ from gyroemp.helpers import (
     prepend_colstr, left_merge, given_dr2_get_dr3_dataframes
 )
 
-def _get_cluster_Prot_Teff_data(N_colors=4):
+def _get_cluster_Prot_Teff_data(N_colors=5):
     """
     Wrapper to gyroemp.getters to retrieve dataframes of reference cluster
     data, as well as to define the colors / labels / zorders used across many
     plots.
-
-    N_colors: set to 4 if you're omitting the 2.5 Gyr clusters.  Else 5.
     """
-    assert N_colors in [4,5]
+    assert N_colors in [5,6]
 
     overwrite = 0
 
+    df_aper = get_alphaPer(overwrite=overwrite)
     df_psceri = get_PscEri(overwrite=overwrite)
     df_bla1 = get_Blanco1(overwrite=overwrite)
     df_plei = get_Pleiades(overwrite=overwrite)
@@ -63,20 +62,34 @@ def _get_cluster_Prot_Teff_data(N_colors=4):
     df_6819 = get_NGC6819(overwrite=overwrite)
     df_r147 = get_Ruprecht147(overwrite=overwrite)
 
-    cmap = cm.Spectral(np.linspace(0,1,N_colors))
+    #cmap = cm.Spectral(np.linspace(0,1,N_colors))  # decent
+    cmap = cm.terrain(np.linspace(0,0.8,N_colors))
+    #cmap = cm.Accent(np.linspace(0,0.6,N_colors))
+    #cmap = cm.hsv(np.linspace(0,0.8,N_colors))
+    #cmap = [f"C{ix}" for ix in range(N_colors)]
+    #cmap = cm.Set3(np.linspace(0,0.5,N_colors))
+
+    cmap = cm.Paired(np.linspace(0,0.5,N_colors))  # good
+    ## rainbow; good
+    #cmap = ["#ED4974", "#8958D3", "#16B9E1", "#58DE7B", "#F0D864", "#FF8057"]
+    ## color3, good
+    #cmap = ["#537c78", "#7ba591", "#cc222b", "#f15b4c", "#faa41b", "#ffd45b"]
+    cmap = ["#5CC8CB", "#2B64C6", "#F9E16A", "#81C83D", '#EC702D', '#E9A2AE']
 
     # contents:
     # prot/teff dataframe, RGB color, label, zorder
+    z0 = 2
     d = {
-        'Pleiades': [df_plei, cmap[0], '120 Myr Pleiades', 2],
-        'Blanco-1': [df_bla1, cmap[0], '120 Myr Blanco-1', 2],
-        'Psc-Eri': [df_psceri, cmap[0], '120 Myr Psc-Eri', 2],
-        'NGC-3532': [df_3532, cmap[1], '300 Myr NGC-3532', 4],
-        'Group-X':  [df_grpx, cmap[1], '300 Myr Group-X', 4],
-        'Praesepe': [df_prae, cmap[2], '670 Myr Praesepe', 6],
-        'NGC-6811': [df_6811, cmap[3], '1 Gyr NGC-6811', 8],
-        'NGC-6819': [df_6819, cmap[N_colors-1], '2.5 Gyr NGC-6819', 10],
-        'Ruprecht-147': [df_r147, cmap[N_colors-1], '2.7 Gyr Rup-147', 10],
+        'α Per': [df_aper, cmap[0], '80 Myr α Per', z0+12],
+        'Pleiades': [df_plei, cmap[1], '120 Myr Pleiades', z0+2],
+        'Blanco-1': [df_bla1, cmap[1], '120 Myr Blanco-1', z0+2],
+        'Psc-Eri': [df_psceri, cmap[1], '120 Myr Psc-Eri', z0+2],
+        'NGC-3532': [df_3532, cmap[2], '300 Myr NGC-3532', z0+4],
+        'Group-X':  [df_grpx, cmap[2], '300 Myr Group-X', z0+4],
+        'Praesepe': [df_prae, cmap[3], '670 Myr Praesepe', z0+6],
+        'NGC-6811': [df_6811, cmap[4], '1 Gyr NGC-6811', z0+8],
+        'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10],
+        'Ruprecht-147': [df_r147, cmap[5], '2.7 Gyr Rup-147', z0+10],
         '120-Myr': [None, cmap[0], '', None],
         '300-Myr': [None, cmap[1], '', None],
         '2.6-Gyr': [None, cmap[N_colors-1], '', None],
@@ -1481,6 +1494,37 @@ def get_alphaPer(overwrite=0):
     """
     Returns the Boyle+ in prep dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
+    """
+
+    # NOTE: overwrite has no effect for alpha-Per CSV.
+
+    cluster = 'alpha-per'
+    authoryr = "Boyle_table3_full"
+    outdir = os.path.join(DATADIR, "interim", cluster)
+    cachepath = os.path.join(outdir, f"{authoryr}.csv")
+
+    assert os.path.exists(cachepath)
+
+
+    df = pd.read_csv(cachepath)
+
+    df["flag_possible_binary"] = ~df["flag_benchmark_period"]
+
+    df = df.rename({
+        "period":"Prot",
+        "flag_benchmark_period":"flag_benchmark_period_output",
+        "in_gyro_sample":"flag_benchmark_period",
+        "teff_curtis20":"Teff_Curtis20",
+    }, axis='columns')
+
+    print(f"Found {cachepath}; returning.")
+    return df
+
+
+def get_alphaPer_construct(overwrite=0):
+    """
+    Constructs the Boyle+ in prep dataframe, with keys:
+    "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
 
         plus:
             "flag_possible_binary",

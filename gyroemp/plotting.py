@@ -101,7 +101,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     to underplot (e.g., [120, 150, 200, 250]).
     """
     # Get data
-    N_colors = 4 if 'Ruprecht-147' not in reference_clusters else 5
+    N_colors = 6
     d = _get_cluster_Prot_Teff_data(N_colors=N_colors)
 
     # Make plot

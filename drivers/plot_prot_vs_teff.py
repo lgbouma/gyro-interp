@@ -8,14 +8,8 @@ if not os.path.exists(PLOTDIR):
     os.mkdir(PLOTDIR)
 outdir = PLOTDIR
 
-# figure 3 base sketch
-slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500]
-ap.plot_prot_vs_teff(
-    outdir, [], slow_seq_ages=slow_seq_ages
-)
-
 # figure 1a
-all_clusters1 = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+all_clusters1 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
                  'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
 slow_seq_ages = list(np.arange(100, 2700, 100))
 ap.plot_prot_vs_teff(
@@ -26,7 +20,7 @@ ap.plot_prot_vs_teff(
 )
 
 # figure 1b
-all_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+all_clusters = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
                  'Praesepe', 'NGC-6811']
 ap.plot_prot_vs_teff(
     outdir, all_clusters
@@ -35,6 +29,13 @@ slow_seq_ages = list(np.arange(100, 1100, 100))
 slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 ap.plot_prot_vs_teff(
     outdir, all_clusters, slow_seq_ages=slow_seq_ages
+)
+assert 0
+
+# figure 3 base sketch
+slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500]
+ap.plot_prot_vs_teff(
+    outdir, [], slow_seq_ages=slow_seq_ages
 )
 
 ##########################################
