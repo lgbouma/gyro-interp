@@ -268,9 +268,9 @@ def slow_sequence_residual(
 def slow_sequence(
     Teff, age, poly_order=7, n=0.5,
     reference_model_ids=[
-        '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
+        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
     ],
-    reference_ages=[120, 300, 670, 1000, 2600],
+    reference_ages=[80, 120, 300, 670, 1000, 2600],
     verbose=True,
     bounds_error='limit'):
     """
@@ -279,12 +279,7 @@ def slow_sequence(
     that it follows a power-law spin-down.
 
     Age must be between the lowest and highest reference age, otherwise an
-    error will be raised.
-
-    Teff must be between 3800 and 6200 K.
-
-    (NOTE: Mostly copied from Elsa's gyro_ages.period_from_age, with minor
-    differences in details.)
+    error will be raised.  Teff must be between 3800 and 6200 K.
 
     Args:
 
@@ -295,7 +290,7 @@ def slow_sequence(
         temperature(s) of the sample to be dated.  units: K
 
         reference_model_ids: list including any of
-            ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+            ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
             'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr',
             'NGC-6819', 'Ruprecht-147']
         The sensible default is set.  120-Myr and 300-Myr are concenations of
@@ -311,7 +306,7 @@ def slow_sequence(
 
         bounds_error: "nan" or "limit".  If "nan" ages below the minimum
         reference age return nans.  If "limit", they return the limiting
-        rotation period at the closest cluster.
+        rotation period at the closest cluster.  Default "limit".
 
     Output:
 
@@ -433,7 +428,7 @@ def reference_cluster_slow_sequence(
         effective temperatures, preferred above all other options.
 
         model_id (str): any of
-            ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+            ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
             'Praesepe', 'NGC-6811', '120-Myr', '300-Myr']
         where '120-Myr' will concatenate of Pleiades, Blanco-1, and
         Psc-Eri, and '300-Myr' will concatenate NGC-3532 and Group-X.
@@ -445,8 +440,9 @@ def reference_cluster_slow_sequence(
         Teff = np.array(Teff)
 
     allowed_model_ids = [
-        'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-        'NGC-6811', '120-Myr', '300-Myr', 'NGC-6819', 'Ruprecht-147', '2.6-Gyr'
+        'α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+        'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', 'NGC-6819',
+        'Ruprecht-147', '2.6-Gyr'
     ]
     if model_id not in allowed_model_ids:
         raise ValueError(f"Got model_id {model_id} - not implemented!")
@@ -458,8 +454,8 @@ def reference_cluster_slow_sequence(
     if not os.path.exists(outpath):
 
         cluster_model_ids = [
-            'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-            'NGC-6811', 'NGC-6819', 'Ruprecht-147'
+            'α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+            'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147'
         ]
         combined_cluster_ids = {
             '120-Myr': ['Pleiades', 'Blanco-1', 'Psc-Eri'],

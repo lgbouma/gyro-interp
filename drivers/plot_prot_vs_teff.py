@@ -26,7 +26,6 @@ ap.plot_prot_vs_teff(
     outdir, all_clusters
 )
 slow_seq_ages = list(np.arange(100, 1100, 100))
-slow_seq_ages = [120, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 ap.plot_prot_vs_teff(
     outdir, all_clusters, slow_seq_ages=slow_seq_ages
 )
