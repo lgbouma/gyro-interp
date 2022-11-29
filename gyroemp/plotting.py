@@ -1573,7 +1573,7 @@ def plot_empirical_limits_of_gyrochronology(
 
     if imagestr in ['plus', 'minus', 'both']:
         #norm = Normalize(vmin=0., vmax=1)
-        norm = LogNorm(vmin=0.03, vmax=3) #FIXME
+        norm = LogNorm(vmin=10**-1.5, vmax=10**0.25) #0.0316 to 3.16
     elif imagestr in ['plus_abs', 'minus_abs', 'both_abs']:
         norm = LogNorm(vmin=50, vmax=500)
     elif imagestr in ['peak', 'median']:
@@ -1600,10 +1600,11 @@ def plot_empirical_limits_of_gyrochronology(
     if 'diff' not in imagestr:
         # sequential
         cmap = mpl.colormaps['plasma']
+        cmap = mpl.cm.get_cmap("plasma", 7)
     else:
         # divering
         cmap = mpl.colormaps['bwr']
-    _cmap = cmap(np.arange(0,cmap.N))
+    #_cmap = cmap(np.arange(0,cmap.N))
 
     # # WHITE TOP OUTLIER
     # white = np.array([256/256, 256/256, 256/256, 1])
@@ -1611,7 +1612,7 @@ def plot_empirical_limits_of_gyrochronology(
     # _cmap[-1, :] = white
 
     #_cmap[0, :] = green
-    newcmp = ListedColormap(_cmap)
+    #newcmp = ListedColormap(_cmap)
 
     teffmin, teffmax = 3800, 6200
     protmin, protmax = 0, 23
@@ -1621,7 +1622,7 @@ def plot_empirical_limits_of_gyrochronology(
             img,
             extent=(teffmin, teffmax, protmin, protmax),
             aspect='auto',
-            cmap=newcmp,
+            cmap=cmap,
             origin='lower',
             norm=norm
         )
@@ -1630,7 +1631,7 @@ def plot_empirical_limits_of_gyrochronology(
             img0,
             extent=(teffmin, teffmax, protmin, protmax),
             aspect='auto',
-            cmap=newcmp,
+            cmap=cmap,
             origin='lower',
             norm=norm
         )
@@ -1642,7 +1643,7 @@ def plot_empirical_limits_of_gyrochronology(
             img1,
             extent=(teffmin, teffmax, protmin, protmax),
             aspect='auto',
-            cmap=newcmp,
+            cmap=cmap,
             origin='lower',
             norm=norm
         )
@@ -1650,10 +1651,10 @@ def plot_empirical_limits_of_gyrochronology(
                     ha='left', va='top', color='k')
 
     if 'both' not in imagestr:
-        cb = fig.colorbar(_p, extend='both')
+        cb = fig.colorbar(_p, extend='neither')
     else:
         # left/bottom/width/height, fractions of figwidth/height
-        cb = fig.colorbar(_p, cax=axs[-1], extend='both')
+        cb = fig.colorbar(_p, cax=axs[-1], extend='neither')
 
     if 'plus' in imagestr:
         labelstr = "+"
@@ -1665,8 +1666,8 @@ def plot_empirical_limits_of_gyrochronology(
     if imagestr in ['plus', 'minus', 'both']:
         cb.set_label(labelstr + '$1\sigma_t/\mathrm{median}(t)$')
         if imagestr == 'both':
-            cb.set_ticks([0.03, 0.1, 0.3, 1, 3])
-            cb.set_ticklabels([0.03, 0.1, 0.3, 1, 3])
+            cb.set_ticks([10**-1.5, 0.1, 10**-0.5, 1])
+            cb.set_ticklabels([0.03, 0.1, 0.3, 1])
             cb.ax.minorticks_off()
 
     elif "abs" in imagestr:
