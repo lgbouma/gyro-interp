@@ -264,7 +264,10 @@ def plot_prot_vs_teff_residual(
 
 
 def plot_cdf_fast_slow_ratio(
-    outdir, poly_order=7
+    outdir, poly_order=7,
+    model_ids = ['α Per', '120-Myr', '300-Myr', 'Praesepe'],
+    reference_clusters = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                          'Group-X', 'Praesepe', 'NGC-6811']
     ):
     """
     Plot: RATIO of cumulative distribution functions, showing the cdf(Teff) for
@@ -276,9 +279,6 @@ def plot_cdf_fast_slow_ratio(
 
     # model_ids: iterable of strings, to be called by
     # models.reference_cluster_slow_sequence.
-    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
-    reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                          'Group-X', 'Praesepe', 'NGC-6811']
 
     # Get data
     d = _get_cluster_Prot_Teff_data()
@@ -303,7 +303,9 @@ def plot_cdf_fast_slow_ratio(
 
         # Get the data
         sel_teff_range = [3800, 6200]
-        if model_id == '120-Myr':
+        if model_id == 'α Per':
+            set_toplot = {'α Per'}
+        elif model_id == '120-Myr':
             set_120myr = {k for k,v in d.items() if "120" in v[2]}
             set_toplot = set_120myr.intersection(set(reference_clusters))
             sel_teff_range = [4500, 6200]
@@ -377,7 +379,7 @@ def plot_cdf_fast_slow_ratio(
         )
         ax.update({
             'ylabel': 'Count',
-            'title': " ".join(label.split(" ")[:-1]),
+            'title': model_id + f" N={int(max(c_vals_all))}",
             'xlim': [6300, 3700],
         })
 
