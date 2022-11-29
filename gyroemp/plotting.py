@@ -1523,7 +1523,7 @@ def plot_empirical_limits_of_gyrochronology(
 
     allowedstrs = [
         'plus', 'minus', 'plus_abs', 'minus_abs', 'median', 'peak',
-        'both', 'both_abs', 'diff_median', 'diff_peak'
+        'both', 'both_abs', 'diff_median', 'diff_median_abs', 'diff_peak'
     ]
     assert imagestr in allowedstrs
     singleaxstrs = [s for s in allowedstrs if 'both' not in s]
@@ -1534,13 +1534,14 @@ def plot_empirical_limits_of_gyrochronology(
     p1sig, m1sig, median, peak = _get_empgyro_grid_data(
         imagestr, n, poly_order
     )
-    if imagestr in ['diff_median', 'diff_peak']:
+    if imagestr in ['diff_median', 'diff_median_abs', 'diff_peak']:
         npt5_p1sig, npt5_m1sig, npt5_median, npt5_peak = (
             _get_empgyro_grid_data(
                 imagestr, 0.5, poly_order
             )
         )
         dmedian = median - npt5_median
+        dmedian_rel = (median - npt5_median) / npt5_median
         dpeak = peak - npt5_peak
         sel = np.abs(dmedian) > 25
         sel1 = np.abs(dmedian) > 40
@@ -1578,8 +1579,10 @@ def plot_empirical_limits_of_gyrochronology(
         norm = LogNorm(vmin=50, vmax=500)
     elif imagestr in ['peak', 'median']:
         norm = LogNorm(vmin=10, vmax=2600)
-    elif imagestr in ['diff_median', 'diff_peak']:
+    elif imagestr in ['diff_median_abs', 'diff_peak_abs']:
         norm = Normalize(vmin=-100, vmax=100)
+    elif imagestr in ['diff_median', 'diff_peak']:
+        norm = Normalize(vmin=-0.1, vmax=0.1)
 
     if imagestr in ['plus', 'plus_abs']:
         img = p1sig.T
@@ -1593,6 +1596,8 @@ def plot_empirical_limits_of_gyrochronology(
     elif imagestr in ['peak']:
         img = peak.T
     elif imagestr in ['diff_median']:
+        img = dmedian_rel.T
+    elif imagestr in ['diff_median_abs']:
         img = dmedian.T
     elif imagestr in ['diff_peak']:
         img = dpeak.T
@@ -1604,6 +1609,7 @@ def plot_empirical_limits_of_gyrochronology(
     else:
         # divering
         cmap = mpl.colormaps['bwr']
+        cmap = mpl.cm.get_cmap("bwr", 8)
     #_cmap = cmap(np.arange(0,cmap.N))
 
     # # WHITE TOP OUTLIER
@@ -1670,14 +1676,16 @@ def plot_empirical_limits_of_gyrochronology(
             cb.set_ticklabels([0.03, 0.1, 0.3, 1])
             cb.ax.minorticks_off()
 
-    elif "abs" in imagestr:
+    elif "abs" in imagestr and "diff" not in imagestr:
         cb.set_label(labelstr + '1$\sigma_t$ [Myr]')
         cb.set_ticks([50, 100, 200, 400, 500])
         cb.set_ticklabels([50, 100, 200, 400, 500])
         cb.ax.minorticks_off()
     elif imagestr in ['median', 'peak']:
         cb.set_label('$t$ [Myr]')
-    elif imagestr in ['diff_median', 'diff_peak']:
+    elif imagestr in ['diff_median']:
+        cb.set_label('$\Delta t / t$')
+    elif imagestr in ['diff_median_abs', 'diff_peak']:
         cb.set_label('$\Delta t$ [Myr]')
 
     if imagestr in singleaxstrs:
