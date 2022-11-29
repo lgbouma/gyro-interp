@@ -1,5 +1,5 @@
 import numpy as np
-from agetools.binary_checker import (
+from gyroemp.binary_checker import (
     given_source_ids_return_possible_binarity
 )
 

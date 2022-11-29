@@ -19,3 +19,4 @@ results/fit_gyro_model/*csv
 data/interim/*/*glu
 data/interim/*/*png
 results*
+data/mist*

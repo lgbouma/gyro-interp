@@ -1,6 +1,6 @@
 import os
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
-from agetools.gyro_posterior import (
+from gyroemp.gyro_posterior import (
     parallel_gyro_age_posterior, gyro_age_posterior
 )
 from datetime import datetime

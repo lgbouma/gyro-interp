@@ -1,5 +1,5 @@
 import numpy as np
-from agetools.gaia import given_source_ids_get_gaia_data
+from gyroemp.gaia import given_source_ids_get_gaia_data
 
 def test_kepler1627_allcols():
     # Get all the Gaia columns for Kepler-1627

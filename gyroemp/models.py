@@ -9,6 +9,7 @@ Contents:
 
 Helper functions:
     logistic
+    teff_zams
     teff_0
     C_uniform
 """
@@ -28,10 +29,51 @@ def logistic(x, x0, L=1, k=0.1):
     return num / denom
 
 
+def teff_zams(age, bounds_error='limit'):
+    """
+    Physics-informed MIST effective temperature for the effective temperature a
+    star has when it arrives on the ZAMS.
+
+    Defined for age from 80 to 1000 Myr.  If `bounds_error=='limit'`, then set
+    as whatever the lowest and highest values are.
+
+    Tested at /tests/plot_teff_cuts.py
+    """
+    if isinstance(age, (float,int)):
+        age = np.array([age])
+
+    csvpath = os.path.join(
+        DATADIR, "literature",
+        "Choi_2016_MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.4_basic_arrival_times.csv"
+    )
+    df = pd.read_csv(csvpath)
+
+    from scipy.interpolate import make_interp_spline
+
+    # linear interpolation
+    spl = make_interp_spline(df['age'], np.log10(df['Teff']), k=1)
+    teff0 = 10**spl(np.log10(age*1e6))
+
+    max_teff = 10**spl(np.log10(80*1e6))
+    min_teff = 10**spl(np.log10(1e9))
+
+    bad = (age < 80) | (age > 1000)
+    if bounds_error == 'nan':
+        teff0[bad] = np.nan
+    elif bounds_error == 'limit':
+        teff0[age < 80] = max_teff
+        teff0[age > 1000] = min_teff
+
+    return teff0
+
+
 def teff_0(age, bounds_error='limit'):
     """
-    Midpoint of how the slow sequence taper moves with age
-    Defined for age from 120 to 1000 Myr.
+    Naive, by-eye midpoint for how the slow sequence taper moves with age.
+    Defined for age from 120 to 1000 Myr.  If `bounds_error=='limit'`, then set
+    as whatever the lowest and highest values are.
+
+    Tested at /tests/plot_teff_cuts.py
     """
 
     if isinstance(age, (float,int)):

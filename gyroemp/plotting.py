@@ -664,6 +664,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
 
     # model_ids: iterable of strings, to be called by
     # models.reference_cluster_slow_sequence.
+    # TODO TODO TODO: TRY THIS OUT ON ALPHA PER... MAKE THESE THINGS KWARGS!!!
     model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                           'Group-X', 'Praesepe', 'NGC-6811']
