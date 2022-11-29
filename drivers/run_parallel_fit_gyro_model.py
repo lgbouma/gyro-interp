@@ -1,6 +1,10 @@
 """
 Varying A, B, C, k0, and k2, each over a grid, what parameters provide the best
 fit to the data?
+
+Usage:
+    Check modelid and grid matches what you want.  Then:
+    $ python -u run_parallel_fit_gyro_model &> logs/logname.log &
 """
 
 from itertools import product
@@ -52,8 +56,8 @@ def main():
 
     is_logB = False # set this
 
-    modelid = "fitgyro_v10_zeroB_zeroA_N2M"
-    outdir = os.path.join(LOCALDIR, "young-KOIs", modelid)
+    modelid = "fitgyro_v02_zeroB_zeroA_N40k"
+    outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     A_grid = np.array([1])
@@ -61,10 +65,15 @@ def main():
         logB_grid = np.arange(-6, 2.0, 1.0)
     else:
         B_grid = np.array([0])
-    C_grid = np.arange(1.1, 5.1, 0.1)
-    C_y0_grid = np.arange(0.2, 0.9, 0.01)
-    logk0_grid = np.arange(-6,-3.9,0.1)
-    logk2_grid = np.arange(-8,-4.5,0.1)
+    C_grid = np.arange(1.1, 20.1, 0.3)
+    C_y0_grid = np.arange(0.2, 0.9, 0.05)
+    logk0_grid = np.arange(-6,-3.9,0.3)
+    logk2_grid = np.arange(-8,-4.5,0.3)
+    # NOTE: probably use these for the 2M resolution
+    # C_grid = np.arange(1.1, 5.1, 0.1)
+    # C_y0_grid = np.arange(0.2, 0.9, 0.01)
+    # logk0_grid = np.arange(-6,-3.9,0.1)
+    # logk2_grid = np.arange(-8,-4.5,0.1)
 
     sigma_period = 0.51
     l1 = -2*sigma_period

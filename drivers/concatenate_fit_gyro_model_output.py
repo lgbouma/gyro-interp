@@ -11,13 +11,12 @@ from glob import glob
 import numpy as np, pandas as pd
 from datetime import datetime
 
-modelid = "fitgyro_v5_gridlogB"
-modelid = "fitgyro_v6_zeroB"
-modelid = "fitgyro_v7_zeroB_denser"
-input_dir = os.path.join(LOCALDIR, "young-KOIs", modelid)
+modelid = "fitgyro_v02_zeroB_zeroA_N40k"
+input_dir = os.path.join(LOCALDIR, "gyroemp", modelid)
 
 csvpaths = glob(os.path.join(input_dir, "A_*csv"))
 N = len(csvpaths)
+print(N)
 
 outdir = os.path.join(RESULTSDIR, "fit_gyro_model")
 outpath = os.path.join(outdir, f'{modelid}_concatenated_chi_squared_results.csv')

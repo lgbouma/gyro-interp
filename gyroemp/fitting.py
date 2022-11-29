@@ -9,6 +9,8 @@ from gyroemp.plotting import _get_model_histogram
 
 def get_chi_sq_red(parameters, verbose=1):
 
+    # NOTE: model_ids can include "α Per", if you want to also fit the model
+    # using that dataset.
     model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                           'Group-X', 'Praesepe', 'NGC-6811']

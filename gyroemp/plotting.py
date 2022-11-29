@@ -31,6 +31,8 @@ from matplotlib.colors import LogNorm, Normalize
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 from numpy import array as nparr
 
@@ -490,7 +492,9 @@ def _plot_prot_vs_teff_residual(
 
     # Get the data
     sel_teff_range = [3800, 6200]
-    if model_id == '120-Myr':
+    if model_id == 'α Per':
+        set_toplot = {'α Per'}
+    elif model_id == '120-Myr':
         set_120myr = {k for k,v in d.items() if "120" in v[2]}
         set_toplot = set_120myr.intersection(set(reference_clusters))
         sel_teff_range = [4500, 6200]
@@ -555,6 +559,8 @@ def _plot_prot_vs_teff_residual(
             )
         else:
             label_txt = label.split(" ")[-1]
+            if 'α Per' in label:
+                label_txt = 'α Per'
 
         ax.scatter(
             Teff[sel], Prot_residual[sel], color=color, alpha=1, s=15,
@@ -567,7 +573,7 @@ def _plot_prot_vs_teff_residual(
             zorder=zorder-1
         )
 
-        if model_id in ['120-Myr', '300-Myr']:
+        if model_id in ['α Per', '120-Myr', '300-Myr']:
             _Teff = np.linspace(3800, 6200, 1000)
             _Prot_model = reference_cluster_slow_sequence(
                 _Teff, model_id, poly_order=poly_order
@@ -590,7 +596,8 @@ def _plot_prot_vs_teff_residual(
                 ha='right',va='top', color='k')
 
     ax.set_xlim([6600, 3400])
-    ax.set_xticks([6000, 5500, 5000, 4500, 4000])
+    ax.set_xticks([6000, 5000, 4000])
+    ax.set_xticklabels([6000, 5000, 4000])
 
     ax.set_ylim([-14, 6])
     ax.set_yticks([-10, -5, 0, 5])
@@ -649,9 +656,14 @@ def _get_model_histogram(age, bounds_error='limit', parameters='default'):
     return np.array(hist_ss_vals), np.array(hist_fs_vals), teff_midway
 
 
-def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
+def plot_data_vs_model_prot(
+    outdir, poly_order=7, parameters='default',
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe'],
+    reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                          'Group-X', 'Praesepe', 'NGC-6811']
+    ):
     """
-    9-panel plot.  Requires: having previously run plot_cdf_fast_slow_ratio.
+    9 (or 12)-panel plot.  Requires: having previously run plot_cdf_fast_slow_ratio.
 
     Top row: Data-Mean actual stars for 120Myr,300Myr,670Myr
         i.e., plot_prot_vs_teff_residual
@@ -662,14 +674,11 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
 
     This is a dense plot that summarizes the entire modeling effort, as well as
     how good our model is doing!
-    """
 
-    # model_ids: iterable of strings, to be called by
-    # models.reference_cluster_slow_sequence.
-    # TODO TODO TODO: TRY THIS OUT ON ALPHA PER... MAKE THESE THINGS KWARGS!!!
-    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
-    reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                          'Group-X', 'Praesepe', 'NGC-6811']
+    ----------
+    model_ids: iterable of strings, to be called by
+    models.reference_cluster_slow_sequence.
+    """
 
     # Get data
     d = _get_cluster_Prot_Teff_data()
@@ -680,19 +689,50 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     # Each mean model gets its own (data-model) vs Teff axis
     factor = 0.8
     fig = plt.figure(figsize=(factor*3.0*3, factor*1.5*1.5*2.5))
-    axd = fig.subplot_mosaic(
-        """
-        012
-        345
-        678
-        """
-    )
+    Ncols = len(model_ids)
+    assert Ncols in [3,4]
+    if Ncols == 3:
+        axd = fig.subplot_mosaic(
+            """
+            012
+            345
+            678
+            """
+        )
+    elif Ncols == 4:
+        axd = fig.subplot_mosaic(
+            """
+            0123
+            4567
+            abcd
+            """
+        )
+
+    fig.text(-0.01, 4/6-0.03, "Rotation Period Data - Model [days]", va='center',
+             rotation=90, fontsize='large')
+
+    fig.text(-0.01, 1/6+0.03/2, "Fast Fraction", va='center',
+             rotation=90, fontsize='large')
+
+    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
+             fontsize='large')
+
+    fig.tight_layout(h_pad=0.4, w_pad=0.4)
+
 
     #
     # TOP ROW (same as plot_prot_vs_teff_residual)
     #
-    axs = [axd['0'], axd['1'], axd['2']]
-    titles = ['120 Myr', '300 Myr', '670 Myr']
+    if Ncols == 3:
+        axs = [axd['0'], axd['1'], axd['2']]
+        if model_ids == ['α Per', '120-Myr', '300-Myr']:
+            titles = ['80 Myr', '120 Myr', '300 Myr']
+        elif model_ids == ['120-Myr', '300-Myr', 'Praesepe']:
+            titles = ['120 Myr', '300 Myr', '670 Myr']
+    elif Ncols == 4:
+        axs = [axd['0'], axd['1'], axd['2'], axd['3']]
+        titles = ['80 Myr', '120 Myr', '300 Myr', '670 Myr']
+
     for ax, model_id, title in zip(axs, model_ids, titles):
         _plot_prot_vs_teff_residual(
             ax, model_id, d, reference_clusters, poly_order, showtxt=0,
@@ -703,9 +743,16 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     #
     # MIDDLE ROW (same as plot_slow_sequence_residual)
     #
-    axs = [axd['3'], axd['4'], axd['5']]
+    if Ncols == 3:
+        axs = [axd['3'], axd['4'], axd['5']]
+        if model_ids == ['α Per', '120-Myr', '300-Myr']:
+            ages = [80, 120, 300]
+        elif model_ids == ['120-Myr', '300-Myr', 'Praesepe']:
+            ages = [120, 300, 670]
+    elif Ncols == 4:
+        axs = [axd['4'], axd['5'], axd['6'], axd['7']]
+        ages = [80, 120, 300, 670]
     resid_Teffs = []
-    ages = [120, 300, 670]
     bounds_error = 'limit'
     for ax, age in zip(axs, ages):
         resid_Teffs, teff_grid = _plot_slow_sequence_residual(
@@ -716,9 +763,11 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     #
     # FINAL ROW: data vs the model
     #
-    axs = [axd['6'], axd['7'], axd['8']]
+    if Ncols == 3:
+        axs = [axd['6'], axd['7'], axd['8']]
+    elif Ncols == 4:
+        axs = [axd['a'], axd['b'], axd['c'], axd['d']]
     cachedir = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio')
-    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
 
     chi_sqs = []
     for ax, age, model_id in zip(axs, ages, model_ids):
@@ -750,7 +799,7 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
                   borderaxespad=1.0, borderpad=0.4)
         ax.set_ylim([-0.03, 1.03])
 
-    n = 14
+    n = 21
     k = 5
     chi_sq_red = np.sum(chi_sqs) / (n-k)
     print(f"this model params chi_sq_red: {chi_sq_red:.4f}")
@@ -758,17 +807,6 @@ def plot_data_vs_model_prot(outdir, poly_order=7, parameters='default'):
     # fix xlims
     for _, ax in axd.items():
         ax.set_xlim([6300, 3700])
-
-    fig.text(-0.01, 4/6-0.03, "Rotation Period Data - Model [days]", va='center',
-             rotation=90, fontsize='large')
-
-    fig.text(-0.01, 1/6+0.03/2, "Fast Fraction", va='center',
-             rotation=90, fontsize='large')
-
-    fig.text(0.5, -0.01, "Effective Temperature [K]", ha='center',
-             fontsize='large')
-
-    fig.tight_layout(h_pad=0.4, w_pad=0.4)
 
     basename = "_".join(reference_clusters)
     b = ''
@@ -843,8 +881,28 @@ def _plot_slow_sequence_residual(
         origin='lower',
         norm=norm
     )
+
+    if age == 670:
+        x0,y0,dx,dy = 0.5, 0.2, 0.4, 0.1
+
+        axins1 = inset_axes(ax, width="100%", height="100%",
+                            # x0,y0, dx, dy
+                            bbox_to_anchor=(x0,y0,dx,dy),
+                            loc='lower left',
+                            bbox_transform=ax.transAxes)
+
+        ticks = [0.01, 0.1, 1]
+        cb = fig.colorbar(_p, cax=axins1, orientation="horizontal",
+                          ticks=ticks)
+        cb.ax.minorticks_off()
+        cb.ax.tick_params(labelsize='small')
+        cb.ax.set_xticklabels([0.01, 0.1, 1])
+        cb.ax.set_title("Probability", fontsize='small', pad=0.1)
+
+
     ax.set_xlim([6600, 3400])
-    ax.set_xticks([6000, 5500, 5000, 4500, 4000])
+    ax.set_xticks([6000, 5000, 4000])
+    ax.set_xticklabels([6000, 5000, 4000])
 
     ax.set_ylim([-14, 6])
     ax.set_yticks([-10, -5, 0, 5])
@@ -1251,7 +1309,7 @@ def _given_params_plot_imshow(ax, xkey, ykey, df, vmin, i, j, map_row):
 
     A_grid = np.array([1])
     B_grid = np.array([0])
-    C_grid = np.arange(1.1, 5.1, 0.1)
+    C_grid = np.arange(1.1, 10.1, 0.1)
     C_y0_grid = np.arange(0.2, 0.9, 0.01)
     logk0_grid = np.arange(-6,-3.9,0.1)
     logk2_grid = np.arange(-8,-4.5,0.1)
