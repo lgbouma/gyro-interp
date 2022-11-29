@@ -94,6 +94,7 @@ def teff_0(age, bounds_error='limit'):
 
     return teff0
 
+
 def C_uniform(age, bounds_error='limit', y0=1/2):
     """
     How the third uniform component amplitude from slow_sequence_residual
@@ -237,10 +238,10 @@ def slow_sequence_residual(
     gaussian_y = norm.pdf(y_grid, loc=0, scale=sigma_period)
 
     # Add the tapering cutoff over a Teff grid using a logistic function.
-    # Its midpoint, teff_0, is a function of time: at 120 Myr it is 4500 K.  By
+    # Its midpoint, teff_zams, is a function of time: at 120 Myr it is 4500 K.  By
     # 300 Myr it is 4000 K, and at older times it goes below 3800 K.
     teff_logistic_taper = logistic(
-        teff_grid, teff_0(age, bounds_error=bounds_error), L=1, k=k0
+        teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k0
     )
 
     # N_y X N_teff grid defining the gaussian
@@ -285,7 +286,7 @@ def slow_sequence_residual(
     # smoothing length.
     uniform_y_Teff_1 = 1.*uniform_y_Teff * (
         1-logistic(
-            teff_grid, teff_0(age, bounds_error=bounds_error), L=1, k=k2
+            teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k2
         )
     )
 
