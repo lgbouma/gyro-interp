@@ -3,7 +3,7 @@ from gyroemp.paths import RESULTSDIR
 from datetime import datetime
 import os
 
-modelid = "fitgyro_v10_zeroB_zeroA_N2M"
+modelid = "fitgyro_v06_zeroB_zeroA_N750k"
 
 csvpath = os.path.join(
     RESULTSDIR, "fit_gyro_model",
@@ -15,6 +15,8 @@ df = pd.read_csv(
 )
 df['logk1'] = np.log(df.k1)
 df = df.drop(['k1'], axis='columns')
+df['n'] = 21
+df['k'] = 5
 
 df['chi_sq'] = (df.chi_sq_red) * (df.n - df.k)
 df['w'] = np.exp(-0.5 * df.chi_sq)

@@ -199,11 +199,11 @@ def slow_sequence_residual(
 
         A = 1
         B = 0
-        C = 8.9
-        C_y0 = 0.65
-        k0 = np.e**-4.8
+        C = 8.7
+        C_y0 = 0.66
+        k0 = np.e**-5.0
         l1 = -2*sigma_period
-        k1 = np.pi # a bit of a joke
+        k1 = np.pi # a joke, but it works
         k2 = np.e**-6.2
 
 
@@ -248,10 +248,12 @@ def slow_sequence_residual(
     gaussian_y = norm.pdf(y_grid, loc=0, scale=sigma_period)
 
     # Add the tapering cutoff over a Teff grid using a logistic function.
-    # Its midpoint is a function of time.  There are two possible choices: one
-    # is teff_0, which is defined s.t. at 120 Myr it is 4500 K.  By 300 Myr it
-    # is 4000 K, and at older times it goes below 3800 K.  The alternative is
-    # more physics-inspired -- just define it as teff_zams.
+    # Its midpoint is a function of time.  There are two implemented choices:
+    # teff_0 and teff_zams.  teff_0 is defined s.t. at 120 Myr it is 4500 K.
+    # By 300 Myr it is 4000 K, and at older times it goes below 3800 K.  The
+    # alternative teff_zams is more physics-inspired -- at any given time, it
+    # is the effective temperature of the lowest-mass star that has just
+    # arrived on the ZAMS (as determined using the MIST models).
     teff_logistic_taper = logistic(
         teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k0
     )

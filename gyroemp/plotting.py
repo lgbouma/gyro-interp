@@ -1309,10 +1309,15 @@ def _given_params_plot_imshow(ax, xkey, ykey, df, vmin, i, j, map_row):
 
     A_grid = np.array([1])
     B_grid = np.array([0])
-    C_grid = np.arange(1.1, 10.1, 0.1)
-    C_y0_grid = np.arange(0.2, 0.9, 0.01)
-    logk0_grid = np.arange(-6,-3.9,0.1)
-    logk2_grid = np.arange(-8,-4.5,0.1)
+    #C_grid = np.arange(1.1, 20.1, 0.1)
+    #C_y0_grid = np.arange(0.2, 0.9, 0.01)
+    #logk0_grid = np.arange(-8,2,0.1)
+    #logk2_grid = np.arange(-8,-4.5,0.1)
+    C_grid = np.arange(1.1, 20.1, 0.2)
+    C_y0_grid = np.arange(0.4, 0.8, 0.02)
+    logk0_grid = np.arange(-8, 3, 0.5)
+    logk2_grid = np.arange(-8,-4.5,0.2)
+
 
     #A_grid = np.arange(0.1, 1.6, 0.1)
     #B_grid = np.array([0])

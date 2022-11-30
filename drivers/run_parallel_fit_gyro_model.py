@@ -56,7 +56,7 @@ def main():
 
     is_logB = False # set this
 
-    modelid = "fitgyro_v02_zeroB_zeroA_N40k"
+    modelid = "fitgyro_v06_zeroB_zeroA_N750k"
     outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
@@ -65,10 +65,10 @@ def main():
         logB_grid = np.arange(-6, 2.0, 1.0)
     else:
         B_grid = np.array([0])
-    C_grid = np.arange(1.1, 20.1, 0.3)
-    C_y0_grid = np.arange(0.2, 0.9, 0.05)
-    logk0_grid = np.arange(-6,-3.9,0.3)
-    logk2_grid = np.arange(-8,-4.5,0.3)
+    C_grid = np.arange(1.1, 20.1, 0.2)
+    C_y0_grid = np.arange(0.4, 0.8, 0.02)
+    logk0_grid = np.arange(-8, 3, 0.5)
+    logk2_grid = np.arange(-8,-4.5,0.2)
     # NOTE: probably use these for the 2M resolution
     # C_grid = np.arange(1.1, 5.1, 0.1)
     # C_y0_grid = np.arange(0.2, 0.9, 0.01)
@@ -77,7 +77,7 @@ def main():
 
     sigma_period = 0.51
     l1 = -2*sigma_period
-    k1 = np.e**1
+    k1 = np.pi
 
     if is_logB:
         N = (
@@ -103,6 +103,7 @@ def main():
         ]
 
     print(N)
+    #assert 0
 
     nworkers = mp.cpu_count()
     maxworkertasks = 1000

@@ -11,7 +11,7 @@ from glob import glob
 import numpy as np, pandas as pd
 from datetime import datetime
 
-modelid = "fitgyro_v02_zeroB_zeroA_N40k"
+modelid = "fitgyro_v06_zeroB_zeroA_N750k"
 input_dir = os.path.join(LOCALDIR, "gyroemp", modelid)
 
 csvpaths = glob(os.path.join(input_dir, "A_*csv"))
