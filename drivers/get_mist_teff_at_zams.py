@@ -15,7 +15,7 @@ from scipy.interpolate import make_interp_spline, BSpline
 # solar metallicity default isochrone from
 # https://waps.cfa.harvard.edu/MIST/model_grids.html
 iso_path = os.path.join(
-    DATADIR, 'mist', "MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.4_basic.iso"
+    DATADIR, 'mist', "MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.4_full.iso"
 )
 
 iso = ISO(iso_path)
@@ -34,7 +34,8 @@ for ix, age in enumerate(ages):
         print(f"{ix}/{len(ages)}: logt {age}...")
     age_ind = iso.age_index(age)
     params = ['star_mass', 'initial_mass', 'log_Teff', 'log_L', 'log_R', 'EEP',
-              'phase']
+              'phase', 'mass_conv_core', 'log_center_T', 'log_center_Rho',
+              'surface_he3', 'pp']
     df = pd.DataFrame({})
     for param in params:
         df[param] = iso.isos[age_ind][param]
@@ -55,29 +56,35 @@ df['R'] = 10**df.log_R
 
 csvpath = os.path.join(
     DATADIR, 'literature',
-    'Choi_2016_MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.4_basic_arrival_times.csv'
+    'Choi_2016_MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.4_full_arrival_times.csv'
 )
 df.to_csv(csvpath, index=False)
 print(f"Wrote {csvpath}")
 
-params = ['star_mass', 'Teff', 'L', 'R']
+params = ['star_mass', 'Teff', 'L', 'R',
+          'mass_conv_core', 'log_center_T', 'log_center_Rho', 'surface_he3',
+          'pp']
 labels = [
     'Stellar mass [M$_\odot$]',
     'Effective temperature [K]',
     'Luminosity [L$_\odot$]',
     'Stellar radius [R$_\odot$]',
+      'mass_conv_core', 'log_center_T', 'log_center_Rho', 'surface_he3',
+      'pp'
 ]
 yticks = [
     [0.1, 0.2, 0.4, 0.6, 1.0, 2.0],
     [3000, 4000, 5000, 6000, 8000],
     None,
-    None
+    None,
+    None,None,None,None,None
 ]
 yticklabels = [
     [0.1, 0.2, 0.4, 0.6, 1.0, 2.0],
     [3000, 4000, 5000, 6000, 8000],
     None,
-    None
+    None,
+    None,None,None,None,None
 ]
 
 

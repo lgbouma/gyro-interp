@@ -22,6 +22,10 @@ plt.legend()
 outpath = os.path.join(outdir, 'teff_cuts_vs_time.png')
 plt.savefig(outpath, dpi=400)
 
+print(teff_zams(80))
+print(teff_zams(120))
+print(teff_zams(300))
+
 
 teff_grid = np.linspace(3800, 6200, 1000)
 plt.close("all")

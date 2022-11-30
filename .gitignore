@@ -20,3 +20,4 @@ data/interim/*/*glu
 data/interim/*/*png
 results*
 data/mist*
+secret_doc*
