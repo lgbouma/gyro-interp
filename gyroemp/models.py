@@ -135,8 +135,10 @@ def slow_sequence_residual(
     y_grid=np.linspace(-14, 6, 1000),
     teff_grid = np.linspace(3800, 6200, 1001),
     poly_order=7, n=0.5,
-    reference_model_ids=['120-Myr', '300-Myr', 'Praesepe', 'NGC-6811'],
-    reference_ages=[120, 300, 670, 1000],
+    reference_model_ids=[
+        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
+    ],
+    reference_ages=[80, 120, 300, 670, 1000, 2600],
     parameters='default',
     verbose=True,
     bounds_error='limit'):
@@ -181,8 +183,11 @@ def slow_sequence_residual(
         resid_y_Teff: 2d array with dimension (N_y_grid x N_teff_grid)
     """
 
+    assert len(reference_ages) == len(reference_model_ids)
+
     from scipy.stats import norm, uniform
 
+    # The intrinsic width (RMS) of the slow sequence, in units of days.
     sigma_period = 0.51
 
     if parameters == "default":
@@ -371,6 +376,8 @@ def slow_sequence(
         temperatures and age, in the same units as the provided reference
         periods.
     """
+
+    assert len(reference_ages) == len(reference_model_ids)
 
     if not isinstance(Teff, (np.ndarray, list)):
         Teff = np.array([Teff])

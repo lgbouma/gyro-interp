@@ -12,11 +12,28 @@ outdir = PLOTDIR
 # many clusters, overplotted
 #
 
-slow_seq_ages = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
-                 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200,
-                 2300, 2400, 2500, 2600]
+slow_seq_ages = np.arange(100, 2600+100, 100)
 
-# systematic uncertainty checks
+# systematic uncertainty checks for varying age scale
+for age_scale in ["1sigmaolder", "1sigmayounger"]:
+    ap.plot_empirical_limits_of_gyrochronology(
+        outdir, 'diff_median', slow_seq_ages=slow_seq_ages,
+        age_scale=age_scale
+    )
+    ap.plot_empirical_limits_of_gyrochronology(
+        outdir, 'diff_median_abs', slow_seq_ages=slow_seq_ages,
+        age_scale=age_scale
+    )
+
+assert 0
+
+# fig3a
+ap.plot_empirical_limits_of_gyrochronology(
+    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1
+)
+
+
+# systematic uncertainty checks for varying n
 for n in [1.0, 0.2]:
     ap.plot_empirical_limits_of_gyrochronology(
         outdir, 'diff_median', slow_seq_ages=slow_seq_ages, n=n
@@ -24,15 +41,8 @@ for n in [1.0, 0.2]:
     ap.plot_empirical_limits_of_gyrochronology(
         outdir, 'diff_median_abs', slow_seq_ages=slow_seq_ages, n=n
     )
-assert 0
-
-# fig3a (I think...)
-ap.plot_empirical_limits_of_gyrochronology(
-    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1
-)
 
 assert 0
-
 for n in [0.5, 1.0, 0.2]:
     ap.plot_empirical_limits_of_gyrochronology(
         outdir, 'median', slow_seq_ages=slow_seq_ages, n=n

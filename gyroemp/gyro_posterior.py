@@ -16,6 +16,7 @@ from datetime import datetime
 from scipy.stats import norm, uniform
 
 from gyroemp.models import slow_sequence_residual, slow_sequence
+from gyroemp.age_scale import agedict
 
 import multiprocessing as mp
 
@@ -127,7 +128,7 @@ def _gyro_age_posterior_worker(task):
     """
 
     (age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-     y_grid, bounds_error, n
+     y_grid, bounds_error, n, reference_ages
     ) = task
 
     if verbose:
@@ -139,7 +140,8 @@ def _gyro_age_posterior_worker(task):
     gaussian_Prots = []
 
     resid_obs_grid = Prot - slow_sequence(
-        teff_grid, age, verbose=False, bounds_error=bounds_error, n=n
+        teff_grid, age, verbose=False, bounds_error=bounds_error, n=n,
+        reference_ages=reference_ages
     )
 
     assert y_grid.ndim == 1
@@ -149,7 +151,7 @@ def _gyro_age_posterior_worker(task):
         y_grid, resid_obs_grid, Prot_err
     )
 
-    # # NOTE: comment below is the slower non-vectorized implementation of the
+    # # NOTE: the comment below is the non-vectorized implementation of the
     # # gaussian_pdf_broadcaster call above.  In this mode "step 0" is the
     # # slowest of the three steps -- took 30msec on a typical call, vs 5 msec
     # # for step 1 and 1 msec for step 2.  In the vectorized
@@ -172,7 +174,7 @@ def _gyro_age_posterior_worker(task):
     # y_grid X Teff_grid
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, verbose=False,
-        bounds_error=bounds_error, n=n
+        bounds_error=bounds_error, n=n, reference_ages=reference_ages
     )
     if verbose:
         print(f"{datetime.now().isoformat()} end 1")
@@ -191,10 +193,7 @@ def _gyro_age_posterior_worker(task):
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
-    verbose=False,
-    bounds_error='limit',
-    N_grid=256,
-    n=0.5
+    verbose=False, bounds_error='limit', N_grid=256, n=0.5, age_scale='default'
     ):
     """
     Given a stellar rotation period and effective temperature, as well as their
@@ -229,6 +228,13 @@ def gyro_age_posterior(
         performance.  Cutting down by factor of two leads to questionable
         convergence.
 
+        n (int or float): assume Prot ~ t^{n} scaling
+
+        age_scale (str): "default", "1sigmaolder", or "1sigmayounger".  Shifts
+        the entire age scale appropriately, based on the user's beliefs about
+        what ages of reference clusters are correct.  The scale is as described
+        in the manuscript, and defined in /gyroemp/age_scale.py
+
     Returns:
         * NaN if Teff outside [3800, 6200] K
         * String of "<120 Myr" if Prot and Teff put the star below the Pleiades
@@ -260,19 +266,32 @@ def gyro_age_posterior(
     if N_grid < 256:
         print("WARNING! N_grid must be >=256 to get converged results.")
 
+    assert isinstance(n, (int, float))
+
+    assert age_scale in ["default", "1sigmaolder", "1sigmayounger"]
+
+    ages = agedict[age_scale]
+    reference_ages = agedict[age_scale]['reference_ages']
+
     #
     # special return cases
     #
-    Prot_pleiades = slow_sequence(Teff, 120, n=n)
-    Prot_ngc6811 = slow_sequence(Teff, 1000, n=n)
-    Prot_rup147 = slow_sequence(Teff, 2600, n=n)
+    Prot_pleiades = slow_sequence(
+        Teff, ages['Pleiades'], n=n, reference_ages=reference_ages
+    )
+    Prot_ngc6811 = slow_sequence(
+        Teff, ages['NGC-6811'], n=n, reference_ages=reference_ages
+    )
+    Prot_rup147 = slow_sequence(
+        Teff, ages['Rup-147'], n=n, reference_ages=reference_ages
+    )
 
     if Prot < Prot_pleiades and Teff > 5000 and bounds_error == 'nan':
-        return '<120 Myr'
+        return f"<{ages['Pleiades']} Myr"
     if Prot < Prot_pleiades and Teff <= 5000 and bounds_error == 'nan':
-        return '<300 Myr'
+        return f"<{ages['NGC-6811']} Myr"
     if Prot > Prot_rup147 and bounds_error == 'nan':
-        return '>2600 Myr'
+        return f"<{ages['Rup-147']} Myr"
 
     #
     # calculate the posterior
@@ -290,7 +309,7 @@ def gyro_age_posterior(
 
         task = (
             age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-            y_grid, bounds_error, n
+            y_grid, bounds_error, n, reference_ages
         )
         p_age = _gyro_age_posterior_worker(task)
 

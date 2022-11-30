@@ -17,7 +17,7 @@ from gyroemp.helpers import given_grid_post_get_summary_statistics
 
 def get_age_posterior_worker(task):
 
-    Prot, Teff, age_grid, outdir, n = task
+    Prot, Teff, age_grid, outdir, n, age_scale = task
 
     Protstr = f"{float(Prot):.2f}"
     Teffstr = f"{float(Teff):.1f}"
@@ -28,7 +28,7 @@ def get_age_posterior_worker(task):
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
             Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-            verbose=False, n=n
+            verbose=False, n=n, age_scale=age_scale
         )
         df = pd.DataFrame({
             'age_grid': age_grid,
@@ -52,13 +52,19 @@ def get_age_posterior_worker(task):
         return 1
 
 
-def main(n=1.0):
+def main(n=0.5, age_scale="default"):
+    """
+    n: assume Prot ~ t^{n} scaling
+
+    age_scale: "default", "1sigmaolder", or "1sigmayounger".  Shifts the
+    entire age scale appropriately.
+    """
 
     outdir = os.path.join(LOCALDIR, "gyroemp")
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     outdir = os.path.join(
-        LOCALDIR, "gyroemp", f"prot_teff_grid_n{n}_reluncpt1pct"
+        LOCALDIR, "gyroemp", f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
     )
     if not os.path.exists(outdir): os.mkdir(outdir)
 
@@ -68,8 +74,8 @@ def main(n=1.0):
     Teff_grid = np.arange(teffmin, teffmax+50, 50)
     Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
 
-    tasks = [(_prot, _teff, age_grid, outdir, n) for _prot, _teff in
-             product(Prot_grid, Teff_grid)]
+    tasks = [(_prot, _teff, age_grid, outdir, n, age_scale)
+             for _prot, _teff in product(Prot_grid, Teff_grid)]
 
     N_tasks = len(tasks)
     print(f"Got N_tasks={N_tasks}...")
@@ -89,6 +95,10 @@ def main(n=1.0):
 
 
 if __name__ == "__main__":
+    main(n=0.5, age_scale="default")
+    main(n=0.5, age_scale="1sigmaolder")
+    main(n=0.5, age_scale="1sigmayounger")
+    assert 0
     main(n=1.0)
     main(n=0.2)
     main(n=0.5)

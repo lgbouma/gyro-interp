@@ -43,6 +43,8 @@ from gyroemp.models import (
 from gyroemp.getters import _get_cluster_Prot_Teff_data
 from gyroemp.helpers import given_grid_post_get_summary_statistics
 from gyroemp.gyro_posterior import gyro_age_posterior
+from gyroemp.age_scale import agedict
+
 from scipy.interpolate import interp1d
 
 # pip install aesthetic
@@ -1516,7 +1518,7 @@ def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
     savefig(fig, outpath, dpi=400, writepdf=False)
 
 
-def _get_empgyro_grid_data(imagestr, n, poly_order):
+def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
 
     # from run_prot_teff_grid.py
     teffmin, teffmax = 3800, 6200
@@ -1528,7 +1530,8 @@ def _get_empgyro_grid_data(imagestr, n, poly_order):
 
     typestr = 'limitgrid'
     cachedir = os.path.join(
-        LOCALDIR, "gyroemp", f"prot_teff_grid_n{n:.1f}_reluncpt1pct"
+        LOCALDIR, "gyroemp",
+        f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
     )
     _fpaths = [
         os.path.join(
@@ -1564,7 +1567,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order):
             peak[ix, iy] = df.loc[sel, 'peak']
 
             if y > slow_sequence(
-                x, 2600, poly_order=poly_order
+                x, 2600, poly_order=poly_order, n=n
             ):
                 p1sig[ix, iy] = np.nan
                 m1sig[ix, iy] = np.nan
@@ -1575,15 +1578,25 @@ def _get_empgyro_grid_data(imagestr, n, poly_order):
 
 
 def plot_empirical_limits_of_gyrochronology(
-    outdir, imagestr, poly_order=7, n=0.5, slow_seq_ages=None, writepdf=0):
+    outdir, imagestr, poly_order=7, n=0.5, age_scale=None,
+    slow_seq_ages=None, writepdf=0
+    ):
     """
     Map out precision of gyro posteriors as a function of Prot and Teff.
 
-    poly_order: integer polynomial order for the reference cluster mean model.
-    Default is 7, which seems to do the best job across all clusters.
+    args:
 
-    slow_seq_ages: optional list of ages, in Myr, for slow sequence models
-    to underplot (e.g., [120, 150, 200, 250]).
+        poly_order: integer polynomial order for the reference cluster mean
+        model.  Default is 7, which seems to do the best job across all
+        clusters.
+
+        slow_seq_ages: optional list of ages, in Myr, for slow sequence models
+        to underplot (e.g., [100, 200, 400]).
+
+        n: assume Prot ~ t^{n} scaling
+
+        age_scale: "default", "1sigmaolder", or "1sigmayounger".  Shifts the
+        entire age scale appropriately.
     """
 
     allowedstrs = [
@@ -1593,16 +1606,18 @@ def plot_empirical_limits_of_gyrochronology(
     assert imagestr in allowedstrs
     singleaxstrs = [s for s in allowedstrs if 'both' not in s]
 
+    assert age_scale in ["default", "1sigmaolder", "1sigmayounger"]
+
     #
     # Get data
     #
     p1sig, m1sig, median, peak = _get_empgyro_grid_data(
-        imagestr, n, poly_order
+        imagestr, n, poly_order, age_scale
     )
     if imagestr in ['diff_median', 'diff_median_abs', 'diff_peak']:
         npt5_p1sig, npt5_m1sig, npt5_median, npt5_peak = (
             _get_empgyro_grid_data(
-                imagestr, 0.5, poly_order
+                imagestr, 0.5, poly_order, age_scale
             )
         )
         dmedian = median - npt5_median
@@ -1765,10 +1780,14 @@ def plot_empirical_limits_of_gyrochronology(
     if isinstance(slow_seq_ages, list) and (
         imagestr in singleaxstrs
     ):
+
+        reference_ages = agedict[age_scale]['reference_ages']
+
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order, n=n
+                Teff, slow_seq_age, poly_order=poly_order, n=n,
+                reference_ages=reference_ages
             )
             if slow_seq_age % 500 == 0:
                 linewidth = 1.5
@@ -1784,7 +1803,8 @@ def plot_empirical_limits_of_gyrochronology(
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order, n=n
+                Teff, slow_seq_age, poly_order=poly_order, n=n,
+                reference_ages=reference_ages
             )
             if slow_seq_age % 500 == 0:
                 linewidth = 1.5
