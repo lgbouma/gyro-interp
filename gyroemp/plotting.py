@@ -1578,7 +1578,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
 
 
 def plot_empirical_limits_of_gyrochronology(
-    outdir, imagestr, poly_order=7, n=0.5, age_scale=None,
+    outdir, imagestr, poly_order=7, n=0.5, age_scale='default',
     slow_seq_ages=None, writepdf=0
     ):
     """
@@ -1617,7 +1617,7 @@ def plot_empirical_limits_of_gyrochronology(
     if imagestr in ['diff_median', 'diff_median_abs', 'diff_peak']:
         npt5_p1sig, npt5_m1sig, npt5_median, npt5_peak = (
             _get_empgyro_grid_data(
-                imagestr, 0.5, poly_order, age_scale
+                imagestr, 0.5, poly_order, 'default'
             )
         )
         dmedian = median - npt5_median
@@ -1662,7 +1662,10 @@ def plot_empirical_limits_of_gyrochronology(
     elif imagestr in ['diff_median_abs', 'diff_peak_abs']:
         norm = Normalize(vmin=-100, vmax=100)
     elif imagestr in ['diff_median', 'diff_peak']:
-        norm = Normalize(vmin=-0.1, vmax=0.1)
+        if age_scale == 'default':
+            norm = Normalize(vmin=-0.1, vmax=0.1)
+        else:
+            norm = Normalize(vmin=-0.2, vmax=0.2)
 
     if imagestr in ['plus', 'plus_abs']:
         img = p1sig.T
@@ -1689,7 +1692,10 @@ def plot_empirical_limits_of_gyrochronology(
     else:
         # divering
         cmap = mpl.colormaps['bwr']
-        cmap = mpl.cm.get_cmap("bwr", 8)
+        if age_scale == 'default':
+            cmap = mpl.cm.get_cmap("bwr", 8)
+        else:
+            cmap = mpl.cm.get_cmap("bwr", 16)
     #_cmap = cmap(np.arange(0,cmap.N))
 
     # # WHITE TOP OUTLIER
@@ -1777,11 +1783,11 @@ def plot_empirical_limits_of_gyrochronology(
             ax.set_yticks([0, 5, 10, 15, 20])
         axs[1].set_yticklabels([])
 
-    if isinstance(slow_seq_ages, list) and (
+    if isinstance(slow_seq_ages, (list, np.ndarray)) and (
         imagestr in singleaxstrs
     ):
 
-        reference_ages = agedict[age_scale]['reference_ages']
+        reference_ages = agedict['default']['reference_ages']
 
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
@@ -1799,7 +1805,7 @@ def plot_empirical_limits_of_gyrochronology(
                 Teff, Prot, color='lightgray', linewidth=linewidth,
                 linestyle=linestyle, zorder=999
             )
-    if isinstance(slow_seq_ages, list) and 'both' in imagestr:
+    if isinstance(slow_seq_ages, (list, np.ndarray)) and 'both' in imagestr:
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
@@ -1844,11 +1850,12 @@ def plot_empirical_limits_of_gyrochronology(
 
     basename = "empirical_limits_of_gyrochronology"
     s = f'_n{n:.1f}'
-    if isinstance(slow_seq_ages, list):
+    ss = f'_scale-{age_scale}'
+    if isinstance(slow_seq_ages, (list, np.ndarray)):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
 
-    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}.png')
+    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}{ss}.png')
 
     if 'both' in imagestr:
         fig.tight_layout(h_pad=0.4, w_pad=0.4)

@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import gyroemp.plotting as ap
 from gyroemp.paths import RESULTSDIR
 
@@ -18,10 +19,6 @@ slow_seq_ages = np.arange(100, 2600+100, 100)
 for age_scale in ["1sigmaolder", "1sigmayounger"]:
     ap.plot_empirical_limits_of_gyrochronology(
         outdir, 'diff_median', slow_seq_ages=slow_seq_ages,
-        age_scale=age_scale
-    )
-    ap.plot_empirical_limits_of_gyrochronology(
-        outdir, 'diff_median_abs', slow_seq_ages=slow_seq_ages,
         age_scale=age_scale
     )
 
