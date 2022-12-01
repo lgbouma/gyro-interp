@@ -56,7 +56,7 @@ def main():
 
     is_logB = False # set this
 
-    modelid = "fitgyro_v06_zeroB_zeroA_N750k"
+    modelid = "fitgyro_v07_zeroB_zeroA_N1pt5M"
     outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
@@ -66,7 +66,7 @@ def main():
     else:
         B_grid = np.array([0])
     C_grid = np.arange(1.1, 20.1, 0.2)
-    C_y0_grid = np.arange(0.4, 0.8, 0.02)
+    C_y0_grid = np.arange(0.4, 0.8, 0.01)
     logk0_grid = np.arange(-8, 3, 0.5)
     logk2_grid = np.arange(-8,-4.5,0.2)
     # NOTE: probably use these for the 2M resolution

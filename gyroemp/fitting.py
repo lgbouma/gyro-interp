@@ -37,15 +37,16 @@ def get_chi_sq_red(parameters, verbose=1):
         model_midpoints = teff_midway
         model_ratio = np.array( h_vals_fs / (h_vals_fs + h_vals_ss) )
 
+        f = 1/0.5323 # fudge factor to yield red-chi^2 near unity
         if age in [120, 300]:
-            sigma = 0.1 # uniform weighting across the 7 bins
+            sigma = 0.1 * f**(-0.5) # uniform weighting across the 7 bins
         elif age == 670:
-            sigma = 0.01 # stricter requirement -- want it gonezo.
+            sigma = 0.01 * f**(-0.5) # stricter requirement -- want it gonezo.
         else:
             raise NotImplementedError
 
-        chi_sq = np.sum( (data_ratio - model_ratio)**2 / sigma**2 )
-        chi_sqs.append(chi_sq)
+        _chi_sq = np.sum( (data_ratio - model_ratio)**2 / sigma**2 )
+        chi_sqs.append(_chi_sq)
 
     n = 21
     k = 6

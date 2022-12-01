@@ -19,7 +19,11 @@ df['n'] = 21
 df['k'] = 5
 
 df['chi_sq'] = (df.chi_sq_red) * (df.n - df.k)
-df['w'] = np.exp(-0.5 * df.chi_sq)
+df['w'] = (
+    np.exp(-0.5 * df.chi_sq)
+    /
+    np.sum(np.exp(-0.5 * df.chi_sq))
+)
 
 print(df.sort_values(by='chi_sq_red').head(n=20))
 

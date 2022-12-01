@@ -624,18 +624,6 @@ def _get_model_histogram(age, bounds_error='limit', parameters='default'):
     hist_fs_vals = []
     for ix, teff_midpoint in enumerate(teff_midway):
 
-        # NOTE OMITTING teff_limit, in order to play fast and loose with the
-        # "slow vs fast sequence" for <4500 K at 120 Myr.  (we want just some
-        # rough agreement between the "-2<y/day<2" and "y/day < -2" subsets)
-
-        #if age in [120, 300]:
-        #    if age == 120:
-        #        teff_limit = 4500
-        #    elif age == 300:
-        #        teff_limit = 3800
-        #    else:
-        #        teff_limit = 0
-
         # Effective temperature subset
         teff_lo = teff_chunk_bins[ix]
         teff_hi = teff_chunk_bins[ix+1]
