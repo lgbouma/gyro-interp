@@ -191,25 +191,16 @@ def slow_sequence_residual(
     sigma_period = 0.51
 
     if parameters == "default":
-        # # from fitgyro_v8_zeroB_N330k
-        # # note all best fits have C/A ~= 2.91 +/- 0.02
-        # A = 1
-        # B = 0
-        # C = 2.9
-        # C_y0 = 0.66
-        # k0 = np.e**-5.5
-        # l1 = -2*sigma_period
-        # k1 = np.e**1
-        # k2 = np.e**-6.3
-
+        # from run_emcee_fit_gyro_model
+        # [8.25637486, 0.6727635, -4.8845869, -6.23968718, -0.14829162]
         A = 1
         B = 0
-        C = 8.7
-        C_y0 = 0.66
-        k0 = np.e**-5.0
+        C = 8.256
+        C_y0 = 0.673
+        k0 = np.e**-4.885
         l1 = -2*sigma_period
         k1 = np.pi # a joke, but it works
-        k2 = np.e**-6.2
+        k2 = np.e**-6.240
 
 
     elif isinstance(parameters, dict):
@@ -311,17 +302,17 @@ def slow_sequence_residual(
 
     A = A
     B = B
-    C = C*C_uniform(age, bounds_error=bounds_error, y0=C_y0)
+    C_prefactor = C * C_uniform(age, bounds_error=bounds_error, y0=C_y0)
 
     # Initial iteration of model
-    resid_y_Teff_0 = A*gaussian_y_Teff + B*uniform_y_Teff_0 + C*uniform_y_Teff_1
+    resid_y_Teff_0 = A*gaussian_y_Teff + B*uniform_y_Teff_0 + C_prefactor*uniform_y_Teff_1
 
     # marginalize over y_grid
     resid_Teff_0 = np.trapz(resid_y_Teff_0, y_grid, axis=0)
 
     # normalize to ensure uniform distribution over Teff
     resid_y_Teff = (1/resid_Teff_0[None,:])*(
-        A*gaussian_y_Teff + B*uniform_y_Teff_0 + C*uniform_y_Teff_1
+        A*gaussian_y_Teff + B*uniform_y_Teff_0 + C_prefactor*uniform_y_Teff_1
     )
 
     return resid_y_Teff
@@ -360,7 +351,7 @@ def slow_sequence(
 
         reference_ages: iterable of ages corresponding to reference_model_ids.
 
-        n: braking index, defined by the spin-down power law Prot = C t^n. Default
+        n: braking index, defined by the spin-down power law Prot ~ t^n. Default
         is the canonical 0.5
 
         verbose: input True or False to choose whether to print error messages.

@@ -6,7 +6,7 @@ Usage:
     $ python -u run_emcee_fit_gyro_model.py &> logs/logname.log &
 """
 
-import emcee
+import emcee, corner
 import multiprocessing as mp
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 import pickle, os, corner
@@ -15,17 +15,44 @@ from os.path import join
 from scipy.optimize import minimize, Bounds
 
 from gyroemp.paths import RESULTSDIR, LOCALDIR
-
 from gyroemp.plotting import _get_model_histogram
 
-def log_probability(theta, datasets):
+def _get_data():
+
+    datasets = OrderedDict()
+
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
+    ages = [120, 300, 670]
+
+    for age, model_id in zip(ages, model_ids):
+
+        csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
+                               f'{model_id}_cdf_fast_slow_ratio_data.csv')
+        df = pd.read_csv(csvpath)
+        data_midpoints = np.array(df.Teff_midpoints)
+        data_ratio = np.array(df.ratio)
+        f = 1/0.5323 # fudge factor to yield red-chi^2 near unity
+        if age in [120, 300]:
+            sigma = 0.1 * f**(-0.5) # uniform weighting across the 7 bins
+        elif age == 670:
+            sigma = 0.01 * f**(-0.5) # stricter requirement -- want it gonezo.
+        else:
+            raise NotImplementedError
+
+        # x, y, y_err
+        datasets[model_id] = [data_midpoints, data_ratio, sigma, age]
+
+    return datasets
+
+
+def log_probability(theta):
 
     lp = log_prior(theta)
 
     if not np.isfinite(lp):
         return -np.inf
 
-    return lp + log_likelihood(theta, datasets)
+    return lp + log_likelihood(theta)
 
 
 def log_prior(theta):
@@ -35,7 +62,7 @@ def log_prior(theta):
     if (
         1 < C < 20 and
         0.1 < C_y0 < 1 and
-        -10 < logk0 < 5 and
+        -10 < logk0 < 0 and
         -10 < logk2 < 0 and
         -3 < logf < 3
     ):
@@ -44,7 +71,7 @@ def log_prior(theta):
     return -np.inf
 
 
-def log_likelihood(theta, datasets):
+def log_likelihood(theta):
 
     C, C_y0, logk0, logk2, logf = theta
 
@@ -85,35 +112,18 @@ def log_likelihood(theta, datasets):
 
 def main():
 
-    modelid = "fitgyro_emcee_v00"
+    modelid = "fitgyro_emcee_v01"
+    OVERWRITE = 1 # whether to overwrite the MCMC samples for modelid
+    n_steps = 15000 # number of MCMC steps.  10k is 100 minutes.
     outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     ############
     # get data #
     ############
-    datasets = OrderedDict()
-    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
-    ages = [120, 300, 670]
-
-    for age, model_id in zip(ages, model_ids):
-
-        csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
-                               f'{model_id}_cdf_fast_slow_ratio_data.csv')
-        df = pd.read_csv(csvpath)
-        data_midpoints = np.array(df.Teff_midpoints)
-        data_ratio = np.array(df.ratio)
-        f = 1/0.5323 # fudge factor to yield red-chi^2 near unity
-        if age in [120, 300]:
-            sigma = 0.1 * f**(-0.5) # uniform weighting across the 7 bins
-        elif age == 670:
-            sigma = 0.01 * f**(-0.5) # stricter requirement -- want it gonezo.
-        else:
-            raise NotImplementedError
-
-        # x, y, y_err
-        datasets[model_id] = [data_midpoints, data_ratio, sigma, age]
-
+    # make the data a global variable to speed up parallelization
+    global datasets
+    datasets = _get_data()
 
     ########################
     # get the MAP solution #
@@ -121,7 +131,6 @@ def main():
 
     ndim = 5
     nwalkers = 32
-    n_steps = 5000
 
     np.random.seed(42)
 
@@ -139,7 +148,7 @@ def main():
         )
 
         print('beginning minimization...')
-        soln = minimize(nll, initial, args=(datasets))
+        soln = minimize(nll, initial)
 
         C_ml, C_y0_ml, k0_ml, k2_ml, f_ml = soln.x
 
@@ -152,27 +161,51 @@ def main():
         map_soln = soln.x
 
     else:
-        map_soln = np.array([ 8.68683268,  0.67138394, -4.96275124, -6.20941048, -0.16000444])
+        map_soln = np.array(
+            [8.25637486, 0.6727635, -4.8845869, -6.23968718, -0.14829162]
+        )
 
     #######################################
     # fit the model and sample parameters #
     #######################################
+    model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     mstr = "_".join(model_ids)
     pklpath = os.path.join(outdir, f'fit_{mstr}.pkl')
 
+    if OVERWRITE:
+        if os.path.exists(pklpath): os.remove(pklpath)
+
     if not os.path.exists(pklpath):
 
-        # do everything!
+        # Sample!
 
         pos = map_soln + 1e-4 * np.random.randn(nwalkers, ndim)
         nwalkers, ndim = pos.shape
 
-        #TODO TODO NEED TO AT LEAST MULTIHTREAD HERE!!!! OR OTHERWISE MAKE MUCH
-        #FASTER
-        sampler = emcee.EnsembleSampler(
-            nwalkers, ndim, log_probability, args=(datasets,)
-        )
-        sampler.run_mcmc(pos, n_steps, progress=True)
+        DO_PARALLEL = 1
+
+        if DO_PARALLEL:
+            nworkers = mp.cpu_count()
+            with mp.Pool(nworkers) as pool:
+                sampler = emcee.EnsembleSampler(
+                    nwalkers, ndim, log_probability,
+                    pool=pool
+                )
+                sampler.run_mcmc(pos, n_steps, progress=True)
+
+        if not DO_PARALLEL:
+            sampler = emcee.EnsembleSampler(
+                nwalkers, ndim, log_probability
+            )
+            sampler.run_mcmc(pos, n_steps, progress=True)
+
+        #FIXME
+        #FIXME
+        #FIXME trim once you know the correlation time...
+        #FIXME
+        #FIXME
+        # flat_samples = sampler.get_chain(discard=1000, flat=True)
+        flat_samples = sampler.get_chain(flat=True)
 
         outdict = {
             'flat_samples': flat_samples
@@ -181,11 +214,14 @@ def main():
             pickle.dump(outdict, f)
             print(f"Wrote {pklpath}")
 
-        import IPython; IPython.embed()
-        # TODO: check autocorrelation time...    maybe iteratively?
         tau = sampler.get_autocorr_time()
         print(tau)
 
+        outdir = os.path.join(RESULTSDIR, "emcee_fit_gyro_model")
+        outtxt = os.path.join(outdir, "tau_estimate.txt")
+        with open(outtxt, 'w') as f:
+            f.writelines(repr(tau))
+        print(f"Wrote {outtxt}")
 
     else:
         print(f"Found {pklpath}, loading.")
@@ -197,7 +233,18 @@ def main():
     ##################
     # analyze output #
     ##################
-    #FIXME
+
+    outdir = os.path.join(RESULTSDIR, "emcee_fit_gyro_model")
+    if not os.path.exists(outdir): os.mkdir(outdir)
+
+    # corner plot
+    fig = corner.corner(
+        flat_samples, labels=["C", "C_y0", "logk0", "logk2", "logf"]
+    )
+    outpath = os.path.join(outdir, "corner.png")
+    fig.savefig(outpath, bbox_inches="tight", dpi=300)
+    print(f"Wrote {outpath}")
+
 
 
 if __name__ == "__main__":
