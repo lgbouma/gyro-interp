@@ -21,3 +21,4 @@ data/interim/*/*png
 results*
 data/mist*
 secret_doc*
+*secret*
