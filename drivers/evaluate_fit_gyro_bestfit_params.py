@@ -1,3 +1,6 @@
+"""
+DEPRECATED (uses the chi^2 brute-force fitting rather than sampling)
+"""
 import numpy as np, pandas as pd
 from gyroemp.paths import RESULTSDIR
 from datetime import datetime

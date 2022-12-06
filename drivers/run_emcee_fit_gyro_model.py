@@ -234,12 +234,22 @@ def main():
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     # corner plot
-    fig = corner.corner(
-        flat_samples, labels=["C", "C_y0", "logk0", "logk2", "logf"]
-    )
     outpath = os.path.join(outdir, "corner.png")
-    fig.savefig(outpath, bbox_inches="tight", dpi=300)
-    print(f"Wrote {outpath}")
+    labels = ["C", "C_y0", "logk0", "logk2", "logf"]
+    if not os.path.exists(outpath):
+        fig = corner.corner(
+            flat_samples, labels=labels
+        )
+        fig.savefig(outpath, bbox_inches="tight", dpi=300)
+        print(f"Wrote {outpath}")
+
+    # print best-fit parameters
+    for i in range(ndim):
+        mcmc = np.percentile(flat_samples[:, i], [15.9, 50, 84.1])
+        q = np.diff(mcmc)
+        txt = "\mathrm{{{3}}} = {0:.3f}_{{-{1:.3f}}}^{{{2:.3f}}}"
+        txt = txt.format(mcmc[1], q[0], q[1], labels[i])
+        print(txt)
 
 
 

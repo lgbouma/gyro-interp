@@ -19,7 +19,7 @@ Helpers:
         _plot_slow_sequence_residual
         _plot_prot_vs_teff_residual
 """
-import os
+import os, pickle
 from glob import glob
 from os.path import join
 from itertools import product
@@ -766,8 +766,19 @@ def plot_data_vs_model_prot(
                                f'{model_id}_cdf_fast_slow_ratio_data.csv')
         df = pd.read_csv(csvpath)
 
-        ax.plot(df.Teff_midpoints, df.ratio, c='k', ls='--', marker='*',
-                label='Data', zorder=2)
+        _f = 1/0.5323 # fudge factor to yield red-chi^2 near unity
+        logf_ml = -0.148
+        if age in [80, 120, 300]:
+            sigma = 0.1 * _f**(-0.5) * np.exp(logf_ml) # uniform weighting across the 7 bins
+        elif age == 670:
+            sigma = 0.01 * _f**(-0.5) * np.exp(logf_ml) # stricter requirement -- want it gonezo.
+
+        #ax.plot(df.Teff_midpoints, df.ratio, c='k', ls='--', marker='*',
+        #        label='Data', zorder=2)
+        ax.errorbar(
+            df.Teff_midpoints, df.ratio, yerr=sigma, c='k', ls='--',
+            marker='o', ms=4.5, label='Data'
+        )
 
         # NOTE: could be plotted continuously, rather than at these specific
         # teff bins, and ages.  for apples-to-apples, this is fine.
@@ -775,24 +786,52 @@ def plot_data_vs_model_prot(
             age, parameters=parameters
         )
         model_ratio = h_vals_fs / (h_vals_fs + h_vals_ss)
+        ax.plot(teff_midway, model_ratio, c='gray', ls='-', marker='X',
+                label='Best-fit Model', zorder=1, ms=4, lw=1, mew=0)
 
-        ax.plot(teff_midway, model_ratio, c='darkgray', ls='-', marker='o',
-                label='Model', zorder=1)
+        pklpath = os.path.join(LOCALDIR, "gyroemp", "fitgyro_emcee_v00",
+                               "fit_120-Myr_300-Myr_Praesepe.pkl")
+        with open(pklpath, 'rb') as f:
+            d = pickle.load(f)
+            flat_samples = d['flat_samples']
 
-        data = np.array(df.ratio)
-        model = np.array(model_ratio)
-        sigma = 0.1 # uniform weighting across the 7 bins
-        chi_sq = np.sum( (data-model)**2 / sigma**2 )
-        chi_sqs.append(chi_sq)
+        np.random.seed(42)
+        N_to_show = 64
+        sel_samples = flat_samples[
+            np.random.choice(flat_samples.shape[0], N_to_show, replace=False)
+        ]
+        sigma_period = 0.51
+        for ix in range(N_to_show):
+            if ix % 8 == 0:
+                print(age, ix)
+            sample = sel_samples[ix, :]
+            #C, C_y0, logk0, logk2, logf = theta
+            parameters = {
+                'A': 1,
+                'B': 0,
+                'C': sample[0],
+                'C_y0': sample[1],
+                'logk0': sample[2],
+                'logk2': sample[3],
+                'l1': -2*sigma_period,
+                'k1': np.pi # a joke, but it works
+            }
+            h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
+                age, parameters=parameters
+            )
+            model_ratio = h_vals_fs / (h_vals_fs + h_vals_ss)
+            ax.plot(teff_midway, model_ratio, c='darkgray', ls='-', marker='o',
+                    zorder=-100, ms=2, alpha=0.1, lw=0.5, mew=0)
 
-        ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
+            #legend trick
+            if ix == 0:
+                ax.plot(teff_midway+9999, model_ratio, c='darkgray', ls='-', marker='o',
+                        zorder=-100, ms=2, alpha=0.5, lw=0.5, mew=0,
+                        label='Samples')
+
+        ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.5,
                   borderaxespad=1.0, borderpad=0.4)
         ax.set_ylim([-0.03, 1.03])
-
-    n = 21
-    k = 5
-    chi_sq_red = np.sum(chi_sqs) / (n-k)
-    print(f"this model params chi_sq_red: {chi_sq_red:.4f}")
 
     # fix xlims
     for _, ax in axd.items():
