@@ -8,6 +8,8 @@ Usage:
 
 import emcee, corner
 import multiprocessing as mp
+import matplotlib as mpl
+mpl.use('agg')
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 import pickle, os, corner
 from collections import OrderedDict
@@ -112,9 +114,9 @@ def log_likelihood(theta):
 
 def main():
 
-    modelid = "fitgyro_emcee_v01"
-    OVERWRITE = 1 # whether to overwrite the MCMC samples for modelid
-    n_steps = 15000 # number of MCMC steps.  10k is 100 minutes.
+    modelid = "fitgyro_emcee_v02"
+    OVERWRITE = 0 # whether to overwrite the MCMC samples for modelid
+    n_steps = 32000 # number of MCMC steps.  10k is 100 minutes.  30k+2k burn.
     outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
@@ -178,7 +180,6 @@ def main():
     if not os.path.exists(pklpath):
 
         # Sample!
-
         pos = map_soln + 1e-4 * np.random.randn(nwalkers, ndim)
         nwalkers, ndim = pos.shape
 
@@ -199,13 +200,8 @@ def main():
             )
             sampler.run_mcmc(pos, n_steps, progress=True)
 
-        #FIXME
-        #FIXME
-        #FIXME trim once you know the correlation time...
-        #FIXME
-        #FIXME
-        # flat_samples = sampler.get_chain(discard=1000, flat=True)
-        flat_samples = sampler.get_chain(flat=True)
+        # autocorrelation time max is 91 steps for logk0. discard 20x that
+        flat_samples = sampler.get_chain(discard=2000, flat=True)
 
         outdict = {
             'flat_samples': flat_samples
