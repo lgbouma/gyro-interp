@@ -12,6 +12,7 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from numpy import array as nparr
 from os.path import join
 from datetime import datetime
+import warnings
 
 from scipy.stats import norm, uniform
 
@@ -29,17 +30,22 @@ def parallel_gyro_age_posterior(
     nworkers='max',
 ):
     """
-    Parallelize gyro_age_posterior calculation over the grid of requested ages.
-
-    Note that the speedup from this function is not very good -- it gives only
-    factor of 2x speedup for typical parameters.
-
-    If the task is to calculate gyro age posteriors for many stars, you will do
-    better by parallelization over STARS, rather than AGES.
+    Parallelize gyro_age_posterior calculation over a requested grid of
+    ages.  The speedup from this function is not very good -- it gives
+    only factor of 2x speedup for typical parameters.  If the task is to
+    calculate gyro age posteriors for many stars, you will do better by
+    parallelization over STARS, rather than AGES.  See e.g.,
+    /drivers/run_prot_teff_grid.py.
 
     Args are as in gyro_age_posterior, but nworkers is either "max" or an
     integer number of cores to use.
     """
+
+    # raise a traceback warning - this functoin should rarely be used.
+    # TODO: remove it entirely?
+    raise UserWarning(
+        "The speedup from parallel_gyro_age_posterior is not very good."
+    )
     #
     # handle input parameters
     #
@@ -123,18 +129,18 @@ def gaussian_pdf_broadcaster(x, mu, sigma):
 
 def _gyro_age_posterior_worker(task):
     """
-    Worker that, for a given true age (and given all the relevant grids)
-    evaluates the gyro posterior.
+    Given a star's true age evaluate the gyro posterior over the given
+    grids in Teff and y=Prot-μ.
     """
 
     (age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
      y_grid, bounds_error, n, reference_ages
     ) = task
 
-    if verbose:
-        print(age)
+    assert y_grid.ndim == 1
 
     if verbose:
+        print(age)
         print(f"{datetime.now().isoformat()} begin 0")
 
     gaussian_Prots = []
@@ -144,46 +150,31 @@ def _gyro_age_posterior_worker(task):
         reference_ages=reference_ages
     )
 
-    assert y_grid.ndim == 1
     assert resid_obs_grid.ndim == 1
 
     gaussian_Prots = gaussian_pdf_broadcaster(
         y_grid, resid_obs_grid, Prot_err
     )
 
-    # # NOTE: the comment below is the non-vectorized implementation of the
-    # # gaussian_pdf_broadcaster call above.  In this mode "step 0" is the
-    # # slowest of the three steps -- took 30msec on a typical call, vs 5 msec
-    # # for step 1 and 1 msec for step 2.  In the vectorized
-    # # gaussian_pdf_broadcaster implementation, step 0 is only 3 msec.
-
-    # for teff, resid_obs in zip(teff_grid, resid_obs_grid):
-    #     # residual over dimension of Teff_grid
-    #     gaussian_Prot = norm.pdf(y_grid, loc=resid_obs, scale=Prot_err)
-    #     gaussian_Prots.append(gaussian_Prot)
-    # # y_grid x Teff_grid of gaussians, accounting for the observational
-    # # uncertainty
-    # gaussian_Prots = np.vstack(gaussian_Prots).T
-
     if verbose:
         print(f"{datetime.now().isoformat()} end 0")
-
-    if verbose:
         print(f"{datetime.now().isoformat()} begin 1")
+
     # probability of a given residual (data-model) over dimensions of
     # y_grid X Teff_grid
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, verbose=False,
         bounds_error=bounds_error, n=n, reference_ages=reference_ages
     )
-    if verbose:
-        print(f"{datetime.now().isoformat()} end 1")
 
     if verbose:
+        print(f"{datetime.now().isoformat()} end 1")
         print(f"{datetime.now().isoformat()} begin 2")
+
     integrand = resid_y_Teff * gaussian_Prots * gaussian_teff[None, :]
 
     p_age = np.trapz(np.trapz(integrand, teff_grid, axis=1), y_grid)
+
     if verbose:
         print(f"{datetime.now().isoformat()} end 2")
 
