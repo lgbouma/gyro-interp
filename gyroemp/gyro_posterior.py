@@ -1,7 +1,8 @@
 """
 Contents:
     gyro_age_posterior
-    parallel_gyro_age_posterior
+    gyro_age_posterior_mcmc
+    agethreaded_gyro_age_posterior
 
 Under-the-hood:
     _gyro_age_posterior_worker
@@ -21,7 +22,7 @@ from gyroemp.age_scale import agedict
 
 import multiprocessing as mp
 
-def parallel_gyro_age_posterior(
+def agethreaded_gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
     verbose=True,
@@ -44,7 +45,7 @@ def parallel_gyro_age_posterior(
     # raise a traceback warning - this functoin should rarely be used.
     # TODO: remove it entirely?
     raise UserWarning(
-        "The speedup from parallel_gyro_age_posterior is not very good."
+        "The speedup from agethreaded_gyro_age_posterior is not very good."
     )
     #
     # handle input parameters

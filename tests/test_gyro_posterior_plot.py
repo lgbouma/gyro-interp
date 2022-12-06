@@ -1,7 +1,7 @@
 import os
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from gyroemp.gyro_posterior import (
-    parallel_gyro_age_posterior, gyro_age_posterior
+    agethreaded_gyro_age_posterior, gyro_age_posterior
 )
 from datetime import datetime
 
@@ -23,7 +23,7 @@ def run_serial(N):
 def run_parallel(N):
 
     print(f"{datetime.now().isoformat()} begin N={N} (parallel)")
-    age_post = parallel_gyro_age_posterior(
+    age_post = agethreaded_gyro_age_posterior(
         Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
         N_grid=N, verbose=False
     )
