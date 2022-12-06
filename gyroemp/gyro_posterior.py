@@ -6,9 +6,12 @@ Contents:
 
 Under-the-hood:
     _gyro_age_posterior_worker
+    _one_star_age_posterior_worker
+    _get_pop_samples
 """
 import os, pickle
-from gyroemp.paths import DATADIR
+from glob import glob
+from gyroemp.paths import DATADIR, LOCALDIR
 import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from numpy import array as nparr
 from os.path import join
@@ -19,6 +22,7 @@ from scipy.stats import norm, uniform
 
 from gyroemp.models import slow_sequence_residual, slow_sequence
 from gyroemp.age_scale import agedict
+from gyroemp.helpers import given_grid_post_get_summary_statistics
 
 from datetime import datetime
 import multiprocessing as mp
@@ -336,8 +340,18 @@ def _one_star_age_posterior_worker(task):
     Teffstr = f"{float(Teff):.1f}"
     typestr = 'limitgrid'
     bounds_error = 'limit'
+    if parameters == 'default':
+        paramstr = "_defaultparameters"
+    else:
+        paramstr = "_" + (
+            repr(parameters).
+            replace(' ',"_").replace("{","").replace("}","").
+            replace("'","").replace(":","").replace(",","")
+        )
 
-    cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teffstr}_{typestr}.csv")
+    cachepath = os.path.join(
+        outdir, f"Prot{Protstr}_Teff{Teffstr}_{typestr}{paramstr}.csv"
+    )
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
             Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
@@ -358,11 +372,11 @@ def _one_star_age_posterior_worker(task):
         df.to_csv(cachepath, index=False)
         print(f"Wrote {cachepath}")
 
-        return 1
+        return cachepath
 
     else:
         print(f"Found {cachepath}")
-        return 1
+        return cachepath
 
 
 def _get_pop_samples(N_pop_samples):
@@ -421,11 +435,17 @@ def gyro_age_posterior_mcmc(
 
         cachedir (str): path to directory where individual posteriors will be
         cached (for every star, `N_post_samples` files will be written here!)
+
+    Parallelizes over the population-parameters samples.  Takes 3 minutes to
+    run `N_post_samples=512` on a 64 core machine.
     """
 
     assert isinstance(cachedir, str)
     if not os.path.exists(cachedir): os.mkdir(cachedir)
 
+    #
+    # calculate the individual posteriors for each set of population parameters
+    #
     popn_parameter_list = _get_pop_samples(N_pop_samples)
 
     tasks = [(Prot, Teff, age_grid, cachedir, n, age_scale, paramdict)
@@ -439,22 +459,44 @@ def gyro_age_posterior_mcmc(
     maxworkertasks= 1000
 
     pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
-
-    results = pool.map(_one_star_age_posterior_worker, tasks)
-
+    cachepaths = pool.map(_one_star_age_posterior_worker, tasks)
     pool.close()
     pool.join()
 
     print(f"{datetime.now().isoformat()} end")
 
-    #FIXME TODO: gotta then draw the samples, and numerically construct the
-    #final pdf.
-    import IPython; IPython.embed()
-    assert 0
+    #
+    # draw the samples, and numerically construct the final pdf.
+    #
+    cachepaths = [c.replace(".csv", "_posterior.csv") for c in cachepaths]
 
+    print(42*'-')
+    print(f"Got {len(cachepaths)} cachepaths (from {len(tasks)})...")
+    print(42*'-')
 
+    if len(cachepaths) < len(tasks):
+        print(42*'-')
+        print('WARNING! Got fewer outputs than expected.')
+        print(42*'-')
 
-    return p_ages
+    age_samples = []
+    for cachepath in cachepaths:
+        df = pd.read_csv(cachepath)
+        age_samples.append(
+            df.sample(
+                n=N_post_samples, replace=True, weights=df.age_post
+            ).age_grid
+        )
+    age_samples = np.hstack(age_samples)
+
+    denominator = len(age_samples)
+
+    p_ages = []
+    for age in age_grid:
+        numerator = np.sum(np.isclose(age_samples, age))
+        p_ages.append(numerator/denominator)
+
+    return p_ages / np.trapz(p_ages, age_grid)
 
 
 

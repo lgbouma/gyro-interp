@@ -1166,26 +1166,29 @@ def plot_age_posteriors(
             typestr = 'limitgrid'
         cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teff}_{typestr}.csv")
         if not os.path.exists(cachepath):
-            if not full_mcmc:
-                age_post = gyro_age_posterior(
-                    Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-                    verbose=False
-                )
-            elif full_mcmc:
-                age_post = gyro_age_posterior_mcmc(
-                    Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-                    verbose=False, cachedir=outdir
-                )
+
+            age_post = gyro_age_posterior(
+                Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                verbose=False
+            )
             df = pd.DataFrame({
                 'age_grid': age_grid,
                 'age_post': age_post
             })
+            if full_mcmc:
+                age_post_mcmc = gyro_age_posterior_mcmc(
+                    Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                    verbose=False, cachedir=outdir
+                )
+                df['age_post_mcmc'] = age_post_mcmc
             df.to_csv(cachepath)
             print(f"Wrote {cachepath}")
 
         df = pd.read_csv(cachepath)
         age_grid = np.array(df.age_grid)
         age_post = np.array(df.age_post)
+        if full_mcmc:
+            age_post_mcmc = np.array(df.age_post_mcmc)
 
         d = given_grid_post_get_summary_statistics(age_grid, age_post)
         d['Prot'] = Prot
@@ -1199,9 +1202,10 @@ def plot_age_posteriors(
     # make plot
     #
 
+    protstr = '_'.join(np.array(Prots).astype(str))
     outpath = os.path.join(
         outdir,
-        f"age_posteriors_Teff{str(Teff)}_Prot{'_'.join(np.array(Prots).astype(str))}.png"
+        f"age_posteriors_Teff{str(Teff)}_Prot{protstr}.png"
     )
 
     #
@@ -1224,8 +1228,14 @@ def plot_age_posteriors(
         #label = r"P$_{\rm rot}=$"+f"{Prot:.1f}d"
         label = f"{Prot:.1f}"+"$\,$d"
 
-        ax.plot(df.age_grid, 1e3*df.age_post, color=color, ls='-', lw=1,
-                label=label)
+        if not full_mcmc:
+            ax.plot(df.age_grid, 1e3*df.age_post, color=color, ls='-', lw=1,
+                    label=label)
+        else:
+            ax.plot(df.age_grid, 1e3*df.age_post_mcmc, color=color,
+                    ls=':', lw=0.5, zorder=2)
+            ax.plot(df.age_grid, 1e3*df.age_post, color=color,
+                    ls='-', lw=1, label=label, zorder=3)
 
     ax.legend(loc='best', fontsize='small', handletextpad=0.2,
               borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
@@ -1233,7 +1243,7 @@ def plot_age_posteriors(
 
     ax.update({
         'xlabel': 'Age [Myr]',
-        'ylabel': 'Probability (Myr$^{-1}$)',
+        'ylabel': 'Probability ($10^{-3}\,$Myr$^{-1}$)',
         'xlim': [0, 1700],
     })
     ax.set_title(f'{Teff}'+'$\,$K', pad=-4)
