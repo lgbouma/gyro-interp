@@ -1,11 +1,13 @@
+"""
+(deprecated)
+"""
 import os
 import gyroemp.plotting as ap
 from gyroemp.paths import RESULTSDIR
 import numpy as np, pandas as pd
 
 PLOTDIR = os.path.join(RESULTSDIR, 'age_posteriors_boundserror_limit')
-if not os.path.exists(PLOTDIR):
-    os.mkdir(PLOTDIR)
+if not os.path.exists(PLOTDIR): os.mkdir(PLOTDIR)
 outdir = PLOTDIR
 
 bounds_error = 'limit'
@@ -16,3 +18,4 @@ for Teff in [4500, 5500]:
         ap.plot_age_posterior(
             Prot, Teff, outdir, age_grid=age_grid, bounds_error=bounds_error
         )
+

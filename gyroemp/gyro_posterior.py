@@ -20,6 +20,7 @@ from scipy.stats import norm, uniform
 from gyroemp.models import slow_sequence_residual, slow_sequence
 from gyroemp.age_scale import agedict
 
+from datetime import datetime
 import multiprocessing as mp
 
 def agethreaded_gyro_age_posterior(
@@ -36,7 +37,8 @@ def agethreaded_gyro_age_posterior(
     only factor of 2x speedup for typical parameters.  If the task is to
     calculate gyro age posteriors for many stars, you will do better by
     parallelization over STARS, rather than AGES.  See e.g.,
-    /drivers/run_prot_teff_grid.py.
+    gyro_age_posterior_mcmc in this module, or /drivers/run_prot_teff_grid.py
+    for examples.
 
     Args are as in gyro_age_posterior, but nworkers is either "max" or an
     integer number of cores to use.
@@ -135,7 +137,7 @@ def _gyro_age_posterior_worker(task):
     """
 
     (age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-     y_grid, bounds_error, n, reference_ages
+     y_grid, bounds_error, n, reference_ages, popn_parameters
     ) = task
 
     assert y_grid.ndim == 1
@@ -165,7 +167,8 @@ def _gyro_age_posterior_worker(task):
     # y_grid X Teff_grid
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, verbose=False,
-        bounds_error=bounds_error, n=n, reference_ages=reference_ages
+        bounds_error=bounds_error, n=n, reference_ages=reference_ages,
+        popn_parameters=popn_parameters
     )
 
     if verbose:
@@ -185,7 +188,8 @@ def _gyro_age_posterior_worker(task):
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid=256, n=0.5, age_scale='default'
+    verbose=False, bounds_error='limit', N_grid=256, n=0.5,
+    age_scale='default', popn_parameters='default'
     ):
     """
     Given a stellar rotation period and effective temperature, as well as their
@@ -227,6 +231,11 @@ def gyro_age_posterior(
         what ages of reference clusters are correct.  The scale is as described
         in the manuscript, and defined in /gyroemp/age_scale.py
 
+        popn_parameters (str or dict). (str) "default", or (dict) containing
+        the population-level free parameters.  Keys of "A", "C", "C_y0", "k0",
+        "l1", "k1", and "k2" must all be specified.  If "B" is not specified,
+        assumes B=0, and the optional component mentioned above is omitted.
+
     Returns:
         * NaN if Teff outside [3800, 6200] K
         * String of "<120 Myr" if Prot and Teff put the star below the Pleiades
@@ -265,6 +274,10 @@ def gyro_age_posterior(
     ages = agedict[age_scale]
     reference_ages = agedict[age_scale]['reference_ages']
 
+    assert isinstance(popn_parameters, (str, dict))
+    if isinstance(popn_parameters, str):
+        assert popn_parameters == 'default'
+
     #
     # special return cases
     #
@@ -301,7 +314,7 @@ def gyro_age_posterior(
 
         task = (
             age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-            y_grid, bounds_error, n, reference_ages
+            y_grid, bounds_error, n, reference_ages, popn_parameters
         )
         p_age = _gyro_age_posterior_worker(task)
 
@@ -313,6 +326,137 @@ def gyro_age_posterior(
     p_ages /= np.trapz(p_ages, age_grid)
 
     return p_ages
+
+
+def _one_star_age_posterior_worker(task):
+
+    Prot, Teff, age_grid, outdir, n, age_scale, parameters = task
+
+    Protstr = f"{float(Prot):.2f}"
+    Teffstr = f"{float(Teff):.1f}"
+    typestr = 'limitgrid'
+    bounds_error = 'limit'
+
+    cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teffstr}_{typestr}.csv")
+    if not os.path.exists(cachepath):
+        age_post = gyro_age_posterior(
+            Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+            verbose=False, n=n, age_scale=age_scale, popn_parameters=parameters
+        )
+        df = pd.DataFrame({
+            'age_grid': age_grid,
+            'age_post': age_post
+        })
+        outpath = cachepath.replace(".csv", "_posterior.csv")
+        df.to_csv(outpath, index=False)
+        print(f"Wrote {outpath}")
+
+        d = given_grid_post_get_summary_statistics(age_grid, age_post)
+        d['Prot'] = Prot
+        d['Teff'] = Teff
+        df = pd.DataFrame(d, index=[0])
+        df.to_csv(cachepath, index=False)
+        print(f"Wrote {cachepath}")
+
+        return 1
+
+    else:
+        print(f"Found {cachepath}")
+        return 1
+
+
+def _get_pop_samples(N_pop_samples):
+
+    pklpath = os.path.join(LOCALDIR, "gyroemp", "fitgyro_emcee_v02",
+                           "fit_120-Myr_300-Myr_Praesepe.pkl")
+    with open(pklpath, 'rb') as f:
+        d = pickle.load(f)
+        flat_samples = d['flat_samples']
+
+    np.random.seed(42)
+    sel_samples = flat_samples[
+        np.random.choice(flat_samples.shape[0], N_pop_samples, replace=False)
+    ]
+    sigma_period = 0.51
+    popn_parameter_list = []
+    for ix in range(N_pop_samples):
+        sample = sel_samples[ix, :]
+        #C, C_y0, logk0, logk2, logf = theta
+        parameters = {
+            'A': 1,
+            'B': 0,
+            'C': sample[0],
+            'C_y0': sample[1],
+            'logk0': sample[2],
+            'logk2': sample[3],
+            'l1': -2*sigma_period,
+            'k1': np.pi # a joke, but it works
+        }
+        popn_parameter_list.append(parameters)
+
+    return popn_parameter_list
+
+
+def gyro_age_posterior_mcmc(
+    Prot, Teff, Prot_err=None, Teff_err=None,
+    age_grid=np.linspace(0, 2600, 500),
+    verbose=False, bounds_error='limit', N_grid=256, n=0.5,
+    age_scale='default',
+    N_pop_samples=512,
+    N_post_samples=10000,
+    cachedir=None
+    ):
+    """
+    Same as gyro_age_posterior, but sampling over the population-level
+    parameters a1/a0, ln k0, ln k1, and y_g.
+
+    Arguments are as in gyro_age_posterior, but with three additions:
+
+        N_pop_samples (int): the number of draws from the posteriors for the
+        aforementioned parameters to average over.
+
+        N_post_samples (int): for each of the above draws, the number of draws
+        from the resulting age posterior to cache before concatenating them all
+        together.
+
+        cachedir (str): path to directory where individual posteriors will be
+        cached (for every star, `N_post_samples` files will be written here!)
+    """
+
+    assert isinstance(cachedir, str)
+    if not os.path.exists(cachedir): os.mkdir(cachedir)
+
+    popn_parameter_list = _get_pop_samples(N_pop_samples)
+
+    tasks = [(Prot, Teff, age_grid, cachedir, n, age_scale, paramdict)
+             for paramdict in popn_parameter_list]
+
+    N_tasks = len(tasks)
+    print(f"Got N_tasks={N_tasks}...")
+    print(f"{datetime.now().isoformat()} begin")
+
+    nworkers = mp.cpu_count()
+    maxworkertasks= 1000
+
+    pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
+
+    results = pool.map(_one_star_age_posterior_worker, tasks)
+
+    pool.close()
+    pool.join()
+
+    print(f"{datetime.now().isoformat()} end")
+
+    #FIXME TODO: gotta then draw the samples, and numerically construct the
+    #final pdf.
+    import IPython; IPython.embed()
+    assert 0
+
+
+
+    return p_ages
+
+
 
 
 if __name__ == "__main__":

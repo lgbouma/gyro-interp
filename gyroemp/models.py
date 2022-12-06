@@ -139,7 +139,7 @@ def slow_sequence_residual(
         'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
     ],
     reference_ages=[80, 120, 300, 670, 1000, 2600],
-    parameters='default',
+    popn_parameters='default',
     verbose=True,
     bounds_error='limit'):
     """
@@ -174,10 +174,10 @@ def slow_sequence_residual(
         residual distribution (usually that of the 120-Myr clusters, when below
         their sequence).
 
-        parameters: (str) "default", or (dict) containing the parameters.  Keys
-        of "A", "C", "C_y0", "k0", "l1", "k1", and "k2" must all be specified.
-        If "B" is not specified, assumes B=0, and the optional component
-        mentioned above is omitted.
+        popn_parameters: (str) "default", or (dict) containing the
+        population-level free parameters.  Keys of "A", "C", "C_y0", "k0",
+        "l1", "k1", and "k2" must all be specified.  If "B" is not specified,
+        assumes B=0, and the optional component mentioned above is omitted.
 
     Returns:
         resid_y_Teff: 2d array with dimension (N_y_grid x N_teff_grid)
@@ -190,8 +190,8 @@ def slow_sequence_residual(
     # The intrinsic width (RMS) of the slow sequence, in units of days.
     sigma_period = 0.51
 
-    if parameters == "default":
-        # from run_emcee_fit_gyro_model
+    if popn_parameters == "default":
+        # from run_emcee_fit_gyro_model; MAP-values
         # [8.25637486, 0.6727635, -4.8845869, -6.23968718, -0.14829162]
         A = 1
         B = 0
@@ -203,36 +203,36 @@ def slow_sequence_residual(
         k2 = np.e**-6.240
 
 
-    elif isinstance(parameters, dict):
+    elif isinstance(popn_parameters, dict):
 
-        A = parameters["A"]
+        A = popn_parameters["A"]
 
-        if "B" in parameters:
-            B = parameters["B"]
-        elif "logB" in parameters:
-            B = np.exp(parameters["logB"])
+        if "B" in popn_parameters:
+            B = popn_parameters["B"]
+        elif "logB" in popn_parameters:
+            B = np.exp(popn_parameters["logB"])
         else:
             if verbose:
                 print("B not explicitly set; assuming fully omitted.")
             B = 0
 
-        C = parameters["C"]
-        C_y0 = parameters["C_y0"]
+        C = popn_parameters["C"]
+        C_y0 = popn_parameters["C_y0"]
 
-        if "k0" in parameters:
-            k0 = parameters["k0"]
-        elif "logk0" in parameters:
-            k0 = np.exp(parameters["logk0"])
+        if "k0" in popn_parameters:
+            k0 = popn_parameters["k0"]
+        elif "logk0" in popn_parameters:
+            k0 = np.exp(popn_parameters["logk0"])
         else:
             raise NotImplementedError
 
-        l1 = parameters["l1"]
-        k1 = parameters["k1"]
+        l1 = popn_parameters["l1"]
+        k1 = popn_parameters["k1"]
 
-        if "k2" in parameters:
-            k2 = parameters["k2"]
-        elif "logk2" in parameters:
-            k2 = np.exp(parameters["logk2"])
+        if "k2" in popn_parameters:
+            k2 = popn_parameters["k2"]
+        elif "logk2" in popn_parameters:
+            k2 = np.exp(popn_parameters["logk2"])
         else:
             raise NotImplementedError
 

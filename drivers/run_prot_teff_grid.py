@@ -11,46 +11,11 @@ import multiprocessing as mp
 import numpy as np, pandas as pd
 from itertools import product
 
-from gyroemp.gyro_posterior import gyro_age_posterior
+from gyroemp.gyro_posterior import (
+    gyro_age_posterior, _one_star_age_posterior_worker
+)
 from gyroemp.paths import RESULTSDIR, LOCALDIR
 from gyroemp.helpers import given_grid_post_get_summary_statistics
-
-def get_age_posterior_worker(task):
-
-    Prot, Teff, age_grid, outdir, n, age_scale = task
-
-    Protstr = f"{float(Prot):.2f}"
-    Teffstr = f"{float(Teff):.1f}"
-    typestr = 'limitgrid'
-    bounds_error = 'limit'
-
-    cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teffstr}_{typestr}.csv")
-    if not os.path.exists(cachepath):
-        age_post = gyro_age_posterior(
-            Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-            verbose=False, n=n, age_scale=age_scale
-        )
-        df = pd.DataFrame({
-            'age_grid': age_grid,
-            'age_post': age_post
-        })
-        outpath = cachepath.replace(".csv", "_posterior.csv")
-        df.to_csv(outpath, index=False)
-        print(f"Wrote {outpath}")
-
-        d = given_grid_post_get_summary_statistics(age_grid, age_post)
-        d['Prot'] = Prot
-        d['Teff'] = Teff
-        df = pd.DataFrame(d, index=[0])
-        df.to_csv(cachepath, index=False)
-        print(f"Wrote {cachepath}")
-
-        return 1
-
-    else:
-        print(f"Found {cachepath}")
-        return 1
-
 
 def main(n=0.5, age_scale="default"):
     """
@@ -74,7 +39,7 @@ def main(n=0.5, age_scale="default"):
     Teff_grid = np.arange(teffmin, teffmax+50, 50)
     Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
 
-    tasks = [(_prot, _teff, age_grid, outdir, n, age_scale)
+    tasks = [(_prot, _teff, age_grid, outdir, n, age_scale, 'default')
              for _prot, _teff in product(Prot_grid, Teff_grid)]
 
     N_tasks = len(tasks)
@@ -86,7 +51,7 @@ def main(n=0.5, age_scale="default"):
 
     pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
 
-    results = pool.map(get_age_posterior_worker, tasks)
+    results = pool.map(_one_star_age_posterior_worker, tasks)
 
     pool.close()
     pool.join()

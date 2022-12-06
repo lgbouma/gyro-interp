@@ -5,7 +5,7 @@ Catch-all file for plotting scripts.  Contents:
     plot_prot_vs_teff_residual
     plot_sub_praesepe_selection_cut
     plot_slow_sequence_residual
-    plot_age_posterior
+    plot_age_posterior (deprecated)
     plot_age_posteriors
     plot_cdf_fast_slow_ratio
     plot_data_vs_model_prot
@@ -42,7 +42,7 @@ from gyroemp.models import (
 )
 from gyroemp.getters import _get_cluster_Prot_Teff_data
 from gyroemp.helpers import given_grid_post_get_summary_statistics
-from gyroemp.gyro_posterior import gyro_age_posterior
+from gyroemp.gyro_posterior import gyro_age_posterior, gyro_age_posterior_mcmc
 from gyroemp.age_scale import agedict
 
 from scipy.interpolate import interp1d
@@ -605,7 +605,7 @@ def _plot_prot_vs_teff_residual(
     ax.set_yticks([-10, -5, 0, 5])
 
 
-def _get_model_histogram(age, bounds_error='limit', parameters='default'):
+def _get_model_histogram(age, bounds_error='limit', popn_parameters='default'):
 
     ymin, ymax = -14, 6
     teffmin, teffmax = 3800, 6200
@@ -614,7 +614,7 @@ def _get_model_histogram(age, bounds_error='limit', parameters='default'):
 
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, bounds_error=bounds_error,
-        parameters=parameters, verbose=False
+        popn_parameters=popn_parameters, verbose=False
     )
 
     teff_chunk_bins = np.arange(3800, 6200+350, 350)
@@ -647,7 +647,7 @@ def _get_model_histogram(age, bounds_error='limit', parameters='default'):
 
 
 def plot_data_vs_model_prot(
-    outdir, poly_order=7, parameters='default',
+    outdir, poly_order=7, popn_parameters='default',
     model_ids = ['120-Myr', '300-Myr', 'Praesepe'],
     reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                           'Group-X', 'Praesepe', 'NGC-6811']
@@ -747,7 +747,7 @@ def plot_data_vs_model_prot(
     for ax, age in zip(axs, ages):
         resid_Teffs, teff_grid = _plot_slow_sequence_residual(
             fig, ax, age, bounds_error, resid_Teffs, showtxt=0, showcolorbar=0,
-            parameters=parameters
+            popn_parameters=popn_parameters
         )
 
     #
@@ -783,13 +783,13 @@ def plot_data_vs_model_prot(
         # NOTE: could be plotted continuously, rather than at these specific
         # teff bins, and ages.  for apples-to-apples, this is fine.
         h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
-            age, parameters=parameters
+            age, popn_parameters=popn_parameters
         )
         model_ratio = h_vals_fs / (h_vals_fs + h_vals_ss)
         ax.plot(teff_midway, model_ratio, c='gray', ls='-', marker='X',
                 label='Best-fit Model', zorder=1, ms=4, lw=1, mew=0)
 
-        pklpath = os.path.join(LOCALDIR, "gyroemp", "fitgyro_emcee_v00",
+        pklpath = os.path.join(LOCALDIR, "gyroemp", "fitgyro_emcee_v02",
                                "fit_120-Myr_300-Myr_Praesepe.pkl")
         with open(pklpath, 'rb') as f:
             d = pickle.load(f)
@@ -806,7 +806,7 @@ def plot_data_vs_model_prot(
                 print(age, ix)
             sample = sel_samples[ix, :]
             #C, C_y0, logk0, logk2, logf = theta
-            parameters = {
+            popn_parameters = {
                 'A': 1,
                 'B': 0,
                 'C': sample[0],
@@ -817,7 +817,7 @@ def plot_data_vs_model_prot(
                 'k1': np.pi # a joke, but it works
             }
             h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
-                age, parameters=parameters
+                age, popn_parameters=popn_parameters
             )
             model_ratio = h_vals_fs / (h_vals_fs + h_vals_ss)
             ax.plot(teff_midway, model_ratio, c='darkgray', ls='-', marker='o',
@@ -851,7 +851,7 @@ def plot_data_vs_model_prot(
 
 def _plot_slow_sequence_residual(
     fig, ax, age, bounds_error, resid_Teffs, showtxt=1, showcolorbar=1,
-    parameters='default'
+    popn_parameters='default'
     ):
 
     ymin, ymax = -14, 6
@@ -861,7 +861,7 @@ def _plot_slow_sequence_residual(
 
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, bounds_error=bounds_error,
-        verbose=False, parameters=parameters
+        verbose=False, popn_parameters=popn_parameters
     )
 
     if age in [120, 300]:
@@ -1149,7 +1149,8 @@ def plot_sub_praesepe_selection_cut(mdf5, poly_order=7):
 def plot_age_posteriors(
     Prots, Teff, outdir,
     age_grid=np.linspace(0, 2600, 500),
-    bounds_error='limit'
+    bounds_error='limit',
+    full_mcmc=False
     ):
 
     #
@@ -1165,10 +1166,16 @@ def plot_age_posteriors(
             typestr = 'limitgrid'
         cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teff}_{typestr}.csv")
         if not os.path.exists(cachepath):
-            age_post = gyro_age_posterior(
-                Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-                verbose=False
-            )
+            if not full_mcmc:
+                age_post = gyro_age_posterior(
+                    Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                    verbose=False
+                )
+            elif full_mcmc:
+                age_post = gyro_age_posterior_mcmc(
+                    Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                    verbose=False, cachedir=outdir
+                )
             df = pd.DataFrame({
                 'age_grid': age_grid,
                 'age_post': age_post
@@ -1238,12 +1245,14 @@ def plot_age_posteriors(
 def plot_age_posterior(
     Prot, Teff, outdir,
     age_grid=np.linspace(0, 2600, 500),
-    bounds_error='limit'
+    bounds_error='limit',
+    full_mcmc=False
     ):
+    """
+    (NOTE: deprecated, in favor of plot_age_posteriors)
+    Calculate and plot the age posterior for a single star.
+    """
 
-    #
-    # Calculate the age posterior
-    #
     Protstr = str(Prot).zfill(2)
     if bounds_error == 'nan':
         typestr = 'defaultgrid'
@@ -1251,10 +1260,16 @@ def plot_age_posterior(
         typestr = 'limitgrid'
     cachepath = os.path.join(outdir, f"Prot{Protstr}_Teff{Teff}_{typestr}.csv")
     if not os.path.exists(cachepath):
-        age_post = gyro_age_posterior(
-            Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-            verbose=False
-        )
+        if not full_mcmc:
+            age_post = gyro_age_posterior(
+                Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                verbose=False
+            )
+        elif full_mcmc:
+            age_post = gyro_age_posterior_mcmc(
+                Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+                verbose=False
+            )
         df = pd.DataFrame({
             'age_grid': age_grid,
             'age_post': age_post
