@@ -51,7 +51,7 @@ EXTRAS_REQUIRE = {
 version = 0.1
 setup(
     name='gyrointerp',
-    version=__version__,
+    version=version,
     description=(
         "Gyrochronology via interpolation of open cluster rotation sequences."
     ),
