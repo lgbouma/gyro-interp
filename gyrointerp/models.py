@@ -354,6 +354,8 @@ def slow_sequence(
     if not isinstance(Teff, (np.ndarray, list)):
         Teff = np.array([Teff])
 
+    assert age >= 0, "age must be non-negative."
+
     # First put everything in age order from youngest reference cluster to
     # oldest reference cluster
     reference_ages = np.array(reference_ages)

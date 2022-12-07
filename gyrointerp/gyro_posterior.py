@@ -505,5 +505,5 @@ if __name__ == "__main__":
     # testing
     Prot = 6
     Teff = 5500
-    age_grid = np.linspace(120, 1000, 50)
+    age_grid = np.linspace(0, 2600, 50)
     age_post = gyro_age_posterior(Prot, Teff, age_grid=age_grid)

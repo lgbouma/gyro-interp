@@ -7,7 +7,6 @@ import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from gyrointerp.gyro_posterior import gyro_age_posterior
 from gyrointerp.helpers import given_grid_post_get_summary_statistics
 
-@pytest.mark.skip(reason="setting up CI (want this to work!)")
 def test_gyro_posterior_simple():
 
     age_grid = np.linspace(0, 2700, 501)
