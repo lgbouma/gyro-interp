@@ -1,7 +1,7 @@
 import os
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
-from gyroemp.gyro_posterior import gyro_age_posterior
-from gyroemp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.gyro_posterior import gyro_age_posterior
+from gyrointerp.helpers import given_grid_post_get_summary_statistics
 
 age_grid = np.linspace(0, 2700, 501)
 Teff = 5800

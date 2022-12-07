@@ -1,4 +1,4 @@
-from gyroemp.models import teff_0, teff_zams, logistic
+from gyrointerp.models import teff_0, teff_zams, logistic
 import numpy as np, matplotlib.pyplot as plt
 import os
 

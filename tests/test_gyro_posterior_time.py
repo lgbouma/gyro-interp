@@ -17,7 +17,7 @@ where the macbook has 16 cores to use during agethreaded_gyro_age_posterior.
 """
 import os
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
-from gyroemp.gyro_posterior import (
+from gyrointerp.gyro_posterior import (
     agethreaded_gyro_age_posterior, gyro_age_posterior
 )
 from datetime import datetime

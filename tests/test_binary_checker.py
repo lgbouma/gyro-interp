@@ -1,5 +1,5 @@
 import numpy as np
-from gyroemp.binary_checker import (
+from gyrointerp.binary_checker import (
     given_source_ids_return_possible_binarity
 )
 

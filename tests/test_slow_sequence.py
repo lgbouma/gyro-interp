@@ -1,5 +1,5 @@
 import numpy as np
-from gyroemp.models import slow_sequence
+from gyrointerp.models import slow_sequence
 
 teff_arr = np.linspace(3800, 6200, 2)
 prot_arr = slow_sequence(teff_arr, 115)

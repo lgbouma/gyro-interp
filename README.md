@@ -1,8 +1,10 @@
 # gyro-interp
 
 ## Installation
+Preferred:
 `$ pip install gyrointerp`
 
+Or clone the repository, and:
 `$ python setup.py develop`
 
 ## Usage
