@@ -1,5 +1,7 @@
 # gyro-interp
 
+<img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
+
 ## Installation
 Preferred:
 `$ pip install gyrointerp`
