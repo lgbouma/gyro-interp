@@ -1,5 +1,5 @@
 import os
-from gyroemp import __path__
+from gyrointerp import __path__
 __path__ = list(__path__)
 
 DATADIR = os.path.join(os.path.dirname(__path__[0]), 'data')

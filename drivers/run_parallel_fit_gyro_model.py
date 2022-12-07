@@ -8,8 +8,8 @@ Usage:
 """
 
 from itertools import product
-from gyroemp.fitting import get_chi_sq_red
-from gyroemp.paths import RESULTSDIR, LOCALDIR
+from gyrointerp.fitting import get_chi_sq_red
+from gyrointerp.paths import RESULTSDIR, LOCALDIR
 import os
 from glob import glob
 import numpy as np, pandas as pd
@@ -57,7 +57,7 @@ def main():
     is_logB = False # set this
 
     modelid = "fitgyro_v07_zeroB_zeroA_N1pt5M"
-    outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
+    outdir = os.path.join(LOCALDIR, "gyrointerp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     A_grid = np.array([1])

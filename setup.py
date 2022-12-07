@@ -51,9 +51,11 @@ EXTRAS_REQUIRE = {
 
 # run setup.
 setup(
-    name='gyroemp',
+    name='gyrointerp',
     version=__version__,
-    description=('Gyrochronology based on open cluster rotation sequences.'),
+    description=(
+        "Gyrochronology via interpolation of open cluster rotation sequences."
+    ),
     long_description=readme(),
     long_description_content_type="text/markdown",
     classifiers=[
@@ -65,12 +67,12 @@ setup(
         "Programming Language :: Python",
     ],
     keywords='astronomy',
-    url='https://github.com/lgbouma/gyro-emp',
+    url='https://github.com/lgbouma/gyro-interp',
     author='Luke Bouma',
     author_email='bouma.luke@gmail.com',
     license='MIT',
     packages=[
-        'gyroemp',
+        'gyrointerp',
     ],
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,

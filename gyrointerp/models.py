@@ -14,7 +14,7 @@ Helper functions:
     C_uniform
 """
 import os, pickle
-from gyroemp.paths import DATADIR
+from gyrointerp.paths import DATADIR
 import pandas as pd, numpy as np
 from numpy import array as nparr
 from os.path import join

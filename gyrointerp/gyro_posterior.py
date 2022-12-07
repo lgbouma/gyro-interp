@@ -11,7 +11,7 @@ Under-the-hood:
 """
 import os, pickle
 from glob import glob
-from gyroemp.paths import DATADIR, LOCALDIR
+from gyrointerp.paths import DATADIR, LOCALDIR
 import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from numpy import array as nparr
 from os.path import join
@@ -20,9 +20,9 @@ import warnings
 
 from scipy.stats import norm, uniform
 
-from gyroemp.models import slow_sequence_residual, slow_sequence
-from gyroemp.age_scale import agedict
-from gyroemp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.models import slow_sequence_residual, slow_sequence
+from gyrointerp.age_scale import agedict
+from gyrointerp.helpers import given_grid_post_get_summary_statistics
 
 from datetime import datetime
 import multiprocessing as mp
@@ -233,7 +233,7 @@ def gyro_age_posterior(
         age_scale (str): "default", "1sigmaolder", or "1sigmayounger".  Shifts
         the entire age scale appropriately, based on the user's beliefs about
         what ages of reference clusters are correct.  The scale is as described
-        in the manuscript, and defined in /gyroemp/age_scale.py
+        in the manuscript, and defined in /gyrointerp/age_scale.py
 
         popn_parameters (str or dict). (str) "default", or (dict) containing
         the population-level free parameters.  Keys of "A", "C", "C_y0", "k0",
@@ -381,7 +381,7 @@ def _one_star_age_posterior_worker(task):
 
 def _get_pop_samples(N_pop_samples):
 
-    pklpath = os.path.join(LOCALDIR, "gyroemp", "fitgyro_emcee_v02",
+    pklpath = os.path.join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02",
                            "fit_120-Myr_300-Myr_Praesepe.pkl")
     with open(pklpath, 'rb') as f:
         d = pickle.load(f)

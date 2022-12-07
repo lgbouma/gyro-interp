@@ -1,6 +1,6 @@
 import os
-import gyroemp.plotting as ap
-from gyroemp.paths import RESULTSDIR
+import gyrointerp.plotting as ap
+from gyrointerp.paths import RESULTSDIR
 
 PLOTDIR = os.path.join(RESULTSDIR, 'data_vs_model_prot')
 if not os.path.exists(PLOTDIR):

@@ -9,7 +9,7 @@ Contents:
 """
 import os
 import numpy as np, pandas as pd
-from gyroemp.paths import DATADIR
+from gyrointerp.paths import DATADIR
 
 def given_dr2_BpmRp_AV_get_Teff_Curtis2020(dr2_BpmRp, A_V):
     """

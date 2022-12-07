@@ -4,9 +4,9 @@ abstract, and throughout the manuscript.  Writes to stdout.
 """
 
 import numpy as np
-from gyroemp import gyro_age_posterior
-from gyroemp.models import slow_sequence
-from gyroemp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp import gyro_age_posterior
+from gyrointerp.models import slow_sequence
+from gyrointerp.helpers import given_grid_post_get_summary_statistics
 
 # Sun-like stars
 age_grid = np.linspace(0, 2600, 100)

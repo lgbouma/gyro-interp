@@ -1,15 +1,14 @@
-# gyro-emp
+# gyro-interp
 
 ## Installation
-`$ pip install gyro-emp`
+`$ pip install gyrointerp`
 
 `$ python setup.py develop`
 
 ## Usage
 
-Core functionality: given a rotation period, effective temperature, and
-uncertainties, what is the gyrochronological age posterior over a grid spanning
-0 to 2.6 Gyr?
+Given a star's rotation period, effective temperature, and uncertainties, what
+is the gyrochronological age posterior over a grid spanning 0 to 2.6 Gyr?
 
 ```
 import numpy as np

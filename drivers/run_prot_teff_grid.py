@@ -11,11 +11,11 @@ import multiprocessing as mp
 import numpy as np, pandas as pd
 from itertools import product
 
-from gyroemp.gyro_posterior import (
+from gyrointerp.gyro_posterior import (
     gyro_age_posterior, _one_star_age_posterior_worker
 )
-from gyroemp.paths import RESULTSDIR, LOCALDIR
-from gyroemp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.paths import RESULTSDIR, LOCALDIR
+from gyrointerp.helpers import given_grid_post_get_summary_statistics
 
 def main(n=0.5, age_scale="default"):
     """
@@ -25,11 +25,11 @@ def main(n=0.5, age_scale="default"):
     entire age scale appropriately.
     """
 
-    outdir = os.path.join(LOCALDIR, "gyroemp")
+    outdir = os.path.join(LOCALDIR, "gyrointerp")
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     outdir = os.path.join(
-        LOCALDIR, "gyroemp", f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
+        LOCALDIR, "gyrointerp", f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
     )
     if not os.path.exists(outdir): os.mkdir(outdir)
 

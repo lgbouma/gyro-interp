@@ -2,8 +2,8 @@
 (deprecated)
 """
 import os
-import gyroemp.plotting as ap
-from gyroemp.paths import RESULTSDIR
+import gyrointerp.plotting as ap
+from gyrointerp.paths import RESULTSDIR
 import numpy as np, pandas as pd
 
 PLOTDIR = os.path.join(RESULTSDIR, 'age_posteriors_boundserror_limit')

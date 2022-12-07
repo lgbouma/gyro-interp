@@ -1,6 +1,6 @@
 import os
-import gyroemp.plotting as ap
-from gyroemp.paths import RESULTSDIR
+import gyrointerp.plotting as ap
+from gyrointerp.paths import RESULTSDIR
 
 PLOTDIR = os.path.join(RESULTSDIR, 'prot_vs_teff_residual')
 if not os.path.exists(PLOTDIR):

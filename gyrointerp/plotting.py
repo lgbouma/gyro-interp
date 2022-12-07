@@ -36,14 +36,14 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 from numpy import array as nparr
 
-from gyroemp.paths import DATADIR, RESULTSDIR, LOCALDIR
-from gyroemp.models import (
+from gyrointerp.paths import DATADIR, RESULTSDIR, LOCALDIR
+from gyrointerp.models import (
     reference_cluster_slow_sequence, slow_sequence, slow_sequence_residual
 )
-from gyroemp.getters import _get_cluster_Prot_Teff_data
-from gyroemp.helpers import given_grid_post_get_summary_statistics
-from gyroemp.gyro_posterior import gyro_age_posterior, gyro_age_posterior_mcmc
-from gyroemp.age_scale import agedict
+from gyrointerp.getters import _get_cluster_Prot_Teff_data
+from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.gyro_posterior import gyro_age_posterior, gyro_age_posterior_mcmc
+from gyrointerp.age_scale import agedict
 
 from scipy.interpolate import interp1d
 
@@ -789,7 +789,7 @@ def plot_data_vs_model_prot(
         ax.plot(teff_midway, model_ratio, c='gray', ls='-', marker='X',
                 label='Best-fit Model', zorder=1, ms=4, lw=1, mew=0)
 
-        pklpath = os.path.join(LOCALDIR, "gyroemp", "fitgyro_emcee_v02",
+        pklpath = os.path.join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02",
                                "fit_120-Myr_300-Myr_Praesepe.pkl")
         with open(pklpath, 'rb') as f:
             d = pickle.load(f)
@@ -1582,7 +1582,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
 
     typestr = 'limitgrid'
     cachedir = os.path.join(
-        LOCALDIR, "gyroemp",
+        LOCALDIR, "gyrointerp",
         f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
     )
     _fpaths = [

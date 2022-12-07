@@ -1,0 +1,1 @@
+from gyrointerp.gyro_posterior import gyro_age_posterior

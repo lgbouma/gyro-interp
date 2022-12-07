@@ -1,7 +1,7 @@
 import os
 import numpy as np
-import gyroemp.plotting as ap
-from gyroemp.paths import RESULTSDIR
+import gyrointerp.plotting as ap
+from gyrointerp.paths import RESULTSDIR
 
 PLOTDIR = os.path.join(RESULTSDIR, 'empirical_limits_of_gyrochronology')
 if not os.path.exists(PLOTDIR):

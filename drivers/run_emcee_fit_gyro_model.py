@@ -16,8 +16,8 @@ from collections import OrderedDict
 from os.path import join
 from scipy.optimize import minimize, Bounds
 
-from gyroemp.paths import RESULTSDIR, LOCALDIR
-from gyroemp.plotting import _get_model_histogram
+from gyrointerp.paths import RESULTSDIR, LOCALDIR
+from gyrointerp.plotting import _get_model_histogram
 
 def _get_data():
 
@@ -117,7 +117,7 @@ def main():
     modelid = "fitgyro_emcee_v02"
     OVERWRITE = 0 # whether to overwrite the MCMC samples for modelid
     n_steps = 32000 # number of MCMC steps.  10k is 100 minutes.  30k+2k burn.
-    outdir = os.path.join(LOCALDIR, "gyroemp", modelid)
+    outdir = os.path.join(LOCALDIR, "gyrointerp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     ############

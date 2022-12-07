@@ -3,11 +3,11 @@ Plot M_star, Teff, L_star, and R_star of stars that have just arrived on the
 ZAMS, using the data from Choi+2016 (MIST).
 
 Writes a cached CSV containing the output for easy interpolation in
-gyroemp.models.teff_zams
+gyrointerp.models.teff_zams
 """
 from read_mist_model import ISO
 import numpy as np, matplotlib.pyplot as plt, pandas as pd
-from gyroemp.paths import DATADIR, RESULTSDIR
+from gyrointerp.paths import DATADIR, RESULTSDIR
 import os
 from aesthetic.plot import set_style, savefig
 from scipy.interpolate import make_interp_spline, BSpline

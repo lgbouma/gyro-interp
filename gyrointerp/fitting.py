@@ -4,8 +4,8 @@ Contents:
 """
 import numpy as np, pandas as pd
 import os
-from gyroemp.paths import RESULTSDIR
-from gyroemp.plotting import _get_model_histogram
+from gyrointerp.paths import RESULTSDIR
+from gyrointerp.plotting import _get_model_histogram
 
 def get_chi_sq_red(parameters, verbose=1):
 

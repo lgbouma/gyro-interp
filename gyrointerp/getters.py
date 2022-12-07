@@ -30,20 +30,20 @@ from cdips.utils.gaiaqueries import (
     given_source_ids_get_gaia_data, given_source_ids_get_neighbor_counts
 )
 
-from gyroemp.paths import LOCALDIR, DATADIR, RESULTSDIR
-from gyroemp.extinctionpriors import extinction_A_V_dict
-from gyroemp.teff import (
+from gyrointerp.paths import LOCALDIR, DATADIR, RESULTSDIR
+from gyrointerp.extinctionpriors import extinction_A_V_dict
+from gyrointerp.teff import (
     given_dr2_BpmRp_AV_get_Teff_Curtis2020, given_VmKs_get_Teff,
     given_GmKs_get_Teff
 )
 
-from gyroemp.helpers import (
+from gyrointerp.helpers import (
     prepend_colstr, left_merge, given_dr2_get_dr3_dataframes
 )
 
 def _get_cluster_Prot_Teff_data(N_colors=5):
     """
-    Wrapper to gyroemp.getters to retrieve dataframes of reference cluster
+    Wrapper to gyrointerp.getters to retrieve dataframes of reference cluster
     data, as well as to define the colors / labels / zorders used across many
     plots.
     """

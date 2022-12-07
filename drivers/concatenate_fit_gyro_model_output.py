@@ -4,15 +4,15 @@ Write the output to one CSV file.
 (which will be plotted by plot_fit_gyro_model.py)
 """
 from itertools import product
-from gyroemp.fitting import get_chi_sq_red
-from gyroemp.paths import RESULTSDIR, LOCALDIR
+from gyrointerp.fitting import get_chi_sq_red
+from gyrointerp.paths import RESULTSDIR, LOCALDIR
 import os
 from glob import glob
 import numpy as np, pandas as pd
 from datetime import datetime
 
 modelid = "fitgyro_v06_zeroB_zeroA_N750k"
-input_dir = os.path.join(LOCALDIR, "gyroemp", modelid)
+input_dir = os.path.join(LOCALDIR, "gyrointerp", modelid)
 
 csvpaths = glob(os.path.join(input_dir, "A_*csv"))
 N = len(csvpaths)
