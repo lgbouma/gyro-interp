@@ -805,16 +805,15 @@ def plot_data_vs_model_prot(
             if ix % 8 == 0:
                 print(age, ix)
             sample = sel_samples[ix, :]
-            #C, C_y0, logk0, logk2, logf = theta
+            #a1, y_g, logk0, logk1, logf = theta
             popn_parameters = {
-                'A': 1,
-                'B': 0,
-                'C': sample[0],
-                'C_y0': sample[1],
+                'a0': 1,
+                'a1': sample[0],
+                'y_g': sample[1],
                 'logk0': sample[2],
-                'logk2': sample[3],
-                'l1': -2*sigma_period,
-                'k1': np.pi # a joke, but it works
+                'logk1': sample[3],
+                'l_hidden': -2*sigma_period,
+                'k_hidden': np.pi # a joke, but it works
             }
             h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
                 age, popn_parameters=popn_parameters

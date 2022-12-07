@@ -1,5 +1,5 @@
 """
-Run MCMC to get best-fit C, C_y0, k0, k2, f, and their uncertainties.
+Run MCMC to get best-fit a1, y_g, logk0, logk1, logf, and their uncertainties.
 
 Usage:
     Check modelid and grid matches what you want.  Then:
@@ -59,13 +59,13 @@ def log_probability(theta):
 
 def log_prior(theta):
 
-    C, C_y0, logk0, logk2, logf = theta
+    a1, y_g, logk0, logk1, logf = theta
 
     if (
-        1 < C < 20 and
-        0.1 < C_y0 < 1 and
+        1 < a1 < 20 and
+        0.1 < y_g < 1 and
         -10 < logk0 < 0 and
-        -10 < logk2 < 0 and
+        -10 < logk1 < 0 and
         -3 < logf < 3
     ):
         return 0.0
@@ -75,7 +75,7 @@ def log_prior(theta):
 
 def log_likelihood(theta):
 
-    C, C_y0, logk0, logk2, logf = theta
+    a1, y_g, logk0, logk1, logf = theta
 
     likelihoods = np.zeros(len(datasets))
 
@@ -84,14 +84,13 @@ def log_likelihood(theta):
         # get model, given age in Myr
         sigma_period = 0.51
         parameters = {
-            'A': 1,
-            'B': 0,
-            'C': C,
-            'C_y0': C_y0,
-            'logk0': logk0,
-            'logk2': logk2,
-            'l1': -2*sigma_period,
-            'k1': np.pi # a joke, but it works
+            'a0': 1,
+            'a1': sample[0],
+            'y_g': sample[1],
+            'logk0': sample[2],
+            'logk1': sample[3],
+            'l_hidden': -2*sigma_period,
+            'k_hidden': np.pi # a joke, but it works
         }
 
         h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
@@ -142,7 +141,7 @@ def main():
         nll = lambda *args: -log_likelihood(*args)
 
         eps = 1e-3
-        #C, C_y0, logk0, logk2, logf = theta
+        #a1, y_g, logk0, logk1, logf = theta
         initial = np.array([8.7, 0.66, -5, -6.2, 1]) + eps*np.random.randn(ndim)
 
         bounds = bounds=(
@@ -152,12 +151,9 @@ def main():
         print('beginning minimization...')
         soln = minimize(nll, initial)
 
-        C_ml, C_y0_ml, k0_ml, k2_ml, f_ml = soln.x
-
         # finds: array([ 8.25637368,  0.6727635 , -4.88458715, -6.23968725, -0.14829159])
-        # or with bounds, array([ 8.68683268,  0.67138394, -4.96275124, -6.20941048, -0.16000444])
         print(f"Got max-likelihood solution:")
-        params = "C, C_y0, logk0, logk2, logf"
+        params = "a1, y_g, logk0, logk1, logf"
         print(params)
         print(soln.x)
         map_soln = soln.x
@@ -235,7 +231,7 @@ def main():
 
     # corner plot
     outpath = os.path.join(outdir, "corner.png")
-    labels = ["C", "C_y0", "logk0", "logk2", "logf"]
+    labels = ["a1", "y_g", "logk0", "logk1", "logf"]
     if not os.path.exists(outpath):
         fig = corner.corner(
             flat_samples, labels=labels

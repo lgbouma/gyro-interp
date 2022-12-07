@@ -11,13 +11,15 @@ Helper functions:
     logistic
     teff_zams
     teff_0
-    C_uniform
+    g_lineardecay
 """
 import os, pickle
 from gyrointerp.paths import DATADIR
 import pandas as pd, numpy as np
 from numpy import array as nparr
 from os.path import join
+
+from scipy.stats import norm, uniform
 
 ###########
 # helpers #
@@ -95,7 +97,7 @@ def teff_0(age, bounds_error='limit'):
     return teff0
 
 
-def C_uniform(age, bounds_error='limit', y0=1/2):
+def g_lineardecay(age, bounds_error='limit', y0=1/2):
     """
     How the third uniform component amplitude from slow_sequence_residual
     decreases with age Full amplitude at 120 Myr.  `y0` amplitude by 300 Myr
@@ -153,16 +155,12 @@ def slow_sequence_residual(
         * a gaussian in "y_grid" , with an age-varying cutoff in Teff, imposed
         as a logistic taper.
 
-        * (optional) an age-varying and Teff-varying uniform distribution,
-        multiplied by the inverse the gaussian's taper, and then truncated to
-        ensure that stars rotate faster than zero days, and to ensure that we
-        model only the fast sequence.  This uniform distribution is also
-        tapered by a logistic function at the "slow" end to yield a smoother
-        transition to the gaussian.
-
-        * an age-varying and Teff-invariant uniform distribution, similar to
-        the one described above, that accounts for the few fast-rotating
-        outliers by having a longer taper scale length.
+        * an age-varying and Teff-varying uniform distribution, multiplied by
+        the inverse of the gaussian's taper (but with independent scale
+        length), and then truncated to ensure that stars rotate faster than
+        zero days, and to ensure that we model only the fast sequence.  This
+        uniform distribution is also tapered by a logistic function at the
+        "slow" end to yield a smoother transition to the gaussian.
 
     Args:
         y_grid, teff_grid, poly_order, reference_model_ids, reference_ages:
@@ -175,9 +173,8 @@ def slow_sequence_residual(
         their sequence).
 
         popn_parameters: (str) "default", or (dict) containing the
-        population-level free parameters.  Keys of "A", "C", "C_y0", "k0",
-        "l1", "k1", and "k2" must all be specified.  If "B" is not specified,
-        assumes B=0, and the optional component mentioned above is omitted.
+        population-level free parameters.  Keys of "a0", "a1", "k0", "k1",
+        "y_g", "l_hidden", and "k_hidden" must all be specified.
 
     Returns:
         resid_y_Teff: 2d array with dimension (N_y_grid x N_teff_grid)
@@ -185,39 +182,25 @@ def slow_sequence_residual(
 
     assert len(reference_ages) == len(reference_model_ids)
 
-    from scipy.stats import norm, uniform
-
     # The intrinsic width (RMS) of the slow sequence, in units of days.
     sigma_period = 0.51
 
     if popn_parameters == "default":
         # from run_emcee_fit_gyro_model; MAP-values
         # [8.25637486, 0.6727635, -4.8845869, -6.23968718, -0.14829162]
-        A = 1
-        B = 0
-        C = 8.256
-        C_y0 = 0.673
+        a0 = 1
+        a1 = 8.256
+        y_g = 0.673
         k0 = np.e**-4.885
-        l1 = -2*sigma_period
-        k1 = np.pi # a joke, but it works
-        k2 = np.e**-6.240
-
+        k1 = np.e**-6.240
+        l_hidden = -2*sigma_period
+        k_hidden = np.pi # a joke, but it works
 
     elif isinstance(popn_parameters, dict):
 
-        A = popn_parameters["A"]
-
-        if "B" in popn_parameters:
-            B = popn_parameters["B"]
-        elif "logB" in popn_parameters:
-            B = np.exp(popn_parameters["logB"])
-        else:
-            if verbose:
-                print("B not explicitly set; assuming fully omitted.")
-            B = 0
-
-        C = popn_parameters["C"]
-        C_y0 = popn_parameters["C_y0"]
+        a0 = popn_parameters["a0"]
+        a1 = popn_parameters["a1"]
+        y_g = popn_parameters["y_g"]
 
         if "k0" in popn_parameters:
             k0 = popn_parameters["k0"]
@@ -225,16 +208,15 @@ def slow_sequence_residual(
             k0 = np.exp(popn_parameters["logk0"])
         else:
             raise NotImplementedError
-
-        l1 = popn_parameters["l1"]
-        k1 = popn_parameters["k1"]
-
-        if "k2" in popn_parameters:
-            k2 = popn_parameters["k2"]
-        elif "logk2" in popn_parameters:
-            k2 = np.exp(popn_parameters["logk2"])
+        if "k1" in popn_parameters:
+            k1 = popn_parameters["k1"]
+        elif "logk1" in popn_parameters:
+            k1 = np.exp(popn_parameters["logk1"])
         else:
             raise NotImplementedError
+
+        l_hidden = popn_parameters["l_hidden"]
+        k_hidden = popn_parameters["k_hidden"]
 
     else:
         raise NotImplementedError
@@ -271,7 +253,7 @@ def slow_sequence_residual(
 
     # Taper the "upper" part of the uniform ("fast rotator") distribution to
     # avoid overlap with the slow sequence.
-    taper_y = 1 - logistic(y_grid, l1, L=1, k=k1)
+    taper_y = 1 - logistic(y_grid, l_hidden, L=1, k=k_hidden)
 
     uniform_taper_y = uniform_y * taper_y
 
@@ -296,23 +278,22 @@ def slow_sequence_residual(
     # smoothing length.
     uniform_y_Teff_1 = 1.*uniform_y_Teff * (
         1-logistic(
-            teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k2
+            teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k1
         )
     )
 
-    A = A
-    B = B
-    C_prefactor = C * C_uniform(age, bounds_error=bounds_error, y0=C_y0)
+    a0 = a0
+    a1_prefactor = a1 * g_lineardecay(age, bounds_error=bounds_error, y0=y_g)
 
     # Initial iteration of model
-    resid_y_Teff_0 = A*gaussian_y_Teff + B*uniform_y_Teff_0 + C_prefactor*uniform_y_Teff_1
+    resid_y_Teff_0 = a0*gaussian_y_Teff + a1_prefactor*uniform_y_Teff_1
 
     # marginalize over y_grid
     resid_Teff_0 = np.trapz(resid_y_Teff_0, y_grid, axis=0)
 
     # normalize to ensure uniform distribution over Teff
     resid_y_Teff = (1/resid_Teff_0[None,:])*(
-        A*gaussian_y_Teff + B*uniform_y_Teff_0 + C_prefactor*uniform_y_Teff_1
+        a0*gaussian_y_Teff + a1_prefactor*uniform_y_Teff_1
     )
 
     return resid_y_Teff

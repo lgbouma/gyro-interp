@@ -235,10 +235,9 @@ def gyro_age_posterior(
         what ages of reference clusters are correct.  The scale is as described
         in the manuscript, and defined in /gyrointerp/age_scale.py
 
-        popn_parameters (str or dict). (str) "default", or (dict) containing
-        the population-level free parameters.  Keys of "A", "C", "C_y0", "k0",
-        "l1", "k1", and "k2" must all be specified.  If "B" is not specified,
-        assumes B=0, and the optional component mentioned above is omitted.
+        popn_parameters: (str) "default", or (dict) containing the
+        population-level free parameters.  Keys of "a0", "a1", "k0", "k1",
+        "y_g", "l_hidden", and "k_hidden" must all be specified.
 
     Returns:
         * NaN if Teff outside [3800, 6200] K
@@ -381,6 +380,8 @@ def _one_star_age_posterior_worker(task):
 
 def _get_pop_samples(N_pop_samples):
 
+    # TODO: cache this in an accessible way so that 
+    # TODO: all users can use gyro_age_posterior_mcmc
     pklpath = os.path.join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02",
                            "fit_120-Myr_300-Myr_Praesepe.pkl")
     with open(pklpath, 'rb') as f:
@@ -395,16 +396,15 @@ def _get_pop_samples(N_pop_samples):
     popn_parameter_list = []
     for ix in range(N_pop_samples):
         sample = sel_samples[ix, :]
-        #C, C_y0, logk0, logk2, logf = theta
+        #a1, y_g, logk0, logk1, logf = theta
         parameters = {
-            'A': 1,
-            'B': 0,
-            'C': sample[0],
-            'C_y0': sample[1],
+            'a0': 1,
+            'a1': sample[0],
+            'y_g': sample[1],
             'logk0': sample[2],
-            'logk2': sample[3],
-            'l1': -2*sigma_period,
-            'k1': np.pi # a joke, but it works
+            'logk1': sample[3],
+            'l_hidden': -2*sigma_period,
+            'k_hidden': np.pi # a joke, but it works
         }
         popn_parameter_list.append(parameters)
 
