@@ -43,6 +43,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install -U pytest
         python -m pip install -U astropy
+        python -m pip install -U astroquery
         python -m pip install -U numpy
         python -m pip install -U pandas
         python -m pip install -U cdips
