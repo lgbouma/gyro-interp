@@ -43,12 +43,13 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install -U pytest
         python -m pip install -U astropy
+        python -m pip install -U cdips
         #python -m pip install -U pymc3
         #python -m pip install -U corner
         #python -m pip install -U "exoplanet[extras]"
-        python -m pip install -U astrobase
         #python -m pip install -U lightkurve
-        python -m pip install -U xarray==0.16.0
+        #python -m pip install -U xarray==0.16.0
+        python -m pip install -U astrobase
         python -m pip install -U aesthetic==0.4
 
     - name: "Install package"

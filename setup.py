@@ -2,8 +2,6 @@
 """
 setup.py - boilerplate
 """
-__version__ = '0.0.0'
-
 import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
@@ -39,10 +37,10 @@ INSTALL_REQUIRES = [
 ]
 
 EXTRAS_REQUIRE = {
-    # 'all':[
-    #     'pymc3',
-    #     'corner'
-    # ]
+    'all':[
+        'cdips',
+        #'corner'
+    ]
 }
 
 ###############
@@ -50,6 +48,7 @@ EXTRAS_REQUIRE = {
 ###############
 
 # run setup.
+version = 0.1
 setup(
     name='gyrointerp',
     version=__version__,
@@ -59,17 +58,18 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     classifiers=[
-        'Development Status :: 1 - Alpha',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering :: Astronomy",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
     ],
     keywords='astronomy',
     url='https://github.com/lgbouma/gyro-interp',
+    download_url=f'https://github.com/lgbouma/gyro-interp/archive/refs/tags/v{str(version).replace(".","")}.tar.gz',
     author='Luke Bouma',
-    author_email='bouma.luke@gmail.com',
+    author_email='luke@astro.caltech.edu',
     license='MIT',
     packages=[
         'gyrointerp',
