@@ -9,10 +9,6 @@ Reusable functions.
 import os
 import numpy as np, pandas as pd
 
-from cdips.utils.gaiaqueries import (
-    given_dr2_sourceids_get_edr3_xmatch, given_source_ids_get_gaia_data
-)
-
 def given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
     """
     Given an age posterior over a grid, determine summary statistics (peak
@@ -97,6 +93,11 @@ def given_dr2_get_dr3_dataframes(dr2_source_ids, runid_dr2, runid_dr3,
     runid_dr2: arbitrary string to identify the DR2->DR3 xmatch query
     runid_dr3: arbitrary (different) string to identify the DR3 query
     """
+
+    # pip install cdips
+    from cdips.utils.gaiaqueries import (
+        given_dr2_sourceids_get_edr3_xmatch, given_source_ids_get_gaia_data
+    )
 
     print(42*'-')
     print(runid_dr2)
