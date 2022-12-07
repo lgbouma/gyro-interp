@@ -55,17 +55,17 @@ def given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
     m3sig = pct_50 - np.nanpercentile(sample_df.age, 50-three_sig)
 
     outdict = {
-        'median': np.round(pct_50,3),
-        'peak': np.round(age_peak,3),
-        'mean': np.round(np.nanmean(sample_df.age),3),
-        '+1sigma': np.round(p1sig,3),
-        '-1sigma': np.round(m1sig,3),
-        '+2sigma': np.round(p2sig,3),
-        '-2sigma': np.round(m2sig,3),
-        '+3sigma': np.round(p3sig,3),
-        '-3sigma': np.round(m3sig,3),
-        '+1sigmapct': np.round(p1sig/pct_50,3),
-        '-1sigmapct': np.round(m1sig/pct_50,3),
+        'median': np.round(pct_50,2),
+        'peak': np.round(age_peak,2),
+        'mean': np.round(np.nanmean(sample_df.age),2),
+        '+1sigma': np.round(p1sig,2),
+        '-1sigma': np.round(m1sig,2),
+        '+2sigma': np.round(p2sig,2),
+        '-2sigma': np.round(m2sig,2),
+        '+3sigma': np.round(p3sig,2),
+        '-3sigma': np.round(m3sig,2),
+        '+1sigmapct': np.round(p1sig/pct_50,2),
+        '-1sigmapct': np.round(m1sig/pct_50,2),
     }
 
     return outdict
