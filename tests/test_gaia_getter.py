@@ -1,9 +1,11 @@
 import pytest
 import numpy as np
-from gyrointerp.gaia import given_source_ids_get_gaia_data
 
 @pytest.mark.skip(reason="setting up CI (& shouldnt this be in cdips?)")
 def test_kepler1627_allcols():
+
+    from gyrointerp.gaia import given_source_ids_get_gaia_data
+
     # Get all the Gaia columns for Kepler-1627
     source_ids = [np.int64(2103737241426734336)]
     cache_string = 'kepler_1627_test_allcols'
@@ -18,6 +20,9 @@ def test_kepler1627_allcols():
 
 @pytest.mark.skip(reason="setting up CI (& shouldnt this be in cdips?)")
 def test_kepler1627_selectcols():
+
+    from gyrointerp.gaia import given_source_ids_get_gaia_data
+
     # Get all the Gaia columns for Kepler-1627
     source_ids = [np.int64(2103737241426734336)]
     cache_string = 'kepler_1627_test_selectcols'
