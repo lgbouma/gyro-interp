@@ -9,6 +9,9 @@ Preferred:
 Or clone the repository, and:
 `$ python setup.py develop`
 
+External dependencies include: `numpy`, `pandas`, `astropy`, `astrobase`,
+`astroquery`, and `cdips`.
+
 ## Usage
 
 Given a star's rotation period, effective temperature, and uncertainties, what

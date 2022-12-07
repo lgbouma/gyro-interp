@@ -1,6 +1,7 @@
 def test_imports():
 
-    modules = ['gyrointerp', 'numpy', 'astrobase', 'astropy', 'pandas']
+    modules = ['gyrointerp', 'numpy', 'astrobase', 'astropy', 'pandas',
+               'astroquery']
 
     for m in modules:
 

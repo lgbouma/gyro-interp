@@ -1,11 +1,13 @@
 import pytest
 import numpy as np
-from gyrointerp.binary_checker import (
-    given_source_ids_return_possible_binarity
-)
 
 @pytest.mark.skip(reason="setting up CI (want this to work!)")
 def test_binary_checker():
+
+    from gyrointerp.binary_checker import (
+        given_source_ids_return_possible_binarity
+    )
+
     # This star is a complex rotator
     source_ids = np.array(['461072508828461824'])
     gaia_datarelease = 'gaiadr3'
