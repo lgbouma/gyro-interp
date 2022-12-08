@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/source/gyrointerp_logo.png" alt="gyrointerp" width="30%"/></p>
+<p align="center"><img src="docs/source/gyrointerp_logo.png" alt="gyrointerp" width="70%"/></p>
 
 <img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
 
