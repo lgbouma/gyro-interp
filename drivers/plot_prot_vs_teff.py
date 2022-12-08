@@ -8,6 +8,17 @@ if not os.path.exists(PLOTDIR):
     os.mkdir(PLOTDIR)
 outdir = PLOTDIR
 
+# logo
+all_clusters1 = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'Praesepe', 'NGC-6811']
+slow_seq_ages = [450]
+model_ids = ['120-Myr', 'Praesepe', 'NGC-6811']
+ap.plot_prot_vs_teff(
+    outdir, all_clusters1, slow_seq_ages=slow_seq_ages, model_ids=model_ids,
+    hide_ax=1
+)
+assert 0
+
+
 # figure 1a
 all_clusters1 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
                  'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']

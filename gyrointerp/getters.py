@@ -63,18 +63,21 @@ def _get_cluster_Prot_Teff_data(N_colors=5):
     df_r147 = get_Ruprecht147(overwrite=overwrite)
 
     #cmap = cm.Spectral(np.linspace(0,1,N_colors))  # decent
-    cmap = cm.terrain(np.linspace(0,0.8,N_colors))
+    #cmap = cm.terrain(np.linspace(0,0.8,N_colors))
     #cmap = cm.Accent(np.linspace(0,0.6,N_colors))
     #cmap = cm.hsv(np.linspace(0,0.8,N_colors))
     #cmap = [f"C{ix}" for ix in range(N_colors)]
     #cmap = cm.Set3(np.linspace(0,0.5,N_colors))
+    cmap = cm.tab20c(np.linspace(0.1,1,N_colors))
 
-    cmap = cm.Paired(np.linspace(0,0.5,N_colors))  # good
+    #cmap = cm.Paired(np.linspace(0,0.5,N_colors))  # good
     ## rainbow; good
     #cmap = ["#ED4974", "#8958D3", "#16B9E1", "#58DE7B", "#F0D864", "#FF8057"]
     ## color3, good
     #cmap = ["#537c78", "#7ba591", "#cc222b", "#f15b4c", "#faa41b", "#ffd45b"]
-    cmap = ["#5CC8CB", "#2B64C6", "#F9E16A", "#81C83D", '#EC702D', '#E9A2AE']
+    #cmap = ["#5CC8CB", "#2B64C6", "#F9E16A", "#81C83D", '#EC702D', '#E9A2AE']
+    cmap = [None, "#ff71ce", None, "#01cdfe","#05ffa1", None]
+    cmap = [None, "#ffb3ba", None, "#ffffba","#bae1ff", None]
 
     # contents:
     # prot/teff dataframe, RGB color, label, zorder
@@ -90,9 +93,9 @@ def _get_cluster_Prot_Teff_data(N_colors=5):
         'NGC-6811': [df_6811, cmap[4], '1 Gyr NGC-6811', z0+8],
         'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10],
         'Ruprecht-147': [df_r147, cmap[5], '2.7 Gyr Rup-147', z0+10],
-        '120-Myr': [None, cmap[0], '', None],
-        '300-Myr': [None, cmap[1], '', None],
-        '2.6-Gyr': [None, cmap[N_colors-1], '', None],
+        '120-Myr': [None, cmap[1], '', None],
+        '300-Myr': [None, cmap[2], '', None],
+        '2.6-Gyr': [None, cmap[5], '', None],
     }
 
     return d

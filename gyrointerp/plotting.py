@@ -86,7 +86,7 @@ def _given_ax_append_spectral_types(
 ############
 def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       model_ids=None, poly_order=7,
-                      slow_seq_ages=None):
+                      slow_seq_ages=None, hide_ax=0):
     """
     reference_clusters: list containing any of
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
@@ -146,7 +146,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                 Teff, model_id, poly_order=poly_order
             )
             ax.plot(
-                Teff, Prot, color=color, linewidth=1, zorder=-1
+                Teff, Prot, color=color, linewidth=2, zorder=-1, alpha=0.9
             )
 
     if isinstance(slow_seq_ages, list):
@@ -159,12 +159,13 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                 Teff, Prot, color='lightgray', linewidth=1, zorder=-1
             )
 
-    ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
-              borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
-              frameon=False)
+    if not hide_ax:
+        ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
+                  borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+                  frameon=False)
 
-    ax.set_xlabel("Effective Temperature [K]")
-    ax.set_ylabel("Rotation Period [days]")
+        ax.set_xlabel("Effective Temperature [K]")
+        ax.set_ylabel("Rotation Period [days]")
 
     ax.set_xlim([7100, 2900])
     ax.set_xticks([7000, 6000, 5000, 4000, 3000])
@@ -177,7 +178,10 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
         ax.set_ylim([-0.5, 28])
         ax.set_yticks([0, 5, 10, 15, 20, 25])
 
-    _given_ax_append_spectral_types(ax)
+    if not hide_ax:
+        _given_ax_append_spectral_types(ax)
+    if hide_ax:
+        ax.set_axis_off()
 
     basename = "_".join(reference_clusters)
     s = ''
@@ -193,8 +197,11 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     if isinstance(slow_seq_ages, list):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
+    ha = ''
+    if hide_ax:
+        ha = 'axisoff'
 
-    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}.png')
+    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}.png')
 
     savefig(fig, outpath, dpi=400, writepdf=1)
 
