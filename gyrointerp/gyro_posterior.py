@@ -1,13 +1,13 @@
 """
 Contents:
-    gyro_age_posterior
-    gyro_age_posterior_mcmc
-    agethreaded_gyro_age_posterior
+    | gyro_age_posterior
+    | gyro_age_posterior_mcmc
 
 Under-the-hood:
-    _gyro_age_posterior_worker
-    _one_star_age_posterior_worker
-    _get_pop_samples
+    | _gyro_age_posterior_worker
+    | _one_star_age_posterior_worker
+    | _get_pop_samples
+    | _agethreaded_gyro_age_posterior
 """
 import os, pickle
 from glob import glob
@@ -27,7 +27,7 @@ from gyrointerp.helpers import given_grid_post_get_summary_statistics
 from datetime import datetime
 import multiprocessing as mp
 
-def agethreaded_gyro_age_posterior(
+def _agethreaded_gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
     verbose=True,
@@ -48,10 +48,10 @@ def agethreaded_gyro_age_posterior(
     integer number of cores to use.
     """
 
-    # raise a traceback warning - this functoin should rarely be used.
+    # print a warning - this functoin should rarely be used.
     # TODO: remove it entirely?
-    raise UserWarning(
-        "The speedup from agethreaded_gyro_age_posterior is not very good."
+    print(
+        "WRN! The speedup from _agethreaded_gyro_age_posterior is not good."
     )
     #
     # handle input parameters
@@ -119,7 +119,7 @@ def agethreaded_gyro_age_posterior(
     return p_ages
 
 
-def gaussian_pdf_broadcaster(x, mu, sigma):
+def _gaussian_pdf_broadcaster(x, mu, sigma):
     """
     Define a 2D gaussian pdf using array broadcasting when `x` and `mu` have
     different dimensions.
@@ -159,7 +159,7 @@ def _gyro_age_posterior_worker(task):
 
     assert resid_obs_grid.ndim == 1
 
-    gaussian_Prots = gaussian_pdf_broadcaster(
+    gaussian_Prots = _gaussian_pdf_broadcaster(
         y_grid, resid_obs_grid, Prot_err
     )
 
@@ -198,57 +198,62 @@ def gyro_age_posterior(
     """
     Given a stellar rotation period and effective temperature, as well as their
     optional uncertainties (all ints or floats), calculate the probability of a
-    given age assuming the models.slow_sequence_residual model holds.
+    given age assuming the ``gyrointerp.models.slow_sequence_residual`` model
+    holds.
 
     If Prot_err and Teff_err are not given, they are assumed to be 1% relative
     and 50 K, respectively.  These are best-case defaults.  The suggested
-    effective temperature scale is implemented in gyrointerp.teff, in the
-    given_dr2_BpmRp_AV_get_Teff_Curtis2020 function.  This assumes you have an
-    accurate estimate for the reddening.  Spectroscopic temperatures are likely
-    the next-best option, though a 2% systematic uncertainty floor is expected
-    for them (see Tayar+2022, 2022ApJ...927...31T).
+    effective temperature scale is implemented in ``gyrointerp.teff``, in the
+    ``given_dr2_BpmRp_AV_get_Teff_Curtis2020`` function.  This assumes you have
+    an accurate estimate for the reddening.  Spectroscopic temperatures are
+    the next-best option.
 
     Args:
 
-        Prot, Teff, Prot_err, Teff_err: ints or floats, units of days and
-        degrees Kelvin.  Must be positive.
+        Prot, Prot_err : int or float.
+            Units of days.  Must be positive.
 
-        age_grid (np.ndarray): grid over which the age posterior is evaluated,
-        units are fixed to be Myr.  A fine choice if bounds_error == 'limit' is
-        np.linspace(0, 2600, 500).
+        Teff, Teff_err : int or float.
+            Units of degrees Kelvin.  Must be positive.
 
-        bounds_error: "limit" or "nan".  If "nan" ages below the minimum
-        reference age return strings as described below.  If "limit", they
-        return a prior-dominated number useable as an upper limit, based on the
-        limiting rotation period at the closest cluster.  Default is "limit".
+        age_grid : np.ndarray.
+            Grid over which the age posterior is evaluated, units are fixed to
+            be Myr (10^6 years).  A fine choice if bounds_error == 'limit' is
+            np.linspace(0, 2600, 500).
 
-        N_grid (int): the dimension of the grid in effective
-        temperature and reisdual-period over which the integration is
-        performed to evaluate the posterior.  Default 256 to maximize
-        performance.  Cutting down by factor of two leads to questionable
-        convergence.
+        bounds_error : str.
+            This must be set to "limit" or "nan".  If "nan" ages below the
+            minimum reference age return strings as described below.  If
+            "limit", they return a prior-dominated number useable as an upper
+            limit, based on the limiting rotation period at the closest
+            cluster.  Default is "limit".
 
-        n (int or float): assume Prot ~ t^{n} scaling
+        N_grid : int.
+            The dimension of the grid in effective temperature and
+            reisdual-period over which the integration is performed to evaluate
+            the posterior.  Default 256 to maximize performance.  Cutting down
+            by factor of two leads to questionable convergence.
 
-        age_scale (str): "default", "1sigmaolder", or "1sigmayounger".  Shifts
-        the entire age scale appropriately, based on the user's beliefs about
-        what ages of reference clusters are correct.  The scale is as described
-        in the manuscript, and defined in /gyrointerp/age_scale.py
+        n : int or float.
+            Assume Prot ~ t^{n} scaling
 
-        popn_parameters: (str) "default", or (dict) containing the
-        population-level free parameters.  Keys of "a0", "a1", "k0", "k1",
-        "y_g", "l_hidden", and "k_hidden" must all be specified.
+        age_scale : str.
+            "default", "1sigmaolder", or "1sigmayounger".  Shifts the entire
+            age scale appropriately, based on the user's beliefs about what
+            ages of reference clusters are correct.  The scale is as described
+            in the manuscript, and defined in /gyrointerp/age_scale.py
+
+        popn_parameters : str.
+            "default", or (dict) containing the population-level free
+            parameters.  Keys of "a0", "a1", "k0", "k1", "y_g", "l_hidden", and
+            "k_hidden" must all be specified.
 
     Returns:
-        * NaN if Teff outside [3800, 6200] K
-        * String of "<120 Myr" if Prot and Teff put the star below the Pleiades
-          sequence, and the star is hotter than 5000 K.
-        * String of "<300 Myr" if Prot and Teff put the star below the Pleiades
-          sequence, and the star is cooler than 5000 K.
-        * String of ">2600 Myr" if Prot and Teff put the star above the
-          Ruprecht-147/NGC-6819 sequence.
-        * Otherwise, returns np.ndarray containing posterior probabilities
-          calculated over age_grid.
+
+        np.ndarray : p_ages
+
+            Numpy array containing posterior probabilities at each point of the
+            age_grid.  Values are NaN if Teff outside of [3800, 6200] K.
     """
     #
     # handle input parameters

@@ -3,22 +3,22 @@ When run on a standard MacBook, this test shows:
 
 401 ages, N=256 grid:
     * gyro_age_posterior takes 4 seconds.
-    * agethreaded_gyro_age_posterior takes 4 seconds.
+    * _agethreaded_gyro_age_posterior takes 4 seconds.
 
 401 ages, N=512 grid:
     * gyro_age_posterior takes 10 seconds.
-    * agethreaded_gyro_age_posterior takes 6 seconds.
+    * _agethreaded_gyro_age_posterior takes 6 seconds.
 
 1001 ages, N=256 grid:
     * gyro_age_posterior takes 10 seconds.
-    * agethreaded_gyro_age_posterior takes 5 seconds.
+    * _agethreaded_gyro_age_posterior takes 5 seconds.
 
-where the macbook has 16 cores to use during agethreaded_gyro_age_posterior.
+where the macbook has 16 cores to use during _agethreaded_gyro_age_posterior.
 """
 import os, pytest
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from gyrointerp.gyro_posterior import (
-    agethreaded_gyro_age_posterior, gyro_age_posterior
+    _agethreaded_gyro_age_posterior, gyro_age_posterior
 )
 from datetime import datetime
 
@@ -40,7 +40,7 @@ def run_serial(N):
 def run_parallel(N):
 
     print(f"{datetime.now().isoformat()} begin N={N} (parallel)")
-    age_post = agethreaded_gyro_age_posterior(
+    age_post = _agethreaded_gyro_age_posterior(
         Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
         N_grid=N, verbose=False
     )

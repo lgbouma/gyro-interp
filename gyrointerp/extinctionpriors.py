@@ -1,4 +1,7 @@
-# Defines a dictionary of mean extinction A_V values for reference clusters.
+"""
+This module defines a dictionary of mean extinction A_V values adopted for the
+reference open clusters when calibrating the gyrochronal model.
+"""
 #
 # Pleiades, Praesepe, and NGC-6811 are as quoted in Appendix A.3 of
 # Curtis+2020, ApJ 904 140.

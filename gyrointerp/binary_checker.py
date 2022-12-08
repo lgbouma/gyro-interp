@@ -1,8 +1,3 @@
-"""
-Contents:
-    binary_checker
-"""
-
 import numpy as np
 
 from cdips.utils.gaiaqueries import (
@@ -28,11 +23,11 @@ def given_source_ids_return_possible_binarity(
     the Gaia point source catalogs.
 
     It creates flags including:
-        flag_non_single_star
-        flag_rv_error
-        flag_ruwe
-        flag_nbhr_count
-        flag_possible_binary
+    | flag_non_single_star
+    | flag_rv_error
+    | flag_ruwe
+    | flag_nbhr_count
+    | flag_possible_binary
 
     Something that a user might wish consider is also whether their star(s) of
     interest is a photometric binary.  This is generally best assessed using a
@@ -43,62 +38,66 @@ def given_source_ids_return_possible_binarity(
 
     ----------
 
-    Required Args:
-        source_ids (np.ndarray): a numpy array containing string-value Gaia
-        source_ids.  For example, np.array(["446488105559389568"]).
+    Args:
+        source_ids : np.ndarray
+            a numpy array containing string-value Gaia
+            source_ids.  For example, np.array(["446488105559389568"]).
 
-        gaia_datarelease (str): Gaia data release corresponding to
-        `source_ids`, must be one of "gaiadr2", "gaiadr3", or "gaiaedr3".
+        gaia_datarelease : str
+            Gaia data release corresponding to `source_ids`, must be one of
+            "gaiadr2", "gaiadr3", or "gaiaedr3".
 
-    Kwargs:
-        flag_cutoffs (dict): containing key/value pairs for the binarity
-        indicator cutoffs, described below.
+    Keyword Args:
+        flag_cutoffs : dict
+            containing key/value pairs for the binarity indicator cutoffs,
+            described below.
 
-        runid (None or str): string used for cacheing.  If given, results will
-        be cached to a file at `~/.gaia_cache/{runid}*.*`.  Otherwise, the
-        cached file will be based on the first source_id in source_ids.
+        runid : None or str
+            string used for cacheing.  If given, results will be cached to a
+            file at `~/.gaia_cache/{runid}*.*`.  Otherwise, the cached file
+            will be based on the first source_id in source_ids.
 
-        overwrite (bool): if True, forces re-running and overwrite of Gaia
-        archive queries.
+        overwrite : bool
+            If True, forces re-running and overwrite of Gaia archive queries.
 
     Returns:
-        Two dataframes: `target_df` and `nbhr_df`.
+        tuple of pd.DataFrame: (`target_df`, `nbhr_df`).
 
         The first is a N-row dataframe containing standard Gaia data for each
         requested source, and a set of flags that can be indicative of
         binarity:
 
-            flag_non_single_star: Non-zero `non_single_star` bitflag from
-                Gaia DR3.  Bit 1 in `non_single_star` means the Gaia pipeline
-                identified it as an astrometric binary.  Bit 2 means it
-                identified it as a spectroscopic binary.  Bit 3 means it
-                identified it as an eclipsing binary.
-                (https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_main_source_catalogue/ssec_dm_gaia_source.html)
+            _flag_non_single_star_: Non-zero non_single_star bitflag from
+            Gaia DR3.  Bit 1 in non_single_star means the Gaia pipeline
+            identified it as an astrometric binary.  Bit 2 means it
+            identified it as a spectroscopic binary.  Bit 3 means it
+            identified it as an eclipsing binary.
+            (https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_main_source_catalogue/ssec_dm_gaia_source.html)
 
-            flag_rv_error: gaia radial_velocity_error is above
-                `flag_cutoffs['rv_error']` km/s.  This means the scatter in the RV
-                time-series is high.
+            _flag_rv_error_: gaia radial_velocity_error is above
+            `flag_cutoffs['rv_error']` km/s.  This means the scatter in the RV
+            time-series is high.
 
-            flag_ruwe: RUWE is above `flag_cutoffs['ruwe']`.  This can indicate
-                true astrometric motion, or that there are multiple
-                marginally-resolved point sources that induce extra astrometric
-                scatter along each different scan direction.
+            _flag_ruwe_: RUWE is above `flag_cutoffs['ruwe']`.  This can indicate
+            true astrometric motion, or that there are multiple
+            marginally-resolved point sources that induce extra astrometric
+            scatter along each different scan direction.
 
-            nbhr_count: count of stars within a brightness difference of
-                `flag_cutoffs['dGmag']` G-band magnitudes of the target star,
-                within a distance of `flag_cutoffs['sep_arcsec']`.  Note that these
-                are just visually coincident stars, and needn't be binary
-                companions!  Checking the parallaxes and proper motions is a more
-                convincing way to demonstrate whether the stars are co-spatial
-                and/or co-moving.
+            _nbhr_count_: count of stars within a brightness difference of
+            `flag_cutoffs['dGmag']` G-band magnitudes of the target star,
+            within a distance of `flag_cutoffs['sep_arcsec']`.  Note that these
+            are just visually coincident stars, and needn't be binary
+            companions!  Checking the parallaxes and proper motions is a more
+            convincing way to demonstrate whether the stars are co-spatial
+            and/or co-moving.
 
-            flag_nbhr_count: if nbhr_count >= 1
+            _flag_nbhr_count_: if nbhr_count >= 1
 
-            flag_possible_binary: bitwise-OR of the above three flags.
+            _flag_possible_binary_: bitwise-OR of the above three flags.
 
-        The second, `nbhr_df`, contains Gaia info for the neighbors, including
-        their source_id's (listed as the "source_id_2" column), distances, and
-        G-band magnitude differences.
+        The second DataFrame, `nbhr_df`, contains Gaia info for the neighbors,
+        including their source_id's (listed as the "source_id_2" column),
+        distances, and G-band magnitude differences.
     """
 
     assert isinstance(source_ids, np.ndarray)

@@ -3,9 +3,9 @@ This module contains functions for calculating photometric effective
 temperatures.
 
 Contents:
-    given_dr2_BpmRp_AV_get_Teff_Curtis2020
-    given_VmKs_get_Teff
-    given_GmKs_get_Teff
+    | given_dr2_BpmRp_AV_get_Teff_Curtis2020
+    | _given_VmKs_get_Teff
+    | _given_GmKs_get_Teff
 """
 import os
 import numpy as np, pandas as pd
@@ -14,7 +14,7 @@ from gyrointerp.paths import DATADIR
 def given_dr2_BpmRp_AV_get_Teff_Curtis2020(dr2_BpmRp, A_V):
     """
     Empirical color-temperature relation from Appendix A of Curtis+2020.
-    Visible in their Figure 11.  Coefficients from Table 4.
+    Visible in their Figure 11.  Coefficients from their Table 4.
 
     This relation was constructed using benchmark stars from Brewer+2016a,
     Boyajian+2012, and Mann+2015 (which should also be cited).
@@ -22,22 +22,23 @@ def given_dr2_BpmRp_AV_get_Teff_Curtis2020(dr2_BpmRp, A_V):
     It is calibrated in the range 0.55 < (BP-RP)0 < 3.25, and has a scatter of
     about +/- 50 K.
 
-    It's important that the passed BP-RP colors are from DR2. For FGK stars in
-    a few test clusters (eg. NGC-3532), the typical offset is +0.02 mag and
-    color dependent.  For late K dwarf and M-dwarfs, it flips, and gets down to
-    -0.1 mag at BP-RP of >2 (SpType>M1V).  This translates to a >100 K error.
+    It's important that the passed BP-RP colors are from Gaia DR2. For FGK
+    stars in a few test clusters (eg. NGC-3532), the typical offset is +0.02
+    mag and color dependent.  For late K dwarf and M-dwarfs, it flips, and gets
+    down to -0.1 mag at BP-RP of >2 (SpType>M1V).  This translates to a >100 K
+    systematic error if you use the wrong Gaia data release.
 
     See https://www.cosmos.esa.int/web/gaia/edr3-passbands for a description of
-    why exactly the passbands changed between reductions.
+    why exactly the Gaia passbands changed between reductions.
 
     Args:
+        dr2_BpmRp (np.ndarray): *observed* Gaia DR2 BP-RP array.
 
-        dr2_BpmRp: (np.ndarray) *observed* Gaia DR2 BP-RP.
-
-        A_V: (float) mean reddening.
+        A_V (float): mean reddening.
 
     Returns:
-        Teff (np.ndarray)
+
+        Teff (np.ndarray): array of effective temperatures.
     """
     c0 = -416.585
     c1 = 39780.0
@@ -75,7 +76,7 @@ def given_dr2_BpmRp_AV_get_Teff_Curtis2020(dr2_BpmRp, A_V):
     return Teff
 
 
-def given_VmKs_get_Teff(VmKs):
+def _given_VmKs_get_Teff(VmKs):
     """
     Interpolate effective temperatures from the Mamajek table and (V-Ks)0.
     (less reddening dependence than B-V).
@@ -109,7 +110,7 @@ def given_VmKs_get_Teff(VmKs):
     return Teff
 
 
-def given_GmKs_get_Teff(GmKs):
+def _given_GmKs_get_Teff(GmKs):
     """
     Interpolate effective temperatures from the Mamajek table and (G-Ks)0.
     """

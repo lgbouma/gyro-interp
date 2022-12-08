@@ -1,6 +1,6 @@
 """
-Define a dictionary of dictionaries containing the default cluster age scale,
-as well as the assumed +1sigma and -1sigma uncertainties on those ages.
+This module defines a dictionary containing the default cluster age scale, as
+well as the assumed +1sigma and -1sigma uncertainties on those ages.
 """
 
 agedict = {

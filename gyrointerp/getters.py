@@ -33,8 +33,8 @@ from cdips.utils.gaiaqueries import (
 from gyrointerp.paths import LOCALDIR, DATADIR, RESULTSDIR
 from gyrointerp.extinctionpriors import extinction_A_V_dict
 from gyrointerp.teff import (
-    given_dr2_BpmRp_AV_get_Teff_Curtis2020, given_VmKs_get_Teff,
-    given_GmKs_get_Teff
+    given_dr2_BpmRp_AV_get_Teff_Curtis2020, _given_VmKs_get_Teff,
+    _given_GmKs_get_Teff
 )
 
 from gyrointerp.helpers import (
@@ -620,7 +620,7 @@ def get_Pleiades(overwrite=0):
 
     # Interpolate effective temperatures from the Mamajek table and (V-Ks)0.
     # (less reddening dependence than B-V).
-    df['Teff_Mamajek'] = given_VmKs_get_Teff(df['__V-K_0'].astype(float))
+    df['Teff_Mamajek'] = _given_VmKs_get_Teff(df['__V-K_0'].astype(float))
 
     # Crossmatch from EPIC --> DR2, using the 1" crossmatch from
     # https://gaia-kepler.fun/, downloaded to LOCALDIR
@@ -837,7 +837,7 @@ def get_NGC3532(overwrite=0):
 
     # Interpolate effective temperatures from the Mamajek table and (V-Ks)0.
     # (less reddening dependence than B-V).
-    df['Teff_Mamajek'] = given_VmKs_get_Teff(df['__V-Ks_0'].astype(float))
+    df['Teff_Mamajek'] = _given_VmKs_get_Teff(df['__V-Ks_0'].astype(float))
 
     dr2_source_ids = np.array(df.GaiaDR2).astype(np.int64)
     gdf, s_dr3 = given_dr2_get_dr3_dataframes(
@@ -1395,7 +1395,7 @@ def get_GroupX(overwrite=0):
     mdf['Teff_Curtis20'] = given_dr2_BpmRp_AV_get_Teff_Curtis2020(
         np.array(mdf.dr2_bp_rp), extinction_A_V_dict["Group-X"]
     )
-    mdf['Teff_Mamajek'] = given_GmKs_get_Teff(mdf['__G-K_0'])
+    mdf['Teff_Mamajek'] = _given_GmKs_get_Teff(mdf['__G-K_0'])
 
     dGmag = 3.25 # anything within 20x the brightness of the target
     sep_arcsec = 1*21 # and 1 TESS pixel
