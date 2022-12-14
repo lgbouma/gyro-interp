@@ -86,7 +86,7 @@ def _given_ax_append_spectral_types(
 ############
 def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       model_ids=None, poly_order=7,
-                      slow_seq_ages=None, hide_ax=0):
+                      slow_seq_ages=None, hide_ax=0, logo_colors=0):
     """
     reference_clusters: list containing any of
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
@@ -106,7 +106,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     """
     # Get data
     N_colors = 6
-    d = _get_cluster_Prot_Teff_data(N_colors=N_colors)
+    d = _get_cluster_Prot_Teff_data(N_colors=N_colors, logo_colors=logo_colors)
 
     # Make plot
     set_style("science")

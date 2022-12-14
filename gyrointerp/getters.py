@@ -1,22 +1,21 @@
 """
-Functions to get the rotation periods and Teffs for single members of benchmark
-open clusters.
+Functions to get the rotation periods and effective temperatures for single
+members of benchmark open clusters.
 
 Meta-wrapper:
-    _get_cluster_Prot_Teff_data
+    | _get_cluster_Prot_Teff_data
 
 Implemented:
-    get_Pleiades
-    get_Blanco1
-    get_NGC3532
-    get_Praesepe_Rampalli_2021
-    get_NGC6811
-    get_GroupX
-    get_PscEri
-
-Not yet implemented:
-    get_Praesepe_Douglas_2017
-    get_alphaPer
+    | get_alphaPer
+    | get_Pleiades
+    | get_Blanco1
+    | get_PscEri
+    | get_NGC3532
+    | get_GroupX
+    | get_Praesepe_Rampalli_2021
+    | get_NGC6811
+    | get_NGC6819
+    | get_Ruprecht147
 """
 import os
 import numpy as np, pandas as pd
@@ -41,7 +40,7 @@ from gyrointerp.helpers import (
     prepend_colstr, left_merge, given_dr2_get_dr3_dataframes
 )
 
-def _get_cluster_Prot_Teff_data(N_colors=5):
+def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     """
     Wrapper to gyrointerp.getters to retrieve dataframes of reference cluster
     data, as well as to define the colors / labels / zorders used across many
@@ -56,28 +55,27 @@ def _get_cluster_Prot_Teff_data(N_colors=5):
     df_bla1 = get_Blanco1(overwrite=overwrite)
     df_plei = get_Pleiades(overwrite=overwrite)
     df_3532 = get_NGC3532(overwrite=overwrite)
+    df_grpx = get_GroupX(overwrite=overwrite)
     df_prae = get_Praesepe_Rampalli_2021(overwrite=overwrite)
     df_6811 = get_NGC6811(overwrite=overwrite)
-    df_grpx = get_GroupX(overwrite=overwrite)
     df_6819 = get_NGC6819(overwrite=overwrite)
     df_r147 = get_Ruprecht147(overwrite=overwrite)
 
-    #cmap = cm.Spectral(np.linspace(0,1,N_colors))  # decent
+    # tested, manuscript
+    #cmap = cm.Spectral(np.linspace(0,1,N_colors))
     #cmap = cm.terrain(np.linspace(0,0.8,N_colors))
     #cmap = cm.Accent(np.linspace(0,0.6,N_colors))
     #cmap = cm.hsv(np.linspace(0,0.8,N_colors))
     #cmap = [f"C{ix}" for ix in range(N_colors)]
     #cmap = cm.Set3(np.linspace(0,0.5,N_colors))
-    cmap = cm.tab20c(np.linspace(0.1,1,N_colors))
+    #cmap = cm.tab20c(np.linspace(0.1,1,N_colors))
 
-    #cmap = cm.Paired(np.linspace(0,0.5,N_colors))  # good
-    ## rainbow; good
-    #cmap = ["#ED4974", "#8958D3", "#16B9E1", "#58DE7B", "#F0D864", "#FF8057"]
-    ## color3, good
-    #cmap = ["#537c78", "#7ba591", "#cc222b", "#f15b4c", "#faa41b", "#ffd45b"]
-    #cmap = ["#5CC8CB", "#2B64C6", "#F9E16A", "#81C83D", '#EC702D', '#E9A2AE']
-    cmap = [None, "#ff71ce", None, "#01cdfe","#05ffa1", None]
-    cmap = [None, "#ffb3ba", None, "#ffffba","#bae1ff", None]
+    # adopted, manuscript
+    cmap = ["#5CC8CB", "#2B64C6", "#F9E16A", "#81C83D", '#EC702D', '#E9A2AE']
+
+    if logo_colors:
+        # ADOPTED LOGO COLORS
+        cmap = [None, "#ffb3ba", None, "#ffffba","#bae1ff", None]
 
     # contents:
     # prot/teff dataframe, RGB color, label, zorder
@@ -181,13 +179,17 @@ def get_NGC6819(overwrite=0):
         (mdf.non_single_star)
         |
         (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
     )
 
     # follow advice from
     # https://vizier.cfa.harvard.edu/viz-bin/VizieR-3?-source=J/ApJ/904/140/table1&-out.max=50&-out.form=HTML%20Table&-oc.form=sexa
     # "Bench" column notes / definition
+    mdf['flag_pass_author_quality'] = mdf.Prot > 0
+
     mdf["flag_benchmark_period"] = (
-        (mdf.Prot > 0)
+        mdf.flag_pass_author_quality
         #&
         #(~mdf.flag_possible_binary)
         &
@@ -289,20 +291,25 @@ def get_Ruprecht147(overwrite=0):
         (mdf.non_single_star)
         |
         (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
+    )
+
+    mdf['flag_pass_author_quality'] = (
+        (mdf.Bench == 'Yes')
+        &
+        (mdf.Prot > 0)
     )
 
     # follow advice from
     # https://vizier.cfa.harvard.edu/viz-bin/VizieR-3?-source=J/ApJ/904/140/table1&-out.max=50&-out.form=HTML%20Table&-oc.form=sexa
     # "Bench" column notes / definition
     mdf["flag_benchmark_period"] = (
-        (mdf.Bench == 'Yes')
+        (mdf.flag_pass_author_quality)
         &
-        (mdf.Prot > 0)
-        #&
-        #(~mdf.flag_possible_binary)
-        &
-        (~mdf.flag_bad_gaiamatch)
+        (~mdf.flag_possible_binary)
     )
+
 
     mdf.to_csv(cachepath, index=False)
     print(f"Wrote {cachepath}")
@@ -436,14 +443,18 @@ def get_NGC6811(overwrite=0):
         (mdf.non_single_star)
         |
         (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
+    )
+
+    mdf["flag_pass_author_quality"] = (
+        (mdf.f_Seq == 'Y')
     )
 
     mdf["flag_benchmark_period"] = (
-        (mdf.f_Seq == 'Y')
+        (mdf.flag_pass_author_quality)
         &
         (~mdf.flag_possible_binary)
-        &
-        (~mdf.flag_bad_gaiamatch)
     )
 
     mdf = mdf.rename({"Per":"Prot"}, axis='columns')
@@ -568,8 +579,6 @@ def get_Blanco1(overwrite=0):
     )
 
     mdf["flag_possible_binary"] = (
-        (mdf.mult.str.contains("r")) # RV binaries from Gillen+20 table
-        |
         (mdf.flag_camd_outlier)
         |
         (mdf.flag_rverror_outlier)
@@ -577,12 +586,18 @@ def get_Blanco1(overwrite=0):
         (mdf.non_single_star)
         |
         (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
+    )
+
+    mdf['flag_pass_author_quality'] = (
+        ~mdf.mult.str.contains("r") # RV binaries from Gillen+20 table
     )
 
     mdf["flag_benchmark_period"] = (
         (~mdf.flag_possible_binary)
         &
-        (~mdf.flag_bad_gaiamatch)
+        (mdf.flag_pass_author_quality)
     )
 
     mdf = mdf.rename({"P_adopt": "Prot"}, axis='columns')
@@ -778,6 +793,14 @@ def get_Pleiades(overwrite=0):
     sel = mdf.Per2 == 0
     mdf.loc[sel, 'Per2'] = np.nan
 
+    mdf["flag_pass_author_quality"] = (
+        (~mdf.flag_fdwarf_outlier)
+        &
+        (pd.isnull(mdf.Per2)) # multiple photometric periods usually implies binarity
+        &
+        (mdf.Mm == 'best')
+    )
+
     mdf["flag_possible_binary"] = (
         (mdf.flag_ruwe_outlier)
         |
@@ -787,21 +810,17 @@ def get_Pleiades(overwrite=0):
         |
         (mdf.non_single_star)
         |
-        (mdf.flag_fdwarf_outlier)
+        (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
         |
         (mdf.flag_rv_outlier)
-        |
-        (~pd.isnull(mdf.Per2)) # multiple photometric periods usually implies binarity
-        |
-        (mdf.flag_nbhr_count)
     )
 
     mdf["flag_benchmark_period"] = (
-        (mdf.Mm == 'best')
+        (mdf.flag_pass_author_quality)
         &
         (~mdf.flag_possible_binary)
-        &
-        (~mdf.flag_bad_gaiamatch)
     )
 
     mdf.to_csv(cachepath, index=False)
@@ -939,45 +958,23 @@ def get_NGC3532(overwrite=0):
         (mdf.flag_nbhr_count)
     )
 
+    mdf["flag_pass_author_quality"] = (
+        #(mdf.Class == 3) # include "activity informed" periods
+        #|
+        (mdf.Class == 1)
+        |
+        (mdf.Class == 2)
+    )
+
     mdf["flag_benchmark_period"] = (
-        (
-            #(mdf.Class == 3) # include "activity informed" periods
-            #|
-            (mdf.Class == 1)
-            |
-            (mdf.Class == 2)
-        )
+        (mdf.flag_pass_author_quality)
         &
-        (
-            ~mdf.flag_possible_binary
-        )
+        (~mdf.flag_possible_binary)
     )
 
     mdf.to_csv(cachepath, index=False)
     print(f"Wrote {cachepath}")
 
-    return mdf
-
-
-def get_Praesepe_Douglas_2017(overwrite=0):
-
-    cluster = 'praesepe_douglas2017'
-    outdir = os.path.join(DATADIR, "interim", cluster)
-    if not os.path.exists(outdir): os.mkdir(outdir)
-    cachepath = os.path.join(outdir, "Douglas_2017_X_DR3_supplemented.csv")
-
-    if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
-        return pd.read_csv(cachepath)
-
-    fitspath = os.path.join(DATADIR, "literature",
-                            "Douglas_2017_praesepe_table3_794_rows.fits")
-    hdul = fits.open(fitspath)
-    df = Table(hdul[1].data).to_pandas()
-    hdul.close()
-
-    #FIXME FIXME TODO TODO
-    assert 0
     return mdf
 
 
@@ -1081,6 +1078,7 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
     s_dr2 = s_dr2.merge(
         gcdf, on='dr2_source_id', how='left'
     )
+    s_dr2['dr2_source_id'] = s_dr2['dr2_source_id'].astype(str)
 
     # Merge
     mdf0 = left_merge(mdf, s_dr2, 'dr3_source_id', 'dr3_source_id')
@@ -1167,24 +1165,32 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
         |
         (mdf.non_single_star)
         |
-        (mdf.Multi == 1)
-        |
-        (mdf.Neigh == 1)
-        |
-        (mdf.Bin == 1)
-        |
-        (mdf.Binary == 1)
-        |
         (mdf.flag_nbhr_count)
     )
 
-    mdf["flag_benchmark_period"] = (
-        (mdf.QFClean == 1)
+    mdf["flag_pass_author_quality"] = (
+        ~(
+            (mdf.Multi == 1)
+            |
+            (mdf.Neigh == 1)
+            |
+            (mdf.Bin == 1)
+            |
+            (mdf.Binary == 1)
+            |
+            (mdf.Flag) # missing Gaia EDR3 measurement
+        )
         &
+        (mdf.QFClean == 1)
+    )
+
+    mdf["flag_benchmark_period"] = (
         (~mdf.flag_possible_binary)
         &
-        (~mdf.Flag) # missing Gaia EDR3 measurement
+        (mdf.flag_pass_author_quality)
     )
+
+    mdf['dr2_source_id'] = mdf.dr2_source_id.astype(str)
 
     mdf.to_csv(cachepath, index=False)
     print(f"Wrote {cachepath}")
@@ -1316,12 +1322,16 @@ def get_PscEri(overwrite=0):
         (mdf.non_single_star)
         |
         (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
     )
+
+    mdf['flag_pass_author_quality'] = True
 
     mdf["flag_benchmark_period"] = (
         (~mdf.flag_possible_binary)
         &
-        (~mdf.flag_bad_gaiamatch)
+        (mdf.flag_pass_author_quality)
     )
 
     mdf.to_csv(cachepath, index=False)
@@ -1473,16 +1483,20 @@ def get_GroupX(overwrite=0):
         (mdf.non_single_star)
         |
         (mdf.flag_nbhr_count)
+        |
+        (mdf.flag_bad_gaiamatch)
     )
 
-    mdf["flag_benchmark_period"] = (
+    mdf["flag_pass_author_quality"] = (
         (mdf.Grade == 'A')
         &
         (mdf.n_Seq == '  ')
+    )
+
+    mdf["flag_benchmark_period"] = (
+        (mdf.flag_pass_author_quality)
         &
         (~mdf.flag_possible_binary)
-        &
-        (~mdf.flag_bad_gaiamatch)
     )
 
     mdf = mdf.rename({"Per":"Prot"}, axis='columns')
@@ -1504,21 +1518,34 @@ def get_alphaPer(overwrite=0):
     cluster = 'alpha-per'
     authoryr = "Boyle_table3_full"
     outdir = os.path.join(DATADIR, "interim", cluster)
-    cachepath = os.path.join(outdir, f"{authoryr}.csv")
+    cachepath = os.path.join(outdir, f"{authoryr}_DR3_supp.csv")
 
-    assert os.path.exists(cachepath)
+    if os.path.exists(cachepath):
+        return pd.read_csv(cachepath)
 
+    df0 = pd.read_csv(os.path.join(
+        outdir, "Boyle_table3_full.csv")
+    )
+    df1 = pd.read_csv(os.path.join(
+        outdir, "Boyle_inprep_X_GDR3_supplemented.csv")
+    )
 
-    df = pd.read_csv(cachepath)
+    df = df0.merge(df1, how='left', left_on='dr3_source_id',
+                   right_on='dr3_source_id', suffixes=("", "_supp"))
 
-    df["flag_possible_binary"] = ~df["flag_benchmark_period"]
-
+    df = df.rename(
+        {'Teff_Curtis20':'Teff_Curtis20_fixedreddening'},
+        axis='columns'
+    )
     df = df.rename({
         "period":"Prot",
-        "flag_benchmark_period":"flag_benchmark_period_output",
-        "in_gyro_sample":"flag_benchmark_period",
-        "teff_curtis20":"Teff_Curtis20",
+        "flag_benchmark_period":"flag_benchmark_period_Andy",
+        "teff_curtis20":"Teff_Curtis20" #variable reddening,
     }, axis='columns')
+
+    df['flag_pass_author_quality'] = df['in_gyro_sample']
+
+    df['flag_benchmark_period'] = df['flag_pass_author_quality']
 
     print(f"Found {cachepath}; returning.")
     return df
