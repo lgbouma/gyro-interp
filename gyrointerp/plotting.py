@@ -86,7 +86,8 @@ def _given_ax_append_spectral_types(
 ############
 def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       model_ids=None, poly_order=7,
-                      slow_seq_ages=None, hide_ax=0, logo_colors=0):
+                      slow_seq_ages=None, hide_ax=0, logo_colors=0,
+                      logy=False):
     """
     reference_clusters: list containing any of
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
@@ -160,9 +161,10 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
             )
 
     if not hide_ax:
-        ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
-                  borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
-                  frameon=False)
+        if not logy:
+            ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
+                      borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+                      frameon=False)
 
         ax.set_xlabel("Effective Temperature [K]")
         ax.set_ylabel("Rotation Period [days]")
@@ -172,11 +174,17 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     minor_xticks = np.arange(3000, 7100, 100)[::-1]
     ax.set_xticks(minor_xticks, minor=True)
 
-    ax.set_ylim([-0.5, 16])
-    ax.set_yticks([0, 5, 10, 15])
-    if 'Ruprecht-147' in reference_clusters:
-        ax.set_ylim([-0.5, 28])
-        ax.set_yticks([0, 5, 10, 15, 20, 25])
+    if not logy:
+        ax.set_ylim([-0.5, 16])
+        ax.set_yticks([0, 5, 10, 15])
+        if 'Ruprecht-147' in reference_clusters:
+            ax.set_ylim([-0.5, 28])
+            ax.set_yticks([0, 5, 10, 15, 20, 25])
+    else:
+        ax.set_yscale("log")
+        ax.set_ylim([0.1, 50])
+        if 'Ruprecht-147' in reference_clusters:
+            ax.set_ylim([0.1, 30])
 
     if not hide_ax:
         _given_ax_append_spectral_types(ax)
@@ -200,10 +208,14 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     ha = ''
     if hide_ax:
         ha = 'axisoff'
+    ly = ''
+    if logy:
+        ly = 'logy'
 
-    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}.png')
+    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}.png')
 
     savefig(fig, outpath, dpi=400, writepdf=1)
+
 
 
 def plot_prot_vs_teff_residual(
