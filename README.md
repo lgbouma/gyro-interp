@@ -24,9 +24,9 @@ is the gyrochronological age posterior over a grid spanning 0 to 2.6 Gyr?
 ```
 import numpy as np
 from gyrointerp import gyro_age_posterior
-Prot, Prot_err = 6, 0.05
+Prot, Prot_err = 6, 0.1
 Teff, Teff_err = 5500, 100
-age_grid = np.linspace(0, 2600, 100)
+age_grid = np.linspace(0, 2600, 500)
 age_posterior = gyro_age_posterior(
   Prot, Teff, Prot_err=Prot_err, Teff_err=Teff_err, age_grid=age_grid
 )
