@@ -1184,7 +1184,8 @@ def plot_age_posteriors(
             if full_mcmc:
                 age_post_mcmc = gyro_age_posterior_mcmc(
                     Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-                    verbose=False, cachedir=outdir
+                    verbose=False, cachedir=outdir, N_pop_samples=2048,
+                    N_post_samples=20000
                 )
                 df['age_post_mcmc'] = age_post_mcmc
             df.to_csv(cachepath)
@@ -1581,12 +1582,12 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
     # from run_prot_teff_grid.py
     teffmin, teffmax = 3800, 6200
     protmin, protmax = 0, 23
-    Teff_grid = np.arange(teffmin, teffmax+50, 50)
-    Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
+    Teff_grid = np.arange(teffmin, teffmax+10, 10)
+    Prot_grid = np.arange(protmin, protmax+0.1, 0.1)
     N_Teff = len(Teff_grid)
     N_Prot = len(Prot_grid)
 
-    typestr = 'limitgrid'
+    typestr = 'limitgrid_defaultparameters'
     cachedir = os.path.join(
         LOCALDIR, "gyrointerp",
         f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
@@ -1616,13 +1617,30 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
             )
 
             if 'abs' not in imagestr:
-                p1sig[ix, iy] = df.loc[sel, '+1sigmapct']
-                m1sig[ix, iy] = df.loc[sel, '-1sigmapct']
+                _p1 = df.loc[sel, '+1sigmapct']
+                if len(_p1) > 0:
+                    p1sig[ix, iy] = _p1
+                else:
+                    print(f"ix: {ix}, iy {iy}, Teff {x}, Prot {y} got nan")
+                    p1sig[ix, iy] = np.nan
+
+                _m1 = df.loc[sel, '-1sigmapct']
+                if len(_m1) > 0:
+                    m1sig[ix, iy] = df.loc[sel, '-1sigmapct']
+                else:
+                    m1sig[ix, iy] = np.nan
             else:
                 p1sig[ix, iy] = df.loc[sel, '+1sigma']
                 m1sig[ix, iy] = df.loc[sel, '-1sigma']
-            median[ix, iy] = df.loc[sel, 'median']
-            peak[ix, iy] = df.loc[sel, 'peak']
+
+            try:
+                median[ix, iy] = df.loc[sel, 'median']
+            except:
+                median[ix, iy] = np.nan
+            try:
+                peak[ix, iy] = df.loc[sel, 'peak']
+            except:
+                peak[ix, iy] = np.nan
 
             if y > slow_sequence(
                 x, 2600, poly_order=poly_order, n=n
@@ -1841,11 +1859,11 @@ def plot_empirical_limits_of_gyrochronology(
             ax.set_yticks([0, 5, 10, 15, 20])
         axs[1].set_yticklabels([])
 
+    reference_ages = agedict['default']['reference_ages']
+
     if isinstance(slow_seq_ages, (list, np.ndarray)) and (
         imagestr in singleaxstrs
     ):
-
-        reference_ages = agedict['default']['reference_ages']
 
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
@@ -1863,7 +1881,9 @@ def plot_empirical_limits_of_gyrochronology(
                 Teff, Prot, color='lightgray', linewidth=linewidth,
                 linestyle=linestyle, zorder=999
             )
+
     if isinstance(slow_seq_ages, (list, np.ndarray)) and 'both' in imagestr:
+
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(

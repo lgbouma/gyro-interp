@@ -36,8 +36,8 @@ def main(n=0.5, age_scale="default"):
     age_grid = np.linspace(0, 2600, 500)
     teffmin, teffmax = 3800, 6200
     protmin, protmax = 0, 23
-    Teff_grid = np.arange(teffmin, teffmax+50, 50)
-    Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
+    Teff_grid = np.arange(teffmin, teffmax+10, 10)
+    Prot_grid = np.arange(protmin, protmax+0.1, 0.1)
 
     tasks = [(_prot, _teff, age_grid, outdir, n, age_scale, 'default')
              for _prot, _teff in product(Prot_grid, Teff_grid)]
@@ -61,9 +61,9 @@ def main(n=0.5, age_scale="default"):
 
 if __name__ == "__main__":
     main(n=0.5, age_scale="default")
+    assert 0
     main(n=0.5, age_scale="1sigmaolder")
     main(n=0.5, age_scale="1sigmayounger")
-    assert 0
     main(n=1.0)
     main(n=0.2)
     main(n=0.5)
