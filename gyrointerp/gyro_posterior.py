@@ -32,7 +32,7 @@ def _agethreaded_gyro_age_posterior(
     age_grid=np.linspace(0, 2600, 500),
     verbose=True,
     bounds_error='limit',
-    N_grid=256,
+    N_grid=512,
     nworkers='max',
 ):
     """
@@ -62,8 +62,8 @@ def _agethreaded_gyro_age_posterior(
     if Teff_err is None:
         Teff_err = 50
 
-    if N_grid < 256:
-        print("WARNING! N_grid must be >=256 to get converged results.")
+    if N_grid < 512:
+        print("WARNING! N_grid must be >=512 to get converged results.")
 
     #
     # special return cases
@@ -192,7 +192,7 @@ def _gyro_age_posterior_worker(task):
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid=256, n=0.5,
+    verbose=False, bounds_error='limit', N_grid=512, n=0.5,
     age_scale='default', popn_parameters='default'
     ):
     """
@@ -231,8 +231,8 @@ def gyro_age_posterior(
         N_grid : int.
             The dimension of the grid in effective temperature and
             reisdual-period over which the integration is performed to evaluate
-            the posterior.  Default 256 to maximize performance.  Cutting down
-            by factor of two leads to questionable convergence.
+            the posterior.  Default 512 to maximize performance.  Cutting down
+            by factor of two leads to poor convergence for rapid rotators.
 
         n : int or float.
             Assume Prot ~ t^{n} scaling
@@ -275,8 +275,8 @@ def gyro_age_posterior(
     if Teff_err is None:
         Teff_err = 50
 
-    if N_grid < 256:
-        print("WARNING! N_grid must be >=256 to get converged results.")
+    if N_grid < 512:
+        print("WARNING! N_grid must be >=512 to get converged results.")
 
     assert isinstance(n, (int, float))
 
@@ -422,7 +422,7 @@ def _get_pop_samples(N_pop_samples):
 def gyro_age_posterior_mcmc(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid=256, n=0.5,
+    verbose=False, bounds_error='limit', N_grid=512, n=0.5,
     age_scale='default',
     N_pop_samples=512,
     N_post_samples=10000,
