@@ -2,6 +2,7 @@
 Contents:
     | gyro_age_posterior
     | gyro_age_posterior_mcmc
+    | gyro_age_posterior_list
 
 Under-the-hood:
     | _gyro_age_posterior_worker
@@ -15,7 +16,6 @@ from gyrointerp.paths import DATADIR, LOCALDIR
 import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from numpy import array as nparr
 from os.path import join
-from datetime import datetime
 import warnings
 
 from scipy.stats import norm, uniform
@@ -196,7 +196,7 @@ def gyro_age_posterior(
     age_scale='default', popn_parameters='default'
     ):
     """
-    Given a stellar rotation period and effective temperature, as well as their
+    Given a single star's rotation period and effective temperature, and the
     optional uncertainties (all ints or floats), calculate the probability of a
     given age assuming the ``gyrointerp.models.slow_sequence_residual`` model
     holds.
@@ -259,6 +259,9 @@ def gyro_age_posterior(
     # handle input parameters
     #
     if Prot <= 0 or Teff <= 0:
+        return np.nan*np.ones(len(age_grid))
+
+    if Teff < 3800 or Teff > 6200:
         return np.nan*np.ones(len(age_grid))
 
     for param in [Prot_err, Teff_err]:
@@ -340,7 +343,7 @@ def _one_star_age_posterior_worker(task):
 
     Prot, Teff, age_grid, outdir, n, age_scale, parameters = task
 
-    Protstr = f"{float(Prot):.2f}"
+    Protstr = f"{float(Prot):.4f}"
     Teffstr = f"{float(Teff):.1f}"
     typestr = 'limitgrid'
     bounds_error = 'limit'
@@ -504,6 +507,59 @@ def gyro_age_posterior_mcmc(
     return p_ages / np.trapz(p_ages, age_grid)
 
 
+def gyro_age_posterior_list(
+    cache_id, Prots, Teffs, age_grid=np.linspace(0, 2600, 500)
+    ):
+    """
+    Given lists of rotation periods and effective temperatures, run them in
+    parallel.  This functions as a thin wrapper to gyro_age_posterior assuming
+    default parameters.  The output posteriors will be cached to
+    `$LOCALDIR/gyrointerp/{cache_id}`.
+
+    Args:
+
+    cache_id (str):
+        string identifying the grid for cacheing
+
+    Prots (np.ndarray):
+        1-D array of rotation periods
+
+    Teffs (np.ndarray):
+        1-D array of temperatures, same length as Prots
+
+    age_grid: as in gyro_age_posterior
+    """
+
+    assert len(Prots) == len(Teffs)
+
+    outdir = os.path.join(LOCALDIR, "gyrointerp")
+    if not os.path.exists(outdir): os.mkdir(outdir)
+
+    outdir = os.path.join(LOCALDIR, "gyrointerp", cache_id)
+    if not os.path.exists(outdir): os.mkdir(outdir)
+
+    n = 0.5
+    age_scale = "default"
+    hyperparameters = "default"
+
+    tasks = [(_prot, _teff, age_grid, outdir, n, age_scale, hyperparameters)
+             for _prot, _teff in zip(Prots, Teffs)]
+
+    N_tasks = len(tasks)
+    print(f"Got N_tasks={N_tasks}...")
+    print(f"{datetime.now().isoformat()} begin")
+
+    nworkers = mp.cpu_count()
+    maxworkertasks= 1000
+
+    pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
+
+    results = pool.map(_one_star_age_posterior_worker, tasks)
+
+    pool.close()
+    pool.join()
+
+    print(f"{datetime.now().isoformat()} end")
 
 
 if __name__ == "__main__":
