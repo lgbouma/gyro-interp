@@ -57,7 +57,7 @@ def _agethreaded_gyro_age_posterior(
     # handle input parameters
     #
     if Prot_err is None:
-        Prot_err = 0.05
+        Prot_err = 0.01 * Prot
 
     if Teff_err is None:
         Teff_err = 50
