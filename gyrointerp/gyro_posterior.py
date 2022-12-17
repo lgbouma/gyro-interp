@@ -192,7 +192,7 @@ def _gyro_age_posterior_worker(task):
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid=512, n=0.5,
+    verbose=False, bounds_error='limit', N_grid='default', n=0.5,
     age_scale='default', popn_parameters='default'
     ):
     """
@@ -228,11 +228,15 @@ def gyro_age_posterior(
             limit, based on the limiting rotation period at the closest
             cluster.  Default is "limit".
 
-        N_grid : int.
+        N_grid : str or int.
             The dimension of the grid in effective temperature and
             reisdual-period over which the integration is performed to evaluate
-            the posterior.  Default 512 to maximize performance.  Cutting down
-            by factor of two leads to poor convergence for rapid rotators.
+            the posterior.  "default" sets it to ``N_grid =
+            (Prot_grid_range)/Prot_err``, where "Prot_grid_range" is set to 20
+            days, the range of the grid used in the integration.   This default
+            ensures convergence;  numerical tests show convergence down to
+            ~0.7x smaller grid sizes.  If an integer is passed, defaults to
+            that.
 
         n : int or float.
             Assume Prot ~ t^{n} scaling
@@ -275,8 +279,43 @@ def gyro_age_posterior(
     if Teff_err is None:
         Teff_err = 50
 
-    if N_grid < 512:
-        print("WARNING! N_grid must be >=512 to get converged results.")
+    if Teff_err < 50:
+        print(
+            "WARNING: Teff uncertainties below 50 K are probably overly 
+            optimistic. Only do this if you have good reason to."
+        )
+
+    if Prot <= 0.3 and Prot_err < 0.03:
+        print(
+            "WARNING: imposing period uncertainty floor of 0.03d for "
+            "Prot<0.3d.  The purpose of this floor is to prevent N_grid "
+            "from growing too large.  This is justified in this region of "
+            "parameter space because the gyro model has no information content "
+            "here."
+        )
+        Prot_err = 0.03
+
+    assert isinstance(N_grid, (int, str))
+
+    if N_grid == "default":
+        Prot_grid_range = 20 # see y_grid below
+        N_grid = int(Prot_grid_range / Prot_err)
+
+        #FIXME leave this in???
+        msg = f"Prot {Prot}, Teff {Teff}, N_grid {N_grid}"
+        print(msg)
+
+    # numerical tests for convergence (/tests/test_gyro_posterior_grid.py)
+    # indicate we can go a little below the default grid resolution and still
+    # do OK.
+    N_grid_required = 0.7*int(Prot_grid_range / Prot_err)
+    if N_grid < N_grid_required:
+        print("WARNING! N_grid must be >~{N_grid_required} to get "
+              "converged results.")
+
+    Teff_grid_range = 6200 - 3800
+    errmsg = "Default N_grid is too small because"
+    assert Teff_grid_range / N_grid < Teff_err, errmsg
 
     assert isinstance(n, (int, float))
 
