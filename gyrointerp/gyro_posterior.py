@@ -281,8 +281,8 @@ def gyro_age_posterior(
 
     if Teff_err < 50:
         print(
-            "WARNING: Teff uncertainties below 50 K are probably overly 
-            optimistic. Only do this if you have good reason to."
+            "WARNING: Teff uncertainties below 50 K are probably overly "
+            "optimistic. Only do this if you have good reason to."
         )
 
     if Prot <= 0.3 and Prot_err < 0.03:

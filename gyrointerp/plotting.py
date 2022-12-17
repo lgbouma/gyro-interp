@@ -1607,7 +1607,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
     _fpaths = [
         os.path.join(
             cachedir,
-            f"Prot{float(Prot):.2f}_Teff{float(Teff):.1f}_{typestr}.csv"
+            f"Prot{float(Prot):.4f}_Teff{float(Teff):.1f}_{typestr}.csv"
         )
         for Prot, Teff in product(Prot_grid, Teff_grid)
     ]
@@ -1625,7 +1625,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
 
             sel = (
                 (df['Teff'].round(2) == np.round(x,2)) &
-                (df['Prot'].round(3) == np.round(y,3))
+                (df['Prot'].round(4) == np.round(y,4))
             )
 
             if 'abs' not in imagestr:
