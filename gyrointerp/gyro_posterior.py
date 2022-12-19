@@ -285,13 +285,13 @@ def gyro_age_posterior(
             "optimistic. Only do this if you have good reason to."
         )
 
-    if Prot <= 0.3 and Prot_err < 0.03:
+    if Prot_err < 0.03:
         print(
-            "WARNING: imposing period uncertainty floor of 0.03d for "
-            "Prot<0.3d.  The purpose of this floor is to prevent N_grid "
-            "from growing too large.  This is justified in this region of "
-            "parameter space because the gyro model has no information content "
-            "here."
+            "WARNING: imposing period uncertainty floor of 0.03d "
+            "The purpose of this floor is to prevent N_grid "
+            "from growing too large.  This is justified "
+            "because the gyro model has no information content "
+            "on this scale."
         )
         Prot_err = 0.03
 
@@ -300,10 +300,12 @@ def gyro_age_posterior(
     if N_grid == "default":
         Prot_grid_range = 20 # see y_grid below
         N_grid = int(Prot_grid_range / Prot_err)
-
-        #FIXME leave this in???
-        msg = f"Prot {Prot}, Teff {Teff}, N_grid {N_grid}"
-        print(msg)
+        if verbose:
+            msg = (
+                f"{datetime.now().isoformat()} "
+                f"Prot {Prot}, Teff {Teff}, N_grid {N_grid}"
+            )
+            print(msg)
 
     # numerical tests for convergence (/tests/test_gyro_posterior_grid.py)
     # indicate we can go a little below the default grid resolution and still
@@ -589,6 +591,7 @@ def gyro_age_posterior_list(
     print(f"{datetime.now().isoformat()} begin")
 
     nworkers = mp.cpu_count()
+
     maxworkertasks= 1000
 
     pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
