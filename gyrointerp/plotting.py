@@ -1233,7 +1233,7 @@ def plot_age_posteriors(
     #
     plt.close("all")
     set_style('clean')
-    fig, ax = plt.subplots(figsize=(3.3, 2))
+    fig, ax = plt.subplots(figsize=(2, 2))
 
     N_colors = len(Prots)
     #cmap = cm.viridis(np.linspace(0,1,N_colors))
@@ -1257,14 +1257,14 @@ def plot_age_posteriors(
             ax.plot(df.age_grid, 1e3*df.age_post, color=color,
                     ls='-', lw=1, label=label, zorder=3)
 
-    ax.legend(loc='best', fontsize='small', handletextpad=0.2,
+    ax.legend(loc='best', fontsize='x-small', handletextpad=0.2,
               borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
               frameon=False)
 
     ax.update({
         'xlabel': 'Age [Myr]',
         'ylabel': 'Probability ($10^{-3}\,$Myr$^{-1}$)',
-        'xlim': [0, 1700],
+        'xlim': [0, 2000],
     })
     ax.set_title(f'{Teff}'+'$\,$K', pad=-4)
 
