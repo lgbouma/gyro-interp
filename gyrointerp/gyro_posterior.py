@@ -32,7 +32,7 @@ def _agethreaded_gyro_age_posterior(
     age_grid=np.linspace(0, 2600, 500),
     verbose=True,
     bounds_error='limit',
-    N_grid=512,
+    N_grid='default',
     nworkers='max',
 ):
     """
@@ -382,7 +382,7 @@ def gyro_age_posterior(
 
 def _one_star_age_posterior_worker(task):
 
-    Prot, Teff, age_grid, outdir, n, age_scale, parameters = task
+    Prot, Teff, age_grid, outdir, n, age_scale, parameters, N_grid = task
 
     Protstr = f"{float(Prot):.4f}"
     Teffstr = f"{float(Teff):.1f}"
@@ -403,7 +403,8 @@ def _one_star_age_posterior_worker(task):
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
             Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-            verbose=False, n=n, age_scale=age_scale, popn_parameters=parameters
+            verbose=False, n=n, age_scale=age_scale,
+            popn_parameters=parameters, N_grid=N_grid
         )
         df = pd.DataFrame({
             'age_grid': age_grid,
@@ -463,7 +464,7 @@ def _get_pop_samples(N_pop_samples):
 def gyro_age_posterior_mcmc(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid=512, n=0.5,
+    verbose=False, bounds_error='limit', N_grid='default', n=0.5,
     age_scale='default',
     N_pop_samples=512,
     N_post_samples=10000,
@@ -497,7 +498,7 @@ def gyro_age_posterior_mcmc(
     #
     popn_parameter_list = _get_pop_samples(N_pop_samples)
 
-    tasks = [(Prot, Teff, age_grid, cachedir, n, age_scale, paramdict)
+    tasks = [(Prot, Teff, age_grid, cachedir, n, age_scale, paramdict, N_grid)
              for paramdict in popn_parameter_list]
 
     N_tasks = len(tasks)
@@ -583,7 +584,8 @@ def gyro_age_posterior_list(
     age_scale = "default"
     hyperparameters = "default"
 
-    tasks = [(_prot, _teff, age_grid, outdir, n, age_scale, hyperparameters)
+    tasks = [(_prot, _teff, age_grid, outdir, n,
+              age_scale, hyperparameters, N_grid)
              for _prot, _teff in zip(Prots, Teffs)]
 
     N_tasks = len(tasks)
