@@ -74,6 +74,10 @@ def plot_posteriors():
                 print('Skipping Prot21.7500_Teff4250.1, it is a many-sigma '
                       'outlier that yields NaN age for Praesepe.')
                 continue
+            if 'Prot12.2200_Teff5048.5' in csvpath:
+                print('Skipping Prot12.2200_Teff5048.5, it is a many-sigma '
+                      'outlier that yields too-old age for Psc-Eri.')
+                continue
 
             # initialize the posterior
             if ix == 0:

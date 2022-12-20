@@ -11,7 +11,7 @@ from gyrointerp.helpers import given_grid_post_get_summary_statistics
 # Sun-like stars
 age_grid = np.linspace(0, 2600, 100)
 ages = [200, 500, 1500, 2000]
-Teffs, Teff_err = [6000, 5800, 5600, 5500, 5000, 4500, 4200], 50
+Teffs, Teff_err = [5800, 5000, 4200, 3800], 50
 for Teff in Teffs:
     print(42*'-')
     for age in ages:

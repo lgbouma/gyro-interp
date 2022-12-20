@@ -113,6 +113,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     set_style("science")
 
     fig, ax = plt.subplots()
+    #fig, ax = plt.subplots(figsize=(3.3, 4))
 
     for reference_cluster in reference_clusters:
 
