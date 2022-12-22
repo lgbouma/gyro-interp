@@ -46,6 +46,7 @@ def calc_posteriors():
 
 def plot_posteriors():
 
+    clusters = ['M34-no-binaries', 'M34']
     clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                 'Group-X', 'Praesepe', 'NGC-6811']
 

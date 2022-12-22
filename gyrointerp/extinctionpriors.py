@@ -15,6 +15,8 @@ reference open clusters when calibrating the gyrochronal model.
 # For NGC-6811, it's Curtis+2019a. (The NGC-6811 paper, not the Psc-Eri one).
 #
 # For alpha-Per, E(B-V) = 0.090 from Gaia Collab+2018 -> A_V = 0.279
+#
+# For M34, E(B-V) = 0.07 from Meibom+2011 -> A_V = 0.217
 
 extinction_A_V_dict = {
     "Pleiades": 0.12,
@@ -27,4 +29,5 @@ extinction_A_V_dict = {
     'alpha-Per': 0.279, # Gaia Collaboration+2018
     'Ruprecht-147': 0.30, # Curtis+2020, table 5
     'NGC-6819': 0.44, # Curtis+2020, table 5 (Meibom+2015 periods)
+    'M34': 0.217, # Meibom+2011
 }

@@ -550,7 +550,8 @@ def gyro_age_posterior_mcmc(
 
 
 def gyro_age_posterior_list(
-    cache_id, Prots, Teffs, age_grid=np.linspace(0, 2600, 500)
+    cache_id, Prots, Teffs, age_grid=np.linspace(0, 2600, 500),
+    N_grid='default'
     ):
     """
     Given lists of rotation periods and effective temperatures, run them in
