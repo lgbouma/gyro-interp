@@ -1952,3 +1952,78 @@ def plot_empirical_limits_of_gyrochronology(
         fig.tight_layout(h_pad=0.4, w_pad=0.4)
 
     savefig(fig, outpath, dpi=400, writepdf=writepdf)
+
+
+def plot_n_vs_teff_vs_time(
+    outdir,
+    ):
+
+    #
+    # Calculate the age posterior
+    #
+    Teffs = np.linspace(3800, 6200, 1000)
+    ages = [80, 120, 300, 670, 1000, 2600]
+    Protd = {}
+    for age in ages:
+        Protd[age] = slow_sequence(Teffs, age)
+
+    #
+    # make plot
+    #
+
+    outpath = os.path.join(
+        outdir,
+        f"n_vs_teff_vs_time.png"
+    )
+
+    #
+    # Plot it
+    #
+    plt.close("all")
+    set_style('clean')
+    fig, ax = plt.subplots(figsize=(4,3))
+
+    N_colors = len(ages)-1
+    #cmap = cm.viridis(np.linspace(0,1,N_colors))
+    #cmap = cm.Spectral(np.linspace(0,1,N_colors))
+    cmap = cm.cividis(np.linspace(0,1,N_colors))
+
+    for ix, age in enumerate(ages):
+
+        if ix == 0:
+            continue
+
+        P0 = Protd[ages[ix-1]]
+        P1 = Protd[ages[ix]]
+        a0 = ages[ix-1]
+        a1 = ages[ix]
+        # P1/P0 = (t1/t0)^n
+        # log(P1/P0) = n log(t1/t0)
+        n = np.log(P1/P0) / (np.log(a1/a0))
+
+        color = cmap[ix-1]
+
+        #label = r"P$_{\rm rot}=$"+f"{Prot:.1f}d"
+        label = f"{a0} to {a1} Myr"
+
+        ax.plot(Teffs, n, color=color, ls='-', lw=1, label=label)
+
+    ax.hlines(
+        0.5, 1000, 10000, colors='darkgray', alpha=1,
+        linestyles='--', zorder=-2, linewidths=0.6
+    )
+
+    ax.legend(loc='best', fontsize='x-small', handletextpad=0.2,
+              borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+              frameon=False)
+
+    ax.update({
+        'xlabel': 'Effective Temperature [K]',
+        'ylabel': '$n$ ($P\propto t^n$)',
+        'xlim': [6200, 3800]
+    })
+    #ax.set_yticks([-0.5, -0.25, 0, 0.25, 0.5])
+    #ax.set_yticklabels([-0.5, None, 0, None, 0.5])
+
+
+    savefig(fig, outpath, dpi=400, writepdf=1)
