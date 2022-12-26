@@ -11,6 +11,7 @@ Catch-all file for plotting scripts.  Contents:
     plot_data_vs_model_prot
     plot_fit_gyro_model
     plot_empirical_limits_of_gyrochronology
+    plot_n_vs_teff_vs_time
 
 Helpers:
     _given_ax_append_spectral_types
@@ -87,7 +88,7 @@ def _given_ax_append_spectral_types(
 def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       model_ids=None, poly_order=7,
                       slow_seq_ages=None, hide_ax=0, logo_colors=0,
-                      logy=False):
+                      logy=False, n=None):
     """
     reference_clusters: list containing any of
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
@@ -116,6 +117,9 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     #fig, ax = plt.subplots(figsize=(3.3, 4))
 
     for reference_cluster in reference_clusters:
+
+        if reference_cluster is None:
+            continue
 
         df = d[reference_cluster][0]
         color = d[reference_cluster][1]
@@ -155,7 +159,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order
+                Teff, slow_seq_age, poly_order=poly_order, n=n
             )
             ax.plot(
                 Teff, Prot, color='lightgray', linewidth=1, zorder=-1
@@ -192,6 +196,8 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     if hide_ax:
         ax.set_axis_off()
 
+    if reference_clusters == [None]:
+        reference_clusters = ["none"]
     basename = "_".join(reference_clusters)
     s = ''
     if show_binaries:
@@ -206,6 +212,9 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     if isinstance(slow_seq_ages, list):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
+    ns = ''
+    if n is not None:
+        ns = f"_n{n}"
     ha = ''
     if hide_ax:
         ha = 'axisoff'
@@ -213,7 +222,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     if logy:
         ly = 'logy'
 
-    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}.png')
+    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{ns}.png')
 
     savefig(fig, outpath, dpi=400, writepdf=1)
 
