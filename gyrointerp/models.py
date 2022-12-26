@@ -300,47 +300,64 @@ def slow_sequence_residual(
 
 
 def slow_sequence(
-    Teff, age, poly_order=7, n=0.5,
+    Teff, age, poly_order=7,
     reference_model_ids=[
         'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
     ],
     reference_ages=[80, 120, 300, 670, 1000, 2600],
     verbose=True,
-    bounds_error='limit'):
+    bounds_error='limit',
+    interp_method='skumanich_vary_n',
+    n=None):
     """
-    Predicts a star's rotation period based on its age and those of reference
-    clusters with known ages. Assumes that the star is on the slow sequence and
-    that it follows a power-law spin-down.
+    Model for a star's rotation period based on its age and effective
+    temperature, as derived from interpolation using reference clusters with
+    known ages.   This function assumes that the star is on the slow sequence.
 
     Age must be between the lowest and highest reference age, otherwise an
     error will be raised.  Teff must be between 3800 and 6200 K.
 
     Args:
 
-        age: an integer or float corresponding to the age that we want a
-        rotational period for.  units: Myr
+        age : int or float.
+            An integer or float corresponding to the age for which we want a
+            rotation period.  Units: Myr (=10^6 years).
 
-        Teff: float or iterable of floats corresponding to the effective
-        temperature(s) of the sample to be dated.  units: K
+        Teff : float or iterable of floats.
+            Effective temperature(s) of the sample to be dated.  Units: Kelvin.
 
-        reference_model_ids: list including any of
-            ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+        reference_model_ids : list
+            This list can include any of
+            ``['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
             'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr',
-            'NGC-6819', 'Ruprecht-147']
-        The sensible default is set.  120-Myr and 300-Myr are concenations of
-        the relevant clusters.
+            'NGC-6819', 'Ruprecht-147']``
+            The default is set as described in the manuscript.  120-Myr and
+            300-Myr are concenations of the relevant clusters.
 
-        reference_ages: iterable of ages corresponding to reference_model_ids.
+        reference_ages : iterable of floats
+            Ages (units of Myr) corresponding to reference_model_ids.
 
-        n: braking index, defined by the spin-down power law Prot ~ t^n. Default
-        is the canonical 0.5
+        verbose : bool
+            True or False to choose whether to print error messages.  Default
+            is False
 
-        verbose: input True or False to choose whether to print error messages.
-        Default is False
+        bounds_error : str
+            "nan" or "limit".  If "nan" ages below the minimum reference age
+            return nans.  If "limit", they return the limiting rotation period
+            at the closest cluster.  Default "limit".
 
-        bounds_error: "nan" or "limit".  If "nan" ages below the minimum
-        reference age return nans.  If "limit", they return the limiting
-        rotation period at the closest cluster.  Default "limit".
+        interp_method : str
+            "skumanich_vary_n", "alt", or "diff".  The former is the default
+            method, that assumes P~t^n, letting n vary with both effective
+            temperature and time to make that scaling relation hold.  The
+            latter two "alt" and "diff" are alternative methods, based on other
+            possible scalings that one can adopt.  Neither is recommended.
+
+        n : None, int, or float
+            Power-law index analogous to the Skumanich braking index, but
+            different in detail (see the implementation).  This is used only if
+            ``interp_method == "alt"`` or ``interp_method == "diff"``, neither
+            of which is recommended for most users.  Default is None.
 
     Output:
 
@@ -354,7 +371,7 @@ def slow_sequence(
     if not isinstance(Teff, (np.ndarray, list)):
         Teff = np.array([Teff])
 
-    assert age >= 0, "age must be non-negative."
+    assert age >= 0, "Age must be non-negative."
 
     # First put everything in age order from youngest reference cluster to
     # oldest reference cluster
@@ -390,10 +407,12 @@ def slow_sequence(
                 print("Warning! Star is younger than the youngest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
-            if bounds_error == 'limit':
+            elif bounds_error == 'limit':
                 if verbose:
                     print("Taking youngest reference cluster Prot as the upper limit.")
                 periods.append(youngest_model[ix])
+            else:
+                raise NotImplementedError
 
         # special case for if the star has a longer period than would be expected
         # if it were the age of the oldest reference cluster
@@ -402,10 +421,12 @@ def slow_sequence(
                 print("Warning! Star is older than the oldest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
-            if bounds_error == 'limit':
+            elif bounds_error == 'limit':
                 if verbose:
                     print("Taking oldest reference cluster Prot as the lower limit.")
                 periods.append(oldest_model[ix])
+            else:
+                raise NotImplementedError
 
         # special case for when reference age exactly matches desired age
         elif len(reference_ages[age == reference_ages]) > 0:
@@ -420,26 +441,32 @@ def slow_sequence(
             # first identify the youngest cluster older than this star and the
             # oldest cluster younger than this star
             younger, = np.where(reference_ages < age)
-
-            # in order from youngest to oldest so choose last index for oldest
-            # younger than this star
             glb_ix = younger[-1]
-
             older, = np.where(reference_ages > age)
-
             lub_ix = older[0]
 
-            dP = options[lub_ix] - options[glb_ix]
-            # older one
-            tg1 = reference_ages[lub_ix]
-            # younger one
-            tg0 = reference_ages[glb_ix]
+            # 1: older cluster, 0: younger cluster
+            P1 = options[lub_ix]
+            P0 = options[glb_ix]
+            t1 = reference_ages[lub_ix]
+            t0 = reference_ages[glb_ix]
 
-            C = dP / (tg1**n - tg0**n)
+            dP = P1 - P0
+            dt = t1 - t0
 
-            Prot_glb = options[glb_ix]
+            if interp_method == "alt":
+                C = dP / (t1**n - t0**n)
+                period = C * (age**n - t0**n) + P0
 
-            period = C*(age**n - tg0**n) + Prot_glb
+            elif interp_method == "diff":
+                C = dP / (dt**n)
+                period = C * (age - t0)**n + P0
+
+            elif interp_method == "skumanich_vary_n":
+                if n is not None:
+                    print("Over-riding n in interp_method skumanich_vary_n")
+                n = np.log(P1/P0) / np.log(t1/t0)
+                period = P0 * (age/t0)**n
 
             periods.append(period)
 

@@ -88,7 +88,7 @@ def _given_ax_append_spectral_types(
 def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       model_ids=None, poly_order=7,
                       slow_seq_ages=None, hide_ax=0, logo_colors=0,
-                      logy=False, n=None):
+                      logy=False, n=None, interp_method='skumanich_vary_n'):
     """
     reference_clusters: list containing any of
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
@@ -159,7 +159,8 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order, n=n
+                Teff, slow_seq_age, poly_order=poly_order, n=n,
+                interp_method=interp_method
             )
             ax.plot(
                 Teff, Prot, color='lightgray', linewidth=1, zorder=-1
@@ -215,6 +216,9 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     ns = ''
     if n is not None:
         ns = f"_n{n}"
+    im = ''
+    if im is not None:
+        im = f"_interpmethod{interp_method}"
     ha = ''
     if hide_ax:
         ha = 'axisoff'
@@ -222,7 +226,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     if logy:
         ly = 'logy'
 
-    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{ns}.png')
+    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}{ns}.png')
 
     savefig(fig, outpath, dpi=400, writepdf=1)
 

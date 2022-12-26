@@ -12,11 +12,17 @@ outdir = PLOTDIR
 all_clusters1 = [None]
 slow_seq_ages = [120+0.5*(300-120), 300+0.5*(670-300), 670+0.5*(1000-670)]
 model_ids = ['120-Myr', '300-Myr', 'Praesepe', 'NGC-6811']
-for n in [0, 0.2, 0.5, 1.0, 2, 0.1]:
-    ap.plot_prot_vs_teff(
-        outdir, all_clusters1, slow_seq_ages=slow_seq_ages,
-        model_ids=model_ids, n=n
-    )
+ap.plot_prot_vs_teff(
+    outdir, all_clusters1, slow_seq_ages=slow_seq_ages,
+    model_ids=model_ids, n=None, interp_method="skumanich_vary_n"
+)
+
+for interp_method in ["alt", "diff"]:
+    for n in [0, 0.2, 0.5, 1.0, 2, 0.1]:
+        ap.plot_prot_vs_teff(
+            outdir, all_clusters1, slow_seq_ages=slow_seq_ages,
+            model_ids=model_ids, n=n, interp_method=interp_method
+        )
 assert 0
 
 # logo
