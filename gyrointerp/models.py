@@ -555,11 +555,3 @@ def reference_cluster_slow_sequence(
         Prot_model[below_praesepe] = Prot_praesepe[below_praesepe] + 0.01
 
     return Prot_model
-
-
-if __name__ == "__main__":
-    # debugging
-    _ = reference_cluster_slow_sequence([4321], 'Pleiades')
-    print(_)
-    _ = reference_cluster_slow_sequence([4321], '120-Myr')
-    print(_)
