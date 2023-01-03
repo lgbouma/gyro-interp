@@ -18,6 +18,9 @@ from gyrointerp.paths import DATADIR
 import pandas as pd, numpy as np
 from numpy import array as nparr
 from os.path import join
+from copy import deepcopy
+
+from scipy.interpolate import interp1d, PchipInterpolator
 
 from scipy.stats import norm, uniform
 
@@ -347,11 +350,15 @@ def slow_sequence(
             at the closest cluster.  Default "limit".
 
         interp_method : str
-            "skumanich_vary_n", "alt", or "diff".  The former is the default
+            "skumanich_vary_n", "alt", "diff", "skumanich_fix_n", "1d_linear",
+            "1d_slinear", "1d_quadratic", "1d_pchip".  The first is the default
             method, that assumes P~t^n, letting n vary with both effective
             temperature and time to make that scaling relation hold.  The
-            latter two "alt" and "diff" are alternative methods, based on other
-            possible scalings that one can adopt.  Neither is recommended.
+            "alt", "diff", and "skumanich_fix_n" methods are alternative
+            methods, based on other possible scalings that one can adopt.
+            None are recommended.  "1d_linear", "1d_slinear", and
+            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
+            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
 
         n : None, int, or float
             Power-law index analogous to the Skumanich braking index, but
@@ -367,6 +374,16 @@ def slow_sequence(
     """
 
     assert len(reference_ages) == len(reference_model_ids)
+
+    condition0 = (
+        interp_method in
+        ["skumanich_vary_n", "alt", "diff", "1d_linear", "1d_slinear",
+         "1d_quadratic", "1d_pchip"]
+    )
+    condition1 = (
+        "skumanich_fix_n" in interp_method
+    )
+    assert condition0 or condition1
 
     if not isinstance(Teff, (np.ndarray, list)):
         Teff = np.array([Teff])
@@ -397,6 +414,8 @@ def slow_sequence(
 
     youngest_model = Prot_model_at_known_age[0]
     oldest_model = Prot_model_at_known_age[-1]
+
+    init_n = deepcopy(n)
 
     for ix, teff in enumerate(list(Teff)):
 
@@ -455,17 +474,37 @@ def slow_sequence(
             dt = t1 - t0
 
             if interp_method == "alt":
+                if n is None:
+                    n = 0.5
                 C = dP / (t1**n - t0**n)
                 period = C * (age**n - t0**n) + P0
 
             elif interp_method == "diff":
+                if n is None:
+                    n = 0.5
                 C = dP / (dt**n)
                 period = C * (age - t0)**n + P0
 
             elif interp_method == "skumanich_vary_n":
-                if n is not None:
+                if init_n is not None:
                     print("Over-riding n in interp_method skumanich_vary_n")
                 n = np.log(P1/P0) / np.log(t1/t0)
+                period = P0 * (age/t0)**n
+
+            elif interp_method in ["1d_linear", "1d_slinear", "1d_quadratic"]:
+                kind = interp_method.replace("1d_", "")
+                fn = interp1d(reference_ages, options, kind=kind)
+                period = fn(age)
+
+            elif interp_method == "1d_pchip":
+                fn = PchipInterpolator(reference_ages, options)
+                period = fn(age)
+
+            elif "skumanich_fix_n" in interp_method:
+                # skumanich_fix_n_{FLOAT_SPECIFYING_N}
+                n = float(interp_method.split("_")[-1])
+                P0 = options[1] # base off the Pleiades/120myr sequence
+                t0 = reference_ages[1]
                 period = P0 * (age/t0)**n
 
             periods.append(period)
