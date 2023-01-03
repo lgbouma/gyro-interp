@@ -12,6 +12,7 @@ Catch-all file for plotting scripts.  Contents:
     plot_fit_gyro_model
     plot_empirical_limits_of_gyrochronology
     plot_n_vs_teff_vs_time
+    plot_prot_vs_time_fixed_teff
 
 Helpers:
     _given_ax_append_spectral_types
@@ -30,6 +31,7 @@ import matplotlib as mpl
 from matplotlib import cm
 from matplotlib.colors import LogNorm, Normalize
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.ticker import ScalarFormatter
 from matplotlib.lines import Line2D
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -2035,8 +2037,105 @@ def plot_n_vs_teff_vs_time(
         'ylabel': '$n$ ($P\propto t^n$)',
         'xlim': [6200, 3800]
     })
-    #ax.set_yticks([-0.5, -0.25, 0, 0.25, 0.5])
-    #ax.set_yticklabels([-0.5, None, 0, None, 0.5])
 
+    savefig(fig, outpath, dpi=400, writepdf=1)
 
+def plot_prot_vs_time_fixed_teff(
+    outdir, teff, interp_methods, xscale='log'
+    ):
+
+    ages = np.linspace(50, 4000, 200)
+
+    # get slow sequence evolution tracks
+    Protd = {}
+    for interp_method in interp_methods:
+        Protd[interp_method] = []
+        for age in ages:
+            Protd[interp_method].append(
+                slow_sequence(teff, age, interp_method=interp_method)
+            )
+
+    # get the _data_
+    poly_order = 7
+    reference_model_ids = [
+        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
+    ]
+    reference_ages = [
+        80, 120, 300, 670, 1000, 2600
+    ]
+
+    reference_Prots = []
+    for model_id in reference_model_ids:
+        Prot_model = reference_cluster_slow_sequence(
+            np.array([teff]), model_id, poly_order=poly_order, verbose=False
+        )
+        reference_Prots.append(Prot_model)
+
+    #
+    # make plot
+    #
+
+    outpath = os.path.join(
+        outdir,
+        f'prot_vs_time_teff{teff:.1f}_'
+        f'{repr(interp_methods).replace(" ","_")}_xscale{xscale}.png'
+    )
+
+    #
+    # Plot it
+    #
+    plt.close("all")
+    set_style('clean')
+    fig, axs = plt.subplots(nrows=2, figsize=(4,6), sharex=True)
+
+    N_colors = len(interp_methods)
+    cmap = cm.tab10(np.linspace(0,1,10))
+
+    colors = [cmap[ix] for ix in range(len(interp_methods))]
+    lss = ['-','--',':','-.']*99
+
+    # top axis
+    ax = axs[0]
+    for interp_method, c, ls in zip(interp_methods, colors, lss):
+        ax.plot(ages, Protd[interp_method], color=c, ls=ls, lw=1,
+                label=f"{interp_method}")
+    ax.scatter(reference_ages, reference_Prots, s=20, marker="+", c='k',
+               zorder=999)
+
+    ax.legend(loc='best', fontsize='x-small', handletextpad=0.2,
+              borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+              frameon=False)
+    ax.set_title(f"{teff} K")
+
+    ax.update({
+        'ylabel': '$P_{\mathrm{rot}}$ [days]',
+        'xscale': xscale,
+    })
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_major_formatter(ScalarFormatter())
+
+    # residual axis
+    ax = axs[1]
+    for interp_method, c, ls in zip(interp_methods, colors, lss):
+        yval = (
+            (nparr(Protd[interp_method]) - nparr(Protd['1d_linear']))
+            /
+            nparr(Protd['1d_linear'])
+        )
+        ax.plot(ages, yval, color=c, ls=ls, lw=1, label=f"{interp_method}")
+    ax.scatter(reference_ages, np.zeros(len(reference_ages)), s=20, marker="+",
+               c='k', zorder=999)
+
+    ylabel = (
+        '$P_{\mathrm{rot}}$ - $P_{\mathrm{rot},\mathrm{1d\_linear}}$ / '
+        '$P_{\mathrm{rot},\mathrm{1d\_linear}}$'
+    )
+    ax.update({
+        'ylabel': ylabel,
+        'xlabel': 'Time [Myr]',
+    })
+    for axis in [ax.xaxis, ax.yaxis]:
+        axis.set_major_formatter(ScalarFormatter())
+
+    fig.tight_layout()
     savefig(fig, outpath, dpi=400, writepdf=1)
