@@ -14,7 +14,7 @@ for teff, _n in zip(teffs, n):
     interp_methods = [
         "1d_linear", "1d_quadratic", "1d_slinear", "1d_pchip",
         "skumanich_vary_n", "alt", "diff", #"skumanich_fix_n_0.5",
-        f"skumanich_fix_n_{_n}"
+        f"skumanich_fix_n_{_n}", "pchip_m67"
     ]
 
     ap.plot_prot_vs_time_fixed_teff(PLOTDIR, teff, interp_methods,

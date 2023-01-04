@@ -333,7 +333,7 @@ def slow_sequence(
             This list can include any of
             ``['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
             'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr',
-            'NGC-6819', 'Ruprecht-147']``
+            'NGC-6819', 'Ruprecht-147', 'M67']``
             The default is set as described in the manuscript.  120-Myr and
             300-Myr are concenations of the relevant clusters.
 
@@ -345,20 +345,24 @@ def slow_sequence(
             is False
 
         bounds_error : str
-            "nan" or "limit".  If "nan" ages below the minimum reference age
-            return nans.  If "limit", they return the limiting rotation period
-            at the closest cluster.  Default "limit".
+            "nan", "limit" or "4gyrlimit".  Extrapolation behaviors are as follows.
+            If "limit", return the limiting rotation period at the closest
+            cluster given in ``reference_model_ids``.  If "4gyrlimit",
+            extrapolate out to 4 Gyr based on the ``reference_model_ids`` and
+            the adopted interpolation method, regardless of where they
+            truncate.  Past 4Gyr, take the same behavior as "limit".  If "nan",
+            ages above or below the minimum reference age return nans
 
         interp_method : str
             "skumanich_vary_n", "alt", "diff", "skumanich_fix_n", "1d_linear",
-            "1d_slinear", "1d_quadratic", "1d_pchip".  The first is the default
-            method, that assumes P~t^n, letting n vary with both effective
-            temperature and time to make that scaling relation hold.  The
-            "alt", "diff", and "skumanich_fix_n" methods are alternative
-            methods, based on other possible scalings that one can adopt.
-            None are recommended.  "1d_linear", "1d_slinear", and
-            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
-            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
+            "1d_slinear", "1d_quadratic", "1d_pchip", "pchip_m67".  The first
+            is the default method, that assumes P~t^n, letting n vary with both
+            effective temperature and time to make that scaling relation hold.
+            The "alt", "diff", and "skumanich_fix_n" methods are alternative
+            methods, based on other possible scalings that one can adopt.  None
+            are recommended.  "1d_linear", "1d_slinear", and "1d_quadratic" are
+            as in ``scipy.interpolate.interp1d``.  "1d_pchip" is
+            ``scipy.interpolate.PchipInterpolator``.
 
         n : None, int, or float
             Power-law index analogous to the Skumanich braking index, but
@@ -378,7 +382,7 @@ def slow_sequence(
     condition0 = (
         interp_method in
         ["skumanich_vary_n", "alt", "diff", "1d_linear", "1d_slinear",
-         "1d_quadratic", "1d_pchip"]
+         "1d_quadratic", "1d_pchip", "pchip_m67"]
     )
     condition1 = (
         "skumanich_fix_n" in interp_method
@@ -409,6 +413,19 @@ def slow_sequence(
         Prot_model_at_known_age.append(Prot_model)
     Prot_model_at_known_age = np.array(Prot_model_at_known_age)
 
+    # Special case for pchip_m67
+    if interp_method == 'pchip_m67':
+        all_reference_model_ids = ['α Per', '120-Myr', '300-Myr', 'Praesepe',
+                                   'NGC-6811', '2.6-Gyr', 'M67']
+        all_reference_ages = [80, 120, 300, 670, 1000, 2600, 4000]
+        all_Prot_model_at_known_age = []
+        for model_id in all_reference_model_ids:
+            _Prot_model = reference_cluster_slow_sequence(
+                Teff, model_id, poly_order=poly_order, verbose=False
+            )
+            all_Prot_model_at_known_age.append(_Prot_model)
+        all_Prot_model_at_known_age = np.array(all_Prot_model_at_known_age)
+
     # Now start making age estimates
     periods = []
 
@@ -426,23 +443,19 @@ def slow_sequence(
                 print("Warning! Star is younger than the youngest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
-            elif bounds_error == 'limit':
-                if verbose:
-                    print("Taking youngest reference cluster Prot as the upper limit.")
+            elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
                 periods.append(youngest_model[ix])
             else:
                 raise NotImplementedError
 
         # special case for if the star has a longer period than would be expected
         # if it were the age of the oldest reference cluster
-        elif age > reference_ages[-1]:
+        elif age > reference_ages[-1] and bounds_error != '4gyrlimit':
             if verbose:
                 print("Warning! Star is older than the oldest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
             elif bounds_error == 'limit':
-                if verbose:
-                    print("Taking oldest reference cluster Prot as the lower limit.")
                 periods.append(oldest_model[ix])
             else:
                 raise NotImplementedError
@@ -456,13 +469,20 @@ def slow_sequence(
         else:
             # isolate periods estimates for different ages of star of this mass
             options = Prot_model_at_known_age[:,ix]
+            if interp_method == 'pchip_m67':
+                all_options = all_Prot_model_at_known_age[:,ix]
 
             # first identify the youngest cluster older than this star and the
             # oldest cluster younger than this star
-            younger, = np.where(reference_ages < age)
-            glb_ix = younger[-1]
-            older, = np.where(reference_ages > age)
-            lub_ix = older[0]
+            if bounds_error == "4gyrlimit" and age >= max(reference_ages):
+                # special case: extrapolate based on oldest two clusters
+                glb_ix = -2
+                lub_ix = -1
+            else:
+                younger, = np.where(reference_ages < age)
+                glb_ix = younger[-1]
+                older, = np.where(reference_ages > age)
+                lub_ix = older[0]
 
             # 1: older cluster, 0: younger cluster
             P1 = options[lub_ix]
@@ -477,35 +497,44 @@ def slow_sequence(
                 if n is None:
                     n = 0.5
                 C = dP / (t1**n - t0**n)
-                period = C * (age**n - t0**n) + P0
+                fn = lambda age: C * (age**n - t0**n) + P0
 
             elif interp_method == "diff":
                 if n is None:
                     n = 0.5
                 C = dP / (dt**n)
-                period = C * (age - t0)**n + P0
+                fn = lambda age: C * (age - t0)**n + P0
 
             elif interp_method == "skumanich_vary_n":
                 if init_n is not None:
                     print("Over-riding n in interp_method skumanich_vary_n")
                 n = np.log(P1/P0) / np.log(t1/t0)
-                period = P0 * (age/t0)**n
+                fn = lambda age: P0 * (age/t0)**n
 
             elif interp_method in ["1d_linear", "1d_slinear", "1d_quadratic"]:
                 kind = interp_method.replace("1d_", "")
-                fn = interp1d(reference_ages, options, kind=kind)
-                period = fn(age)
+                fn = interp1d(reference_ages, options, kind=kind,
+                              fill_value="extrapolate")
 
             elif interp_method == "1d_pchip":
                 fn = PchipInterpolator(reference_ages, options)
-                period = fn(age)
+
+            elif interp_method == "pchip_m67":
+                fn = PchipInterpolator(all_reference_ages, all_options)
 
             elif "skumanich_fix_n" in interp_method:
                 # skumanich_fix_n_{FLOAT_SPECIFYING_N}
                 n = float(interp_method.split("_")[-1])
                 P0 = options[1] # base off the Pleiades/120myr sequence
                 t0 = reference_ages[1]
-                period = P0 * (age/t0)**n
+                fn = lambda age: P0 * (age/t0)**n
+
+            # calculate the period
+            period = fn(age)
+
+            # overwrite if necessary based on bounds_error
+            if bounds_error == "4gyrlimit" and age > 4000:
+                period = fn(4000)
 
             periods.append(period)
 
@@ -531,9 +560,10 @@ def reference_cluster_slow_sequence(
         in Kelvin.  Curtis+2020 Gaia DR2 BP-RP scale, or spectroscopic
         effective temperatures, preferred above all other options.
 
-        model_id (str): any of
-            ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-            'Praesepe', 'NGC-6811', '120-Myr', '300-Myr']
+        model_id (str): any of ``allowed_model_ids``:
+            ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+            'Group-X', 'Praesepe', 'NGC-6811', '120-Myr', '300-Myr',
+            'NGC-6819', 'Ruprecht-147', '2.6-Gyr', 'M67']
         where '120-Myr' will concatenate of Pleiades, Blanco-1, and
         Psc-Eri, and '300-Myr' will concatenate NGC-3532 and Group-X.
 
@@ -546,7 +576,7 @@ def reference_cluster_slow_sequence(
     allowed_model_ids = [
         'α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
         'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', 'NGC-6819',
-        'Ruprecht-147', '2.6-Gyr'
+        'Ruprecht-147', '2.6-Gyr', 'M67'
     ]
     if model_id not in allowed_model_ids:
         raise ValueError(f"Got model_id {model_id} - not implemented!")
@@ -559,7 +589,7 @@ def reference_cluster_slow_sequence(
 
         cluster_model_ids = [
             'α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-            'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147'
+            'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147', 'M67'
         ]
         combined_cluster_ids = {
             '120-Myr': ['Pleiades', 'Blanco-1', 'Psc-Eri'],

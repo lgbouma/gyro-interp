@@ -2044,7 +2044,7 @@ def plot_prot_vs_time_fixed_teff(
     outdir, teff, interp_methods, xscale='log'
     ):
 
-    ages = np.linspace(50, 4000, 200)
+    ages = np.linspace(50, 5000, 300)
 
     # get slow sequence evolution tracks
     Protd = {}
@@ -2052,17 +2052,15 @@ def plot_prot_vs_time_fixed_teff(
         Protd[interp_method] = []
         for age in ages:
             Protd[interp_method].append(
-                slow_sequence(teff, age, interp_method=interp_method)
+                slow_sequence(teff, age, interp_method=interp_method,
+                              bounds_error='4gyrlimit')
             )
 
     # get the _data_
     poly_order = 7
-    reference_model_ids = [
-        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
-    ]
-    reference_ages = [
-        80, 120, 300, 670, 1000, 2600
-    ]
+    reference_model_ids = ['α Per', '120-Myr', '300-Myr', 'Praesepe',
+                           'NGC-6811', '2.6-Gyr', 'M67']
+    reference_ages = [80, 120, 300, 670, 1000, 2600, 4000]
 
     reference_Prots = []
     for model_id in reference_model_ids:
@@ -2071,6 +2069,15 @@ def plot_prot_vs_time_fixed_teff(
         )
         reference_Prots.append(Prot_model)
 
+    dProtd = {}
+    for interp_method in interp_methods:
+        dProtd[interp_method] = []
+        for age in reference_ages:
+            dProtd[interp_method].append(
+                slow_sequence(teff, age, interp_method=interp_method,
+                              bounds_error='4gyrlimit')
+            )
+
     #
     # make plot
     #
@@ -2078,7 +2085,7 @@ def plot_prot_vs_time_fixed_teff(
     outpath = os.path.join(
         outdir,
         f'prot_vs_time_teff{teff:.1f}_'
-        f'{repr(interp_methods).replace(" ","_")}_xscale{xscale}.png'
+        f'{"_".join(interp_methods).replace(" ","_")}_xscale{xscale}.png'
     )
 
     #
@@ -2086,7 +2093,7 @@ def plot_prot_vs_time_fixed_teff(
     #
     plt.close("all")
     set_style('clean')
-    fig, axs = plt.subplots(nrows=2, figsize=(4,6), sharex=True)
+    fig, axs = plt.subplots(nrows=2, figsize=(2.2,4), sharex=True)
 
     N_colors = len(interp_methods)
     cmap = cm.tab10(np.linspace(0,1,10))
@@ -2097,12 +2104,12 @@ def plot_prot_vs_time_fixed_teff(
     # top axis
     ax = axs[0]
     for interp_method, c, ls in zip(interp_methods, colors, lss):
-        ax.plot(ages, Protd[interp_method], color=c, ls=ls, lw=1,
+        ax.plot(ages, Protd[interp_method], color=c, ls=ls, lw=0.7,
                 label=f"{interp_method}")
-    ax.scatter(reference_ages, reference_Prots, s=20, marker="+", c='k',
+    ax.scatter(reference_ages, reference_Prots, s=30, marker="+", c='k',
                zorder=999)
 
-    ax.legend(loc='best', fontsize='x-small', handletextpad=0.2,
+    ax.legend(loc='best', fontsize='xx-small', handletextpad=0.2,
               borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
               frameon=False)
     ax.set_title(f"{teff} K")
@@ -2118,24 +2125,30 @@ def plot_prot_vs_time_fixed_teff(
     ax = axs[1]
     for interp_method, c, ls in zip(interp_methods, colors, lss):
         yval = (
-            (nparr(Protd[interp_method]) - nparr(Protd['1d_linear']))
+            (nparr(Protd[interp_method]) - nparr(Protd['pchip_m67']))
             /
-            nparr(Protd['1d_linear'])
+            nparr(Protd['pchip_m67'])
         )
-        ax.plot(ages, yval, color=c, ls=ls, lw=1, label=f"{interp_method}")
-    ax.scatter(reference_ages, np.zeros(len(reference_ages)), s=20, marker="+",
-               c='k', zorder=999)
+        ax.plot(ages, 100*yval, color=c, ls=ls, lw=0.7, label=f"{interp_method}")
 
-    ylabel = (
-        '$P_{\mathrm{rot}}$ - $P_{\mathrm{rot},\mathrm{1d\_linear}}$ / '
-        '$P_{\mathrm{rot},\mathrm{1d\_linear}}$'
+    dy = (
+            (nparr(reference_Prots) - nparr(dProtd['pchip_m67']))
+            /
+            nparr(dProtd['pchip_m67'])
     )
+
+    ax.scatter(reference_ages, 100*dy, s=30, marker="+", c='k', zorder=999)
+
     ax.update({
-        'ylabel': ylabel,
+        'ylabel': 'Residual [%]',
         'xlabel': 'Time [Myr]',
     })
     for axis in [ax.xaxis, ax.yaxis]:
         axis.set_major_formatter(ScalarFormatter())
+    #if teff == 5800:
+    #    ax.set_yticks([-0.2, -0.1, 0, 0.1, 0.2])
+    #    ax.set_yticklabels([-0.2, -0.1, 0, 0.1, 0.2])
+    #    ax.set_ylim([-0.23, 0.23])
 
     fig.tight_layout()
     savefig(fig, outpath, dpi=400, writepdf=1)
