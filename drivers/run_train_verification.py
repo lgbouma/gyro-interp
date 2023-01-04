@@ -18,8 +18,9 @@ if not os.path.exists(savdir): os.mkdir(savdir)
 
 def calc_posteriors():
 
-    clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-                'Praesepe', 'NGC-6811']
+    #clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+    #            'Praesepe', 'NGC-6811']
+    clusters = ['NGC-6819', 'Ruprecht-147']
 
     d = _get_cluster_Prot_Teff_data()
 
@@ -40,7 +41,7 @@ def calc_posteriors():
         cache_id = f"train_verification/{cluster}".replace(" ","_")
 
         # calculate the posterior
-        age_grid = np.linspace(0, 2600, 5000) # dense grid for multiplication
+        age_grid = np.linspace(0, 4000, 5000) # dense grid for multiplication
         gyro_age_posterior_list(cache_id, Prots, Teffs, age_grid)
 
 
@@ -49,6 +50,7 @@ def plot_posteriors():
     clusters = ['M34-no-binaries', 'M34']
     clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                 'Group-X', 'Praesepe', 'NGC-6811']
+    clusters = ['NGC-6819', 'Ruprecht-147']
 
     summaries = []
 
@@ -107,11 +109,16 @@ def plot_posteriors():
         print(d)
         summaries.append(d)
 
-        xmax = 1000 if cluster not in ["NGC-6811", "Praesepe"] else 2000
+        xmin = 0
+        xmax = 1000
+        if cluster in ["NGC-6811", "Praesepe"]:
+            xmax = 2000
+        elif cluster in ["NGC-6819", "Ruprecht-147"]:
+            xmax = 4000
         ax.update({
             'xlabel': 'Age [Myr]',
             'ylabel': 'Probability ($10^{-3}\,$Myr$^{-1}$)',
-            'xlim': [0, xmax],
+            'xlim': [xmin, xmax],
         })
         outpath = os.path.join(outdir, f'{cluster.replace(" ","_")}_verification.png')
         savefig(fig, outpath, writepdf=0)
@@ -131,8 +138,8 @@ def plot_posteriors():
 
 
 if __name__ == "__main__":
-    do_calc = 0
-    do_plot = 1
+    do_calc = 1
+    do_plot = 0
     if do_calc:
         calc_posteriors()
     if do_plot:
