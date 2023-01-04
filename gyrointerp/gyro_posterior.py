@@ -171,8 +171,8 @@ def _gyro_age_posterior_worker(task):
     # y_grid X Teff_grid
     resid_y_Teff = slow_sequence_residual(
         age, y_grid=y_grid, teff_grid=teff_grid, verbose=False,
-        bounds_error=bounds_error, n=n, reference_ages=reference_ages,
-        popn_parameters=popn_parameters
+        bounds_error=bounds_error, interp_method=interp_method, n=n,
+        reference_ages=reference_ages, popn_parameters=popn_parameters
     )
 
     if verbose:
@@ -422,9 +422,8 @@ def _one_star_age_posterior_worker(task):
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
             Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
-            interp_method=interp_method,
-            verbose=False, n=n, age_scale=age_scale,
-            popn_parameters=parameters, N_grid=N_grid
+            interp_method=interp_method, verbose=False, n=n,
+            age_scale=age_scale, popn_parameters=parameters, N_grid=N_grid
         )
         df = pd.DataFrame({
             'age_grid': age_grid,

@@ -40,8 +40,13 @@ def calc_posteriors():
 
         cache_id = f"train_verification/{cluster}".replace(" ","_")
 
+        # dense grid for multiplication
+        if cluster in ['NGC-6819', 'Ruprecht-147']:
+            age_grid = np.linspace(0, 5000, 5000)
+        else:
+            age_grid = np.linspace(0, 2700, 5000)
+
         # calculate the posterior
-        age_grid = np.linspace(0, 4000, 5000) # dense grid for multiplication
         gyro_age_posterior_list(cache_id, Prots, Teffs, age_grid)
 
 

@@ -451,6 +451,10 @@ def slow_sequence(
 
     for ix, teff in enumerate(list(Teff)):
 
+        if teff < 3800 or teff > 6200:
+            periods.append(np.nan)
+            continue
+
         # special case for if the star has a shorter period than would be expected
         # if it were the age of the youngest reference cluster
         if age < reference_ages[0]:

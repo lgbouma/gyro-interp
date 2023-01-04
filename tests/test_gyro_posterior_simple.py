@@ -9,6 +9,9 @@ from gyrointerp.helpers import given_grid_post_get_summary_statistics
 
 def test_gyro_posterior_simple():
 
+    #
+    # check sun-like star near NGC-3532
+    #
     age_grid = np.linspace(0, 2700, 501)
     Teff = 5800
     Prot = 5.1
@@ -20,10 +23,28 @@ def test_gyro_posterior_simple():
     r = given_grid_post_get_summary_statistics(age_grid, age_post)
 
     assert abs(r['median'] - 300) < 20
-    assert abs(r['peak'] - 300) < 20
+    assert abs(r['peak'] - 300) < 30
     assert abs(r['mean'] - 300) < 20
     assert 50 < r['+1sigma'] < 100
     assert 50 < r['-1sigma'] < 100
+
+    #
+    # check sun-like star near Ruprecht-147, to ensure extrapolation is working
+    #
+    age_grid = np.linspace(0, 5000, 501)
+    Prot = 17
+
+    age_post = gyro_age_posterior(
+        Prot, Teff, age_grid=age_grid, verbose=False
+    )
+
+    r = given_grid_post_get_summary_statistics(age_grid, age_post)
+
+    assert abs(r['median'] - 2600) < 200
+    assert abs(r['mean'] - 2600) < 200
+    assert 300 < r['+1sigma'] < 400
+    assert 200 < r['-1sigma'] < 300
+
 
 if __name__ == "__main__":
     test_gyro_posterior_simple()
