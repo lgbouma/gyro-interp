@@ -65,14 +65,14 @@ def teff_zams(age, bounds_error='limit'):
     bad = (age < 80) | (age > 1000)
     if bounds_error == 'nan':
         teff0[bad] = np.nan
-    elif bounds_error == 'limit':
+    elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
         teff0[age < 80] = max_teff
         teff0[age > 1000] = min_teff
 
     return teff0
 
 
-def teff_0(age, bounds_error='limit'):
+def teff_0(age, bounds_error='4gyrlimit'):
     """
     Naive, by-eye midpoint for how the slow sequence taper moves with age.
     Defined for age from 120 to 1000 Myr.  If `bounds_error=='limit'`, then set
@@ -93,14 +93,14 @@ def teff_0(age, bounds_error='limit'):
     bad = (age < 120) | (age > 1000)
     if bounds_error == 'nan':
         teff0[bad] = np.nan
-    elif bounds_error == 'limit':
+    elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
         teff0[age < 120] = c
         teff0[age > 1000] = -(1000-120) * slope + c
 
     return teff0
 
 
-def g_lineardecay(age, bounds_error='limit', y0=1/2):
+def g_lineardecay(age, bounds_error='4gyrlimit', y0=1/2):
     """
     How the third uniform component amplitude from slow_sequence_residual
     decreases with age Full amplitude at 120 Myr.  `y0` amplitude by 300 Myr
@@ -123,7 +123,7 @@ def g_lineardecay(age, bounds_error='limit', y0=1/2):
 
     if bounds_error == 'nan':
         c_uniform[bad] = np.nan
-    elif bounds_error == 'limit':
+    elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
         c_uniform[age < 120] = c
         c_uniform[age > 1000] = -(1000-120) * slope + c
 
@@ -139,14 +139,14 @@ def slow_sequence_residual(
     age,
     y_grid=np.linspace(-14, 6, 1000),
     teff_grid = np.linspace(3800, 6200, 1001),
-    poly_order=7, n=0.5,
+    poly_order=7, n=None,
     reference_model_ids=[
         'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
     ],
     reference_ages=[80, 120, 300, 670, 1000, 2600],
     popn_parameters='default',
     verbose=True,
-    bounds_error='limit'):
+    bounds_error='4gyrlimit', interp_method='pchip_m67'):
     """
     Given an effective temperature and an age, return the 2-D distribution of
     residuals around and underneath the slow sequence, sampled onto grids of
@@ -170,10 +170,25 @@ def slow_sequence_residual(
             self-explanatory, except for `y_grid`, which was defined further up
             in the docstring.
 
-        bounds_error: "nan" or "limit".  If "nan" then below the minimum
-        reference age, returns nans.  If "limit", then return the limiting
-        residual distribution (usually that of the 120-Myr clusters, when below
-        their sequence).
+        bounds_error : str
+            "nan", "limit" or "4gyrlimit".  Extrapolation behaviors are as follows.
+            If "limit", return the limiting rotation period at the closest
+            cluster given in ``reference_model_ids``.  If "4gyrlimit",
+            extrapolate out to 4 Gyr based on the ``reference_model_ids`` and
+            the adopted interpolation method, regardless of where they
+            truncate.  Past 4Gyr, take the same behavior as "limit".  If "nan",
+            ages above or below the minimum reference age return nans
+
+        interp_method : str
+            Implemented interpolation methods include "skumanich_vary_n",
+            "alt", "diff", "skumanich_fix_n_0.XX", "1d_linear", "1d_slinear",
+            "1d_quadratic", "1d_pchip", and "pchip_m67".  The latter is the
+            default method, because it yields evolution of rotation periods in
+            time that are smooth and by design fit the cluster data from the
+            age of alpha-Per through M67.  Unless you know what you are doing,
+            "pchip_m67" is recommended".  "1d_linear", "1d_slinear", and
+            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
+            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
 
         popn_parameters: (str) "default", or (dict) containing the
         population-level free parameters.  Keys of "a0", "a1", "k0", "k1",
@@ -246,7 +261,7 @@ def slow_sequence_residual(
     Prot_ss = slow_sequence(
         teff_grid, age, poly_order=poly_order, n=n,
         reference_model_ids=reference_model_ids, reference_ages=reference_ages,
-        bounds_error=bounds_error, verbose=verbose
+        bounds_error=bounds_error, interp_method=interp_method, verbose=verbose
     ).flatten()
 
     # Define the uniform component, which we will mold into the time and
@@ -309,8 +324,8 @@ def slow_sequence(
     ],
     reference_ages=[80, 120, 300, 670, 1000, 2600],
     verbose=True,
-    bounds_error='limit',
-    interp_method='skumanich_vary_n',
+    bounds_error='4gyrlimit',
+    interp_method='pchip_m67',
     n=None):
     """
     Model for a star's rotation period based on its age and effective
@@ -354,15 +369,15 @@ def slow_sequence(
             ages above or below the minimum reference age return nans
 
         interp_method : str
-            "skumanich_vary_n", "alt", "diff", "skumanich_fix_n", "1d_linear",
-            "1d_slinear", "1d_quadratic", "1d_pchip", "pchip_m67".  The first
-            is the default method, that assumes P~t^n, letting n vary with both
-            effective temperature and time to make that scaling relation hold.
-            The "alt", "diff", and "skumanich_fix_n" methods are alternative
-            methods, based on other possible scalings that one can adopt.  None
-            are recommended.  "1d_linear", "1d_slinear", and "1d_quadratic" are
-            as in ``scipy.interpolate.interp1d``.  "1d_pchip" is
-            ``scipy.interpolate.PchipInterpolator``.
+            Implemented interpolation methods include "skumanich_vary_n",
+            "alt", "diff", "skumanich_fix_n_0.XX", "1d_linear", "1d_slinear",
+            "1d_quadratic", "1d_pchip", and "pchip_m67".  The latter is the
+            default method, because it yields evolution of rotation periods in
+            time that are smooth and by design fit the cluster data from the
+            age of alpha-Per through M67.  Unless you know what you are doing,
+            "pchip_m67" is recommended".  "1d_linear", "1d_slinear", and
+            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
+            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
 
         n : None, int, or float
             Power-law index analogous to the Skumanich braking index, but
@@ -476,6 +491,8 @@ def slow_sequence(
             # oldest cluster younger than this star
             if bounds_error == "4gyrlimit" and age >= max(reference_ages):
                 # special case: extrapolate based on oldest two clusters
+                # needed for interpolation methods that require a rotation
+                # period interval: "alt", "diff", and "skumanich_vary_n".
                 glb_ix = -2
                 lub_ix = -1
             else:

@@ -29,7 +29,7 @@ import multiprocessing as mp
 
 def _agethreaded_gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
-    age_grid=np.linspace(0, 2600, 500),
+    age_grid=np.linspace(0, 3000, 500),
     verbose=True,
     bounds_error='limit',
     N_grid='default',
@@ -140,8 +140,8 @@ def _gyro_age_posterior_worker(task):
     grids in Teff and y=Prot-μ.
     """
 
-    (age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-     y_grid, bounds_error, n, reference_ages, popn_parameters
+    (age, verbose, gaussian_teff, Prot, Prot_err, teff_grid, y_grid,
+     bounds_error, interp_method, n, reference_ages, popn_parameters
     ) = task
 
     assert y_grid.ndim == 1
@@ -153,8 +153,8 @@ def _gyro_age_posterior_worker(task):
     gaussian_Prots = []
 
     resid_obs_grid = Prot - slow_sequence(
-        teff_grid, age, verbose=False, bounds_error=bounds_error, n=n,
-        reference_ages=reference_ages
+        teff_grid, age, verbose=False, bounds_error=bounds_error,
+        interp_method=interp_method, n=n, reference_ages=reference_ages
     )
 
     assert resid_obs_grid.ndim == 1
@@ -191,9 +191,9 @@ def _gyro_age_posterior_worker(task):
 
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
-    age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid='default', n=0.5,
-    age_scale='default', popn_parameters='default'
+    age_grid=np.linspace(0, 3000, 500),
+    verbose=False, bounds_error='4gyrlimit', interp_method='pchip_m67', n=None,
+    N_grid='default', age_scale='default', popn_parameters='default'
     ):
     """
     Given a single star's rotation period and effective temperature, and the
@@ -218,28 +218,45 @@ def gyro_age_posterior(
 
         age_grid : np.ndarray.
             Grid over which the age posterior is evaluated, units are fixed to
-            be Myr (10^6 years).  A fine choice if bounds_error == 'limit' is
-            np.linspace(0, 2600, 500).
+            be Myr (10^6 years).  A fine choice if ``bounds_error ==
+            '4gyrlimit'`` and ``interp_method == 'pchip_m67'`` is
+            np.linspace(0, 3000, 500).
 
-        bounds_error : str.
-            This must be set to "limit" or "nan".  If "nan" ages below the
-            minimum reference age return strings as described below.  If
-            "limit", they return a prior-dominated number useable as an upper
-            limit, based on the limiting rotation period at the closest
-            cluster.  Default is "limit".
+        bounds_error : str
+            "nan", "limit" or "4gyrlimit".  Extrapolation behaviors are as follows.
+            If "limit", return the limiting rotation period at the closest
+            cluster given in ``reference_model_ids``.  If "4gyrlimit",
+            extrapolate out to 4 Gyr based on the ``reference_model_ids`` and
+            the adopted interpolation method, regardless of where they
+            truncate.  Past 4Gyr, take the same behavior as "limit".  If "nan",
+            ages above or below the minimum reference age return nans
+
+        interp_method : str
+            Implemented interpolation methods include "skumanich_vary_n",
+            "alt", "diff", "skumanich_fix_n_0.XX", "1d_linear", "1d_slinear",
+            "1d_quadratic", "1d_pchip", and "pchip_m67".  The latter is the
+            default method, because it yields evolution of rotation periods in
+            time that are smooth and by design fit the cluster data from the
+            age of alpha-Per through M67.  Unless you know what you are doing,
+            "pchip_m67" is recommended".  "1d_linear", "1d_slinear", and
+            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
+            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
+
+        n : None, int, or float
+            Power-law index analogous to the Skumanich braking index, but
+            different in detail (see the implementation).  This is used only if
+            ``interp_method == "alt"`` or ``interp_method == "diff"``, neither
+            of which is recommended for most users.  Default is None.
 
         N_grid : str or int.
-            The dimension of the grid in effective temperature and
-            reisdual-period over which the integration is performed to evaluate
+            The number of grid points in effective temperature and
+            residual-period over which the integration is performed to evaluate
             the posterior.  "default" sets it to ``N_grid =
             (Prot_grid_range)/Prot_err``, where "Prot_grid_range" is set to 20
             days, the range of the grid used in the integration.   This default
             ensures convergence;  numerical tests show convergence down to
-            ~0.7x smaller grid sizes.  If an integer is passed, defaults to
-            that.
-
-        n : int or float.
-            Assume Prot ~ t^{n} scaling
+            ~0.7x smaller grid sizes.  If an integer is passed, will use that
+            instead.
 
         age_scale : str.
             "default", "1sigmaolder", or "1sigmayounger".  Shifts the entire
@@ -319,7 +336,7 @@ def gyro_age_posterior(
     errmsg = "Default N_grid is too small because"
     assert Teff_grid_range / N_grid < Teff_err, errmsg
 
-    assert isinstance(n, (int, float))
+    assert isinstance(n, (int, float, type(None)))
 
     assert age_scale in ["default", "1sigmaolder", "1sigmayounger"]
 
@@ -366,7 +383,8 @@ def gyro_age_posterior(
 
         task = (
             age, verbose, gaussian_teff, Prot, Prot_err, teff_grid,
-            y_grid, bounds_error, n, reference_ages, popn_parameters
+            y_grid, bounds_error, interp_method, n, reference_ages,
+            popn_parameters
         )
         p_age = _gyro_age_posterior_worker(task)
 
@@ -382,7 +400,8 @@ def gyro_age_posterior(
 
 def _one_star_age_posterior_worker(task):
 
-    Prot, Teff, age_grid, outdir, n, age_scale, parameters, N_grid = task
+    (Prot, Teff, age_grid, outdir, bounds_error, interp_method, n, age_scale,
+     parameters, N_grid) = task
 
     Protstr = f"{float(Prot):.4f}"
     Teffstr = f"{float(Teff):.1f}"
@@ -403,6 +422,7 @@ def _one_star_age_posterior_worker(task):
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
             Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+            interp_method=interp_method,
             verbose=False, n=n, age_scale=age_scale,
             popn_parameters=parameters, N_grid=N_grid
         )
@@ -463,12 +483,10 @@ def _get_pop_samples(N_pop_samples):
 
 def gyro_age_posterior_mcmc(
     Prot, Teff, Prot_err=None, Teff_err=None,
-    age_grid=np.linspace(0, 2600, 500),
-    verbose=False, bounds_error='limit', N_grid='default', n=0.5,
-    age_scale='default',
-    N_pop_samples=512,
-    N_post_samples=10000,
-    cachedir=None
+    age_grid=np.linspace(0, 3000, 500),
+    verbose=False, bounds_error='4gyrlimit', interp_method='pchip_m67',
+    N_grid='default', n=None, age_scale='default', N_pop_samples=512,
+    N_post_samples=10000, cachedir=None
     ):
     """
     Same as gyro_age_posterior, but sampling over the population-level
@@ -498,8 +516,9 @@ def gyro_age_posterior_mcmc(
     #
     popn_parameter_list = _get_pop_samples(N_pop_samples)
 
-    tasks = [(Prot, Teff, age_grid, cachedir, n, age_scale, paramdict, N_grid)
-             for paramdict in popn_parameter_list]
+    tasks = [(Prot, Teff, age_grid, cachedir, bounds_error, interp_method, n,
+              age_scale, paramdict, N_grid) for paramdict in
+              popn_parameter_list]
 
     N_tasks = len(tasks)
     print(f"Got N_tasks={N_tasks}...")
@@ -550,8 +569,8 @@ def gyro_age_posterior_mcmc(
 
 
 def gyro_age_posterior_list(
-    cache_id, Prots, Teffs, age_grid=np.linspace(0, 2600, 500),
-    N_grid='default'
+    cache_id, Prots, Teffs, age_grid=np.linspace(0, 3000, 500),
+    N_grid='default', bounds_error='4gyrlimit', interp_method='pchip_m67'
     ):
     """
     Given lists of rotation periods and effective temperatures, run them in
@@ -581,11 +600,11 @@ def gyro_age_posterior_list(
     outdir = os.path.join(LOCALDIR, "gyrointerp", cache_id)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
-    n = 0.5
+    n = None
     age_scale = "default"
     hyperparameters = "default"
 
-    tasks = [(_prot, _teff, age_grid, outdir, n,
+    tasks = [(_prot, _teff, age_grid, outdir, bounds_error, interp_method, n,
               age_scale, hyperparameters, N_grid)
              for _prot, _teff in zip(Prots, Teffs)]
 
@@ -611,5 +630,5 @@ if __name__ == "__main__":
     # testing
     Prot = 6
     Teff = 5500
-    age_grid = np.linspace(0, 2600, 50)
+    age_grid = np.linspace(0, 3000, 50)
     age_post = gyro_age_posterior(Prot, Teff, age_grid=age_grid)
