@@ -31,7 +31,7 @@ def _agethreaded_gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 3000, 500),
     verbose=True,
-    bounds_error='limit',
+    bounds_error='4gyrlimit',
     N_grid='default',
     nworkers='max',
 ):
@@ -406,7 +406,6 @@ def _one_star_age_posterior_worker(task):
     Protstr = f"{float(Prot):.4f}"
     Teffstr = f"{float(Teff):.1f}"
     typestr = 'limitgrid'
-    bounds_error = 'limit'
     if parameters == 'default':
         paramstr = "_defaultparameters"
     else:
