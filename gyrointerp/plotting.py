@@ -2093,10 +2093,10 @@ def plot_prot_vs_time_fixed_teff(
     #
     plt.close("all")
     set_style('clean')
-    fig, axs = plt.subplots(nrows=2, figsize=(2.2,4), sharex=True)
+    fig, axs = plt.subplots(nrows=2, figsize=(2.2,3.5), sharex=True)
 
     N_colors = len(interp_methods)
-    cmap = cm.tab10(np.linspace(0,1,10))
+    cmap = cm.tab20(np.linspace(0,1,10))
 
     colors = [cmap[ix] for ix in range(len(interp_methods))]
     lss = ['-','--',':','-.']*99
@@ -2104,7 +2104,9 @@ def plot_prot_vs_time_fixed_teff(
     # top axis
     ax = axs[0]
     for interp_method, c, ls in zip(interp_methods, colors, lss):
-        ax.plot(ages, Protd[interp_method], color=c, ls=ls, lw=0.7,
+        if interp_method == 'pchip_m67':
+            c, ls = 'k', '-'
+        ax.plot(ages, Protd[interp_method], color=c, ls=ls, lw=0.5,
                 label=f"{interp_method}")
     ax.scatter(reference_ages, reference_Prots, s=30, marker="+", c='k',
                zorder=999)
@@ -2124,17 +2126,19 @@ def plot_prot_vs_time_fixed_teff(
     # residual axis
     ax = axs[1]
     for interp_method, c, ls in zip(interp_methods, colors, lss):
+        if interp_method == 'pchip_m67':
+            c, ls = 'k', '-'
         yval = (
             (nparr(Protd[interp_method]) - nparr(Protd['pchip_m67']))
             /
-            nparr(Protd['pchip_m67'])
+            nparr(Protd[interp_method])
         )
-        ax.plot(ages, 100*yval, color=c, ls=ls, lw=0.7, label=f"{interp_method}")
+        ax.plot(ages, 100*yval, color=c, ls=ls, lw=0.5, label=f"{interp_method}")
 
     dy = (
             (nparr(reference_Prots) - nparr(dProtd['pchip_m67']))
             /
-            nparr(dProtd['pchip_m67'])
+            nparr(reference_Prots)
     )
 
     ax.scatter(reference_ages, 100*dy, s=30, marker="+", c='k', zorder=999)
@@ -2150,5 +2154,5 @@ def plot_prot_vs_time_fixed_teff(
     #    ax.set_yticklabels([-0.2, -0.1, 0, 0.1, 0.2])
     #    ax.set_ylim([-0.23, 0.23])
 
-    fig.tight_layout()
+    fig.tight_layout(h_pad=0.2, w_pad=0.2)
     savefig(fig, outpath, dpi=400, writepdf=1)
