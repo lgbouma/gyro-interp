@@ -11,11 +11,6 @@ n = [0.47, 0.33, 0.25]
 
 for teff, _n in zip(teffs, n):
 
-    #interp_methods = [
-    #    "1d_linear", "1d_quadratic", "1d_slinear", "1d_pchip",
-    #    "skumanich_vary_n", "alt", "diff", #"skumanich_fix_n_0.5",
-    #    f"skumanich_fix_n_{_n}", "pchip_m67"
-    #]
     interp_methods = [
         f"skumanich_fix_n_{_n}",
         "skumanich_vary_n", # "alt", "diff", #"skumanich_fix_n_0.5",

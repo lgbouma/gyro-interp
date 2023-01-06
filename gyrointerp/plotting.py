@@ -26,6 +26,7 @@ from glob import glob
 from os.path import join
 from itertools import product
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
+from copy import deepcopy
 
 import matplotlib as mpl
 from matplotlib import cm
@@ -90,7 +91,7 @@ def _given_ax_append_spectral_types(
 def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       model_ids=None, poly_order=7,
                       slow_seq_ages=None, hide_ax=0, logo_colors=0,
-                      logy=False, n=None, interp_method='skumanich_vary_n'):
+                      logy=False, n=None, interp_method='pchip_m67'):
     """
     reference_clusters: list containing any of
         ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
@@ -214,7 +215,10 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     ss = ''
     if isinstance(slow_seq_ages, list):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
-        m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
+        m = (
+            f"_slowseq_poly{poly_order}_" +
+            f"_{slow_seq_ages[0]}_to_{slow_seq_ages[-1]}"
+        )
     ns = ''
     if n is not None:
         ns = f"_n{n}"
@@ -2044,6 +2048,14 @@ def plot_prot_vs_time_fixed_teff(
     outdir, teff, interp_methods, xscale='log'
     ):
 
+    from gilly.gyrochronology import (
+        MamajekHillenbrand08_gyro_Prot, SpadaLanzafame20_gyro_Prot,
+        Angus19_gyro_Prot
+    )
+    from cdips.utils.mamajek import (
+        get_interp_BmV_from_Teff, get_interp_BpmRp_from_Teff
+    )
+
     ages = np.linspace(50, 5000, 300)
 
     # get slow sequence evolution tracks
@@ -2055,6 +2067,37 @@ def plot_prot_vs_time_fixed_teff(
                 slow_sequence(teff, age, interp_method=interp_method,
                               bounds_error='4gyrlimit')
             )
+
+    BmV = float(get_interp_BmV_from_Teff(teff))
+    BpmRp = float(get_interp_BpmRp_from_Teff(teff))
+
+    literature_methods = ['MH08', 'A19', 'SL20']
+    starcolors = [BmV, BpmRp, BmV]
+    getters = [
+        MamajekHillenbrand08_gyro_Prot, Angus19_gyro_Prot, SpadaLanzafame20_gyro_Prot
+    ]
+    all_methods = deepcopy(interp_methods + literature_methods)
+    for literature_method, starcolor, getter in zip(
+        literature_methods, starcolors, getters
+    ):
+        Protd[literature_method] = []
+        for age in ages:
+            Protd[literature_method].append(
+                getter(starcolor, age)
+            )
+
+    sl20arr = np.array(Protd['SL20'])
+    sl20arr[sl20arr == 0] = np.nan
+    Protd['SL20'] = sl20arr
+
+    a19arr = np.array(Protd['A19'])
+    a19arr[np.array(ages) < 80 ] = np.nan
+    Protd['A19'] = a19arr
+
+    mh08arr = np.array(Protd['MH08'])
+    mh08arr[np.array(ages) < 80 ] = np.nan
+    Protd['MH08'] = mh08arr
+
 
     # get the _data_
     poly_order = 7
@@ -2085,7 +2128,7 @@ def plot_prot_vs_time_fixed_teff(
     outpath = os.path.join(
         outdir,
         f'prot_vs_time_teff{teff:.1f}_'
-        f'{"_".join(interp_methods).replace(" ","_")}_xscale{xscale}.png'
+        f'{"_".join(all_methods).replace(" ","_")}_xscale{xscale}.png'
     )
 
     #
@@ -2095,23 +2138,25 @@ def plot_prot_vs_time_fixed_teff(
     set_style('clean')
     fig, axs = plt.subplots(nrows=2, figsize=(2.2,3.5), sharex=True)
 
-    N_colors = len(interp_methods)
+    N_colors = len(all_methods)
     cmap = cm.tab20(np.linspace(0,1,10))
 
-    colors = [cmap[ix] for ix in range(len(interp_methods))]
+    colors = [cmap[ix] for ix in range(len(all_methods))]
     lss = ['-','--',':','-.']*99
 
     # top axis
     ax = axs[0]
-    for interp_method, c, ls in zip(interp_methods, colors, lss):
-        if interp_method == 'pchip_m67':
+    for method, c, ls in zip(all_methods, colors, lss):
+        if method == 'pchip_m67':
             c, ls = 'k', '-'
-        ax.plot(ages, Protd[interp_method], color=c, ls=ls, lw=0.5,
-                label=f"{interp_method}")
+        if teff == 4200 and method == 'MH08':
+            continue
+        ax.plot(ages, Protd[method], color=c, ls=ls, lw=0.5,
+                label=f"{method}")
     ax.scatter(reference_ages, reference_Prots, s=30, marker="+", c='k',
                zorder=999)
 
-    ax.legend(loc='best', fontsize='xx-small', handletextpad=0.2,
+    ax.legend(loc='upper left', fontsize='xx-small', handletextpad=0.2,
               borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
               frameon=False)
     ax.set_title(f"{teff} K")
@@ -2125,15 +2170,17 @@ def plot_prot_vs_time_fixed_teff(
 
     # residual axis
     ax = axs[1]
-    for interp_method, c, ls in zip(interp_methods, colors, lss):
-        if interp_method == 'pchip_m67':
+    for method, c, ls in zip(all_methods, colors, lss):
+        if method == 'pchip_m67':
             c, ls = 'k', '-'
+        if teff == 4200 and method == 'MH08':
+            continue
         yval = (
-            (nparr(Protd[interp_method]) - nparr(Protd['pchip_m67']))
+            (nparr(Protd[method]).flatten() - nparr(Protd['pchip_m67']).flatten())
             /
-            nparr(Protd[interp_method])
+            nparr(Protd[method]).flatten()
         )
-        ax.plot(ages, 100*yval, color=c, ls=ls, lw=0.5, label=f"{interp_method}")
+        ax.plot(ages, 100*yval, color=c, ls=ls, lw=0.5, label=f"{method}")
 
     dy = (
             (nparr(reference_Prots) - nparr(dProtd['pchip_m67']))
@@ -2146,6 +2193,7 @@ def plot_prot_vs_time_fixed_teff(
     ax.update({
         'ylabel': 'Residual [%]',
         'xlabel': 'Time [Myr]',
+        'ylim': [-33, 33]
     })
     for axis in [ax.xaxis, ax.yaxis]:
         axis.set_major_formatter(ScalarFormatter())
