@@ -1605,20 +1605,25 @@ def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
     savefig(fig, outpath, dpi=400, writepdf=False)
 
 
-def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
+def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale, interp_method,
+                           grid_resolution):
 
     # from run_prot_teff_grid.py
     teffmin, teffmax = 3800, 6200
     protmin, protmax = 0, 23
-    Teff_grid = np.arange(teffmin, teffmax+10, 10)
-    Prot_grid = np.arange(protmin, protmax+0.1, 0.1)
+    if grid_resolution == "fine":
+        Teff_grid = np.arange(teffmin, teffmax+10, 10)
+        Prot_grid = np.arange(protmin, protmax+0.1, 0.1)
+    elif grid_resolution == "coarse":
+        Teff_grid = np.arange(teffmin, teffmax+100, 100)
+        Prot_grid = np.arange(protmin, protmax+0.5, 0.5)
     N_Teff = len(Teff_grid)
     N_Prot = len(Prot_grid)
 
     typestr = 'limitgrid_defaultparameters'
     cachedir = os.path.join(
         LOCALDIR, "gyrointerp",
-        f"prot_teff_grid_n{n:.1f}_reluncpt1pct_{age_scale}"
+        f"prot_teff_grid_n{n}_reluncpt1pct_{age_scale}_{interp_method}"
     )
     _fpaths = [
         os.path.join(
@@ -1682,8 +1687,9 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale):
 
 
 def plot_empirical_limits_of_gyrochronology(
-    outdir, imagestr, poly_order=7, n=0.5, age_scale='default',
-    slow_seq_ages=None, writepdf=0
+    outdir, imagestr, poly_order=7, n=None, age_scale='default',
+    interp_method='pchip_m67', slow_seq_ages=None, writepdf=0,
+    grid_resolution='coarse'
     ):
     """
     Map out precision of gyro posteriors as a function of Prot and Teff.
@@ -1696,8 +1702,6 @@ def plot_empirical_limits_of_gyrochronology(
 
         slow_seq_ages: optional list of ages, in Myr, for slow sequence models
         to underplot (e.g., [100, 200, 400]).
-
-        n: assume Prot ~ t^{n} scaling
 
         age_scale: "default", "1sigmaolder", or "1sigmayounger".  Shifts the
         entire age scale appropriately.
@@ -1716,12 +1720,13 @@ def plot_empirical_limits_of_gyrochronology(
     # Get data
     #
     p1sig, m1sig, median, peak = _get_empgyro_grid_data(
-        imagestr, n, poly_order, age_scale
+        imagestr, n, poly_order, age_scale, interp_method, grid_resolution
     )
     if imagestr in ['diff_median', 'diff_median_abs', 'diff_peak']:
         npt5_p1sig, npt5_m1sig, npt5_median, npt5_peak = (
             _get_empgyro_grid_data(
-                imagestr, 0.5, poly_order, 'default'
+                imagestr, None, poly_order, 'default', 'pchip_m67',
+                grid_resolution
             )
         )
         dmedian = median - npt5_median
@@ -1764,10 +1769,10 @@ def plot_empirical_limits_of_gyrochronology(
     elif imagestr in ['peak', 'median']:
         norm = LogNorm(vmin=10, vmax=2600)
     elif imagestr in ['diff_median_abs', 'diff_peak_abs']:
-        norm = Normalize(vmin=-100, vmax=100)
+        norm = Normalize(vmin=-200, vmax=200)
     elif imagestr in ['diff_median', 'diff_peak']:
         if age_scale == 'default':
-            norm = Normalize(vmin=-0.1, vmax=0.1)
+            norm = Normalize(vmin=-0.2, vmax=0.2)
         else:
             norm = Normalize(vmin=-0.2, vmax=0.2)
 
@@ -1955,13 +1960,14 @@ def plot_empirical_limits_of_gyrochronology(
             _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
 
     basename = "empirical_limits_of_gyrochronology"
-    s = f'_n{n:.1f}'
+    s = f'_n{n}'
     ss = f'_scale-{age_scale}'
+    _is = f"_{interp_method}"
     if isinstance(slow_seq_ages, (list, np.ndarray)):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
 
-    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}{ss}.png')
+    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}{ss}{_is}.png')
 
     if 'both' in imagestr:
         fig.tight_layout(h_pad=0.4, w_pad=0.4)

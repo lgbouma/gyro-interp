@@ -9,16 +9,32 @@ if not os.path.exists(PLOTDIR):
 outdir = PLOTDIR
 
 
-#
-# many clusters, overplotted
-#
-
 slow_seq_ages = np.arange(100, 2600+100, 100)
 
-# fig4
+# fig4, publication-quality
 ap.plot_empirical_limits_of_gyrochronology(
-    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1
+    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1,
+    grid_resolution='fine'
 )
+assert 0
+
+# fig4, coarse
+ap.plot_empirical_limits_of_gyrochronology(
+    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1,
+    grid_resolution='coarse'
+)
+
+# systematic uncertaity checks for varying spin-down rates, as assessed through
+# interpolation methods ("n")
+for interp_method in ["1d_linear", "1d_pchip"]:
+    ap.plot_empirical_limits_of_gyrochronology(
+        outdir, 'diff_median', slow_seq_ages=slow_seq_ages,
+        interp_method=interp_method
+    )
+    ap.plot_empirical_limits_of_gyrochronology(
+        outdir, 'diff_median_abs', slow_seq_ages=slow_seq_ages,
+        interp_method=interp_method
+    )
 assert 0
 
 # systematic uncertainty checks for varying age scale
@@ -28,7 +44,7 @@ for age_scale in ["1sigmaolder", "1sigmayounger"]:
         age_scale=age_scale
     )
 
-# systematic uncertainty checks for varying n
+# (deprecated) systematic uncertainty checks for varying n
 for n in [1.0, 0.2]:
     ap.plot_empirical_limits_of_gyrochronology(
         outdir, 'diff_median', slow_seq_ages=slow_seq_ages, n=n
@@ -38,19 +54,11 @@ for n in [1.0, 0.2]:
     )
 
 assert 0
-for n in [0.5, 1.0, 0.2]:
-    ap.plot_empirical_limits_of_gyrochronology(
-        outdir, 'median', slow_seq_ages=slow_seq_ages, n=n
-    )
-    ap.plot_empirical_limits_of_gyrochronology(
-        outdir, 'peak', slow_seq_ages=slow_seq_ages, n=n
-    )
-
-assert 0
-# figure 3a
+# (deprecated) figure 3a, ina absolute values)
 ap.plot_empirical_limits_of_gyrochronology(
     outdir, 'both_abs', slow_seq_ages=slow_seq_ages
 )
+
 assert 0
 # bonus
 ap.plot_empirical_limits_of_gyrochronology(
