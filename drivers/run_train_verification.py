@@ -56,6 +56,7 @@ def plot_posteriors():
     clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                 'Group-X', 'Praesepe', 'NGC-6811']
     clusters = ['NGC-6819', 'Ruprecht-147']
+    clusters = ['M37', 'M37-no-binaries']
 
     summaries = []
 
@@ -86,6 +87,15 @@ def plot_posteriors():
                 print('Skipping Prot12.2200_Teff5048.5, it is a many-sigma '
                       'outlier that yields too-old age for Psc-Eri.')
                 continue
+            if 'Prot4.9000_Teff6187.4' in csvpath:
+                print('Skipping rapid rotating hot stars in NGC-6819....')
+                continue
+            if 'Prot6.3600_Teff6168.9' in csvpath:
+                print('Skipping rapid rotating hot stars in NGC-6819....')
+                continue
+            if 'Prot6.9079_Teff6102.6' in csvpath:
+                print('Skipping rapid rotating hot stars in Ruprecht-147....')
+                continue
 
             # initialize the posterior
             if ix == 0:
@@ -99,6 +109,12 @@ def plot_posteriors():
                 df = pd.read_csv(csvpath)
                 t_post = np.array(df.age_post)
                 final_post *= t_post
+
+                if 'M37' in cluster:
+                    # avoid floating point style truncation error
+                    sel = (age_grid > 500) & (age_grid < 600)
+                    #print(ix, max(final_post[sel]))
+                    final_post /= np.trapz(final_post, age_grid)
 
             zorder = ix
             ax.plot(age_grid, 1e3*t_post/np.trapz(t_post, age_grid), alpha=0.1,
@@ -134,17 +150,17 @@ def plot_posteriors():
     df.to_csv(csvpath, index=True)
     print(f"Wrote {csvpath}")
 
-    selcols = ['median','+1sigma','-1sigma']
-    tdf = df.round(0).astype(int)
-    tdf = tdf[selcols]
-    texpath = os.path.join(outdir, "verification.tex")
-    tdf.to_latex(texpath)
-    print(f"Wrote {texpath}")
+    #selcols = ['median','+1sigma','-1sigma']
+    #tdf = df.round(0).astype(int)
+    #tdf = tdf[selcols]
+    #texpath = os.path.join(outdir, "verification.tex")
+    #tdf.to_latex(texpath)
+    #print(f"Wrote {texpath}")
 
 
 if __name__ == "__main__":
-    do_calc = 1
-    do_plot = 0
+    do_calc = 0
+    do_plot = 1
     if do_calc:
         calc_posteriors()
     if do_plot:
