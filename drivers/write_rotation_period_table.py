@@ -55,6 +55,14 @@ dfs = []
 for c, bibcode in clusters.items():
 
     _df = d[c][0]
+
+    if c == 'α Per':
+        # Boyle+22 included a lot of faint candidate cluster members that were
+        # too faint to yield TESS rotation periods.  omit them, along with any
+        # candidate alpha-Per members that did not yield rotation periods.
+        sel = ~pd.isnull(_df.Prot)
+        _df = _df[sel]
+
     _df['dr2_source_id'] = _df.dr2_source_id.astype(str)
     _df['dr3_source_id'] = _df.dr3_source_id.astype(str)
 
