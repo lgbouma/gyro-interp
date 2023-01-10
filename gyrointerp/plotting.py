@@ -308,9 +308,10 @@ def plot_prot_vs_teff_residual(
 
 def plot_cdf_fast_slow_ratio(
     outdir, poly_order=7,
-    model_ids = ['α Per', '120-Myr', '300-Myr', 'Praesepe'],
-    reference_clusters = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                          'Group-X', 'Praesepe', 'NGC-6811']
+    model_ids=['α Per', '120-Myr', '300-Myr', 'Praesepe'],
+    reference_clusters=['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                        'Group-X', 'Praesepe', 'NGC-6811'],
+    include_binaries=0
     ):
     """
     Plot: RATIO of cumulative distribution functions, showing the cdf(Teff) for
@@ -373,6 +374,8 @@ def plot_cdf_fast_slow_ratio(
             zorder = d[reference_cluster][3]
 
             sel = df.flag_benchmark_period
+            if include_binaries:
+                sel = (~pd.isnull(df.Prot)) & (~pd.isnull(df.Teff_Curtis20))
 
             Teff = nparr(df[sel].Teff_Curtis20)
             Prot = nparr(df[sel].Prot)
@@ -501,7 +504,9 @@ def plot_cdf_fast_slow_ratio(
             'count_fast_seq': h_vals_fs,
             'count_slow_seq': h_vals_ss,
         })
-        csvpath = os.path.join(outdir, f'{model_id}_cdf_fast_slow_ratio_data.csv')
+        ib = '' if not include_binaries else '_includebinaries'
+        csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
+                               f'{model_id}_cdf_fast_slow_ratio_data{ib}.csv')
         outdf.to_csv(csvpath, index=False)
         print(f"Wrote {csvpath}")
 
@@ -520,13 +525,14 @@ def plot_cdf_fast_slow_ratio(
     if isinstance(model_ids, list):
         m = f"_models_poly{poly_order}_" + "_".join(model_ids)
 
-    outpath = join(outdir, f'{b}cdf_fast_slow_ratio_{basename}{m}.png')
+    outpath = join(outdir, f'{b}cdf_fast_slow_ratio_{basename}{m}{ib}.png')
 
     savefig(fig, outpath, dpi=400, writepdf=False)
 
 
 def _plot_prot_vs_teff_residual(
-    ax, model_id, d, reference_clusters, poly_order, showtxt=1, tefflim_ss=1
+    ax, model_id, d, reference_clusters, poly_order, showtxt=1, tefflim_ss=1,
+    include_binaries=0
     ):
     # helper function that plots the DATA (residual) for the different open
     # clusters, and their concatenations
@@ -558,6 +564,8 @@ def _plot_prot_vs_teff_residual(
         zorder = d[reference_cluster][3]
 
         sel = df.flag_benchmark_period
+        if include_binaries:
+            sel = (~pd.isnull(df.Prot)) & (~pd.isnull(df.Teff_Curtis20))
 
         Teff = nparr(df[sel].Teff_Curtis20)
         Prot = nparr(df[sel].Prot)
@@ -687,9 +695,10 @@ def _get_model_histogram(age, bounds_error='limit', popn_parameters='default'):
 
 def plot_data_vs_model_prot(
     outdir, poly_order=7, popn_parameters='default',
-    model_ids = ['120-Myr', '300-Myr', 'Praesepe'],
-    reference_clusters = ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                          'Group-X', 'Praesepe', 'NGC-6811']
+    model_ids=['120-Myr', '300-Myr', 'Praesepe'],
+    reference_clusters=['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                        'Group-X', 'Praesepe', 'NGC-6811'],
+    include_binaries=0,
     ):
     """
     9 (or 12)-panel plot.  Requires: having previously run plot_cdf_fast_slow_ratio.
@@ -765,7 +774,7 @@ def plot_data_vs_model_prot(
     for ax, model_id, title in zip(axs, model_ids, titles):
         _plot_prot_vs_teff_residual(
             ax, model_id, d, reference_clusters, poly_order, showtxt=0,
-            tefflim_ss=0
+            tefflim_ss=0, include_binaries=include_binaries
         )
         ax.set_title(title)
 
@@ -786,7 +795,7 @@ def plot_data_vs_model_prot(
     for ax, age in zip(axs, ages):
         resid_Teffs, teff_grid = _plot_slow_sequence_residual(
             fig, ax, age, bounds_error, resid_Teffs, showtxt=0, showcolorbar=0,
-            popn_parameters=popn_parameters
+            popn_parameters=popn_parameters, include_binaries=include_binaries
         )
 
     #
@@ -801,19 +810,20 @@ def plot_data_vs_model_prot(
     chi_sqs = []
     for ax, age, model_id in zip(axs, ages, model_ids):
 
+        # these cached data files are made by plot_cdf_fast_slow_ratio
+        ib = '' if not include_binaries else '_includebinaries'
         csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
-                               f'{model_id}_cdf_fast_slow_ratio_data.csv')
+                               f'{model_id}_cdf_fast_slow_ratio_data{ib}.csv')
+        assert os.path.exists(csvpath)
         df = pd.read_csv(csvpath)
 
-        _f = 1/0.5323 # fudge factor to yield red-chi^2 near unity
-        logf_ml = -0.148
+        _f = 1/0.5323 # initial fudge factor to yield red-chi^2 near unity
+        logf_ml = -0.148 # result from max-likelihood fitting
         if age in [80, 120, 300]:
             sigma = 0.1 * _f**(-0.5) * np.exp(logf_ml) # uniform weighting across the 7 bins
         elif age == 670:
             sigma = 0.01 * _f**(-0.5) * np.exp(logf_ml) # stricter requirement -- want it gonezo.
 
-        #ax.plot(df.Teff_midpoints, df.ratio, c='k', ls='--', marker='*',
-        #        label='Data', zorder=2)
         ax.errorbar(
             df.Teff_midpoints, df.ratio, yerr=sigma, c='k', ls='--',
             marker='o', ms=4.5, label='Data'
@@ -883,13 +893,14 @@ def plot_data_vs_model_prot(
     if isinstance(model_ids, list):
         m = f"_models_poly{poly_order}_" + "_".join(model_ids)
 
-    outpath = join(outdir, f'data_vs_model_{basename}{m}.png')
+    outpath = join(outdir, f'data_vs_model_{basename}{m}{ib}.png'.
+                   replace(" ", "_"))
     savefig(fig, outpath, dpi=400, writepdf=1)
 
 
 def _plot_slow_sequence_residual(
     fig, ax, age, bounds_error, resid_Teffs, showtxt=1, showcolorbar=1,
-    popn_parameters='default'
+    popn_parameters='default', include_binaries=0
     ):
 
     ymin, ymax = -14, 6
