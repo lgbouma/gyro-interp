@@ -1750,7 +1750,7 @@ def plot_empirical_limits_of_gyrochronology(
         sel = np.abs(dmedian) > 25
         sel1 = np.abs(dmedian) > 40
         msg = (
-            f"n={n}:\n"
+            f"n={n},  interp_method={interp_method}\n"
             f"mean: {np.nanmean(dmedian):.3f}\n"
             f"mean of abs>25: {np.nanmean(dmedian[sel]):.3f}\n"
             f"mean of abs>40: {np.nanmean(dmedian[sel1]):.3f}\n"
@@ -1817,7 +1817,7 @@ def plot_empirical_limits_of_gyrochronology(
         # divering
         cmap = mpl.colormaps['bwr']
         if age_scale == 'default':
-            cmap = mpl.cm.get_cmap("bwr", 8)
+            cmap = mpl.cm.get_cmap("bwr", 32)
         else:
             cmap = mpl.cm.get_cmap("bwr", 16)
     #_cmap = cmap(np.arange(0,cmap.N))

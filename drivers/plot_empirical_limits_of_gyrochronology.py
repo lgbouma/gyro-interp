@@ -11,19 +11,6 @@ outdir = PLOTDIR
 
 slow_seq_ages = np.arange(100, 2600+100, 100)
 
-# fig4, publication-quality
-ap.plot_empirical_limits_of_gyrochronology(
-    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1,
-    grid_resolution='fine'
-)
-assert 0
-
-# fig4, coarse
-ap.plot_empirical_limits_of_gyrochronology(
-    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1,
-    grid_resolution='coarse'
-)
-
 # systematic uncertaity checks for varying spin-down rates, as assessed through
 # interpolation methods ("n")
 for interp_method in ["1d_linear", "1d_pchip"]:
@@ -36,6 +23,19 @@ for interp_method in ["1d_linear", "1d_pchip"]:
         interp_method=interp_method
     )
 assert 0
+
+# fig4, publication-quality
+ap.plot_empirical_limits_of_gyrochronology(
+    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1,
+    grid_resolution='fine'
+)
+assert 0
+
+# fig4, coarse
+ap.plot_empirical_limits_of_gyrochronology(
+    outdir, 'both', slow_seq_ages=slow_seq_ages, writepdf=1,
+    grid_resolution='coarse'
+)
 
 # systematic uncertainty checks for varying age scale
 for age_scale in ["1sigmaolder", "1sigmayounger"]:
