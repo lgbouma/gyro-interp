@@ -315,9 +315,16 @@ def gyro_age_posterior(
 
     assert isinstance(N_grid, (int, str))
 
+    Prot_grid_range = 20 # see y_grid below
+    Teff_grid_range = 6200 - 3800
+
     if N_grid == "default":
-        Prot_grid_range = 20 # see y_grid below
-        N_grid = int(Prot_grid_range / Prot_err)
+
+        N_grid_0 = int(Prot_grid_range / Prot_err)
+        N_grid_1 = int(Teff_grid_range / Teff_err)
+
+        N_grid = max([N_grid_0, N_grid_1])
+
         if verbose:
             msg = (
                 f"{datetime.now().isoformat()} "
@@ -325,17 +332,23 @@ def gyro_age_posterior(
             )
             print(msg)
 
-    # numerical tests for convergence (/tests/test_gyro_posterior_grid.py)
+    # Numerical tests for convergence (/tests/test_gyro_posterior_grid.py)
     # indicate we can go a little below the default grid resolution and still
-    # do OK.
-    N_grid_required = 0.7*int(Prot_grid_range / Prot_err)
-    if N_grid < N_grid_required:
-        print("WARNING! N_grid must be >~{N_grid_required} to get "
-              "converged results.")
-
-    Teff_grid_range = 6200 - 3800
-    errmsg = "Default N_grid is too small because"
-    assert Teff_grid_range / N_grid < Teff_err, errmsg
+    # do OK.  If they fail, raise an assertion error.
+    N_grid_required_0 = 0.7*int(Prot_grid_range / Prot_err)
+    N_grid_required_1 = 0.7*int(Teff_grid_range / Teff_err)
+    if N_grid < N_grid_required_0:
+        msg = (
+            f"ERROR! N_grid must be >~{N_grid_required_0} to get "
+            f"converged results.  Prot_err={Prot_err}"
+        )
+        raise AssertionError(msg)
+    if N_grid < N_grid_required_1:
+        msg = (
+            f"ERROR! N_grid must be >~{N_grid_required_1} to get "
+            f"converged results. Teff_err={Teff_err}"
+        )
+        raise AssertionError(msg)
 
     assert isinstance(n, (int, float, type(None)))
 
@@ -620,7 +633,8 @@ def gyro_age_posterior_list(
 
     tasks = [(_prot, _teff, _proterr, _tefferr, age_grid, outdir, bounds_error,
               interp_method, n, age_scale, hyperparameters, N_grid)
-             for _prot, _teff in zip(Prots, Teffs, Prot_errs, Teff_errs)]
+             for _prot, _teff, _proterr, _tefferr
+             in zip(Prots, Teffs, Prot_errs, Teff_errs)]
 
     N_tasks = len(tasks)
     print(f"Got N_tasks={N_tasks}...")
