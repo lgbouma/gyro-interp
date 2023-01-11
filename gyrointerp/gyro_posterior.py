@@ -60,7 +60,7 @@ def _agethreaded_gyro_age_posterior(
         Prot_err = 0.01 * Prot
 
     if Teff_err is None:
-        Teff_err = 50
+        Teff_err = 100
 
     if N_grid < 512:
         print("WARNING! N_grid must be >=512 to get converged results.")
@@ -202,11 +202,12 @@ def gyro_age_posterior(
     holds.
 
     If Prot_err and Teff_err are not given, they are assumed to be 1% relative
-    and 50 K, respectively.  These are best-case defaults.  The suggested
-    effective temperature scale is implemented in ``gyrointerp.teff``, in the
+    and 100 K, respectively.  One suggested effective temperature scale is
+    implemented in ``gyrointerp.teff``, in the
     ``given_dr2_BpmRp_AV_get_Teff_Curtis2020`` function.  This assumes you have
     an accurate estimate for the reddening.  Spectroscopic temperatures are
-    the next-best option.
+    also good options, though they should preferably be calibrated against the
+    Curtis+2020 effective temperature scale (2020ApJ...904..140C, Appendix A).
 
     Args:
 
@@ -294,7 +295,7 @@ def gyro_age_posterior(
         Prot_err = 0.01 * Prot
 
     if Teff_err is None:
-        Teff_err = 50
+        Teff_err = 100
 
     if Teff_err < 50:
         print(
@@ -400,8 +401,8 @@ def gyro_age_posterior(
 
 def _one_star_age_posterior_worker(task):
 
-    (Prot, Teff, age_grid, outdir, bounds_error, interp_method, n, age_scale,
-     parameters, N_grid) = task
+    (Prot, Teff, Prot_err, Teff_err, age_grid, outdir, bounds_error,
+     interp_method, n, age_scale, parameters, N_grid) = task
 
     Protstr = f"{float(Prot):.4f}"
     Teffstr = f"{float(Teff):.1f}"
@@ -420,7 +421,8 @@ def _one_star_age_posterior_worker(task):
     )
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
-            Prot, Teff, age_grid=age_grid, bounds_error=bounds_error,
+            Prot, Teff, Prot_err=Prot_err, Teff_err=Teff_err,
+            age_grid=age_grid, bounds_error=bounds_error,
             interp_method=interp_method, verbose=False, n=n,
             age_scale=age_scale, popn_parameters=parameters, N_grid=N_grid
         )
@@ -514,8 +516,8 @@ def gyro_age_posterior_mcmc(
     #
     popn_parameter_list = _get_pop_samples(N_pop_samples)
 
-    tasks = [(Prot, Teff, age_grid, cachedir, bounds_error, interp_method, n,
-              age_scale, paramdict, N_grid) for paramdict in
+    tasks = [(Prot, Teff, Prot_err, Teff_err, age_grid, cachedir, bounds_error,
+              interp_method, n, age_scale, paramdict, N_grid) for paramdict in
               popn_parameter_list]
 
     N_tasks = len(tasks)
@@ -567,8 +569,9 @@ def gyro_age_posterior_mcmc(
 
 
 def gyro_age_posterior_list(
-    cache_id, Prots, Teffs, age_grid=np.linspace(0, 3000, 500),
-    N_grid='default', bounds_error='4gyrlimit', interp_method='pchip_m67'
+    cache_id, Prots, Teffs, Prot_errs=None, Teff_errs=None,
+    age_grid=np.linspace(0, 3000, 500), N_grid='default',
+    bounds_error='4gyrlimit', interp_method='pchip_m67'
     ):
     """
     Given lists of rotation periods and effective temperatures, run them in
@@ -578,19 +581,32 @@ def gyro_age_posterior_list(
 
     Args:
 
-    cache_id (str):
-        string identifying the grid for cacheing
+        cache_id (str):
+            string identifying the grid for cacheing
 
-    Prots (np.ndarray):
-        1-D array of rotation periods
+        Prots (np.ndarray):
+            1-D array of rotation periods
 
-    Teffs (np.ndarray):
-        1-D array of temperatures, same length as Prots
+        Teffs (np.ndarray):
+            1-D array of temperatures, same length as Prots
+
+        Prot_errs (np.ndarray):
+            1-D array of rotation period uncertainties.  If None, assumes 1%
+            relative uncertainties by default.
+
+        Teff_errs (np.ndarray):
+            1-D array of effective temperature uncertainties.  If None, assumes
+            100K by default.
 
     age_grid: as in gyro_age_posterior
     """
 
     assert len(Prots) == len(Teffs)
+
+    if Prot_errs is None:
+        Prot_errs = 0.01*Prots
+    if Teff_errs is None:
+        Teff_errs = 100
 
     outdir = os.path.join(LOCALDIR, "gyrointerp")
     if not os.path.exists(outdir): os.mkdir(outdir)
@@ -602,9 +618,9 @@ def gyro_age_posterior_list(
     age_scale = "default"
     hyperparameters = "default"
 
-    tasks = [(_prot, _teff, age_grid, outdir, bounds_error, interp_method, n,
-              age_scale, hyperparameters, N_grid)
-             for _prot, _teff in zip(Prots, Teffs)]
+    tasks = [(_prot, _teff, _proterr, _tefferr, age_grid, outdir, bounds_error,
+              interp_method, n, age_scale, hyperparameters, N_grid)
+             for _prot, _teff in zip(Prots, Teffs, Prot_errs, Teff_errs)]
 
     N_tasks = len(tasks)
     print(f"Got N_tasks={N_tasks}...")

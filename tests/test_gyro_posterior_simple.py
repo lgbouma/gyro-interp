@@ -13,11 +13,11 @@ def test_gyro_posterior_simple():
     # check sun-like star near NGC-3532
     #
     age_grid = np.linspace(0, 2700, 501)
-    Teff = 5800
+    Teff, Teff_err = 5800, 50
     Prot = 5.1
 
     age_post = gyro_age_posterior(
-        Prot, Teff, age_grid=age_grid, verbose=False
+        Prot, Teff, Teff_err=Teff_err, age_grid=age_grid, verbose=False
     )
 
     r = given_grid_post_get_summary_statistics(age_grid, age_post)
@@ -35,7 +35,7 @@ def test_gyro_posterior_simple():
     Prot = 17
 
     age_post = gyro_age_posterior(
-        Prot, Teff, age_grid=age_grid, verbose=False
+        Prot, Teff, Teff_err=Teff_err, age_grid=age_grid, verbose=False
     )
 
     r = given_grid_post_get_summary_statistics(age_grid, age_post)
