@@ -414,7 +414,7 @@ def gyro_age_posterior(
 
 def _one_star_age_posterior_worker(task):
 
-    (Prot, Teff, Prot_err, Teff_err, age_grid, outdir, bounds_error,
+    (Prot, Teff, Prot_err, Teff_err, star_id, age_grid, outdir, bounds_error,
      interp_method, n, age_scale, parameters, N_grid) = task
 
     Protstr = f"{float(Prot):.4f}"
@@ -429,8 +429,13 @@ def _one_star_age_posterior_worker(task):
             replace("'","").replace(":","").replace(",","")
         )
 
+    if star_id is None:
+        sid = ''
+    else:
+        sid = f'{star_id}_'
+
     cachepath = os.path.join(
-        outdir, f"Prot{Protstr}_Teff{Teffstr}_{typestr}{paramstr}.csv"
+        outdir, f"{sid}Prot{Protstr}_Teff{Teffstr}_{typestr}{paramstr}.csv"
     )
     if not os.path.exists(cachepath):
         age_post = gyro_age_posterior(
@@ -527,11 +532,12 @@ def gyro_age_posterior_mcmc(
     #
     # calculate the individual posteriors for each set of population parameters
     #
+    star_id = None
     popn_parameter_list = _get_pop_samples(N_pop_samples)
 
-    tasks = [(Prot, Teff, Prot_err, Teff_err, age_grid, cachedir, bounds_error,
-              interp_method, n, age_scale, paramdict, N_grid) for paramdict in
-              popn_parameter_list]
+    tasks = [(Prot, Teff, Prot_err, Teff_err, star_id, age_grid, cachedir,
+              bounds_error, interp_method, n, age_scale, paramdict, N_grid)
+              for paramdict in popn_parameter_list]
 
     N_tasks = len(tasks)
     print(f"Got N_tasks={N_tasks}...")
@@ -583,19 +589,19 @@ def gyro_age_posterior_mcmc(
 
 def gyro_age_posterior_list(
     cache_id, Prots, Teffs, Prot_errs=None, Teff_errs=None,
-    age_grid=np.linspace(0, 3000, 500), N_grid='default',
+    star_ids=None, age_grid=np.linspace(0, 3000, 500), N_grid='default',
     bounds_error='4gyrlimit', interp_method='pchip_m67'
     ):
     """
     Given lists of rotation periods and effective temperatures, run them in
     parallel.  This functions as a thin wrapper to gyro_age_posterior assuming
-    default parameters.  The output posteriors will be cached to
-    `$LOCALDIR/gyrointerp/{cache_id}`.
+    default parameters.
 
     Args:
 
         cache_id (str):
-            string identifying the grid for cacheing
+            The output posteriors will be cached to
+            ``$LOCALDIR/gyrointerp/{cache_id}``.
 
         Prots (np.ndarray):
             1-D array of rotation periods
@@ -611,15 +617,26 @@ def gyro_age_posterior_list(
             1-D array of effective temperature uncertainties.  If None, assumes
             100K by default.
 
-    age_grid: as in gyro_age_posterior
+        star_ids (np.ndarray of strings):
+            Arbitrary strings naming your stars.  For example, if you give
+            "TIC1234567", posteriors will be written to CSV files with a
+            pattern matching
+            ``TIC1234567_ProtXX.XXXX_TeffYYYY.Y_limitgrid_defaultparameters.csv``.
+            If None, then the identifier is omitted.
     """
 
     assert len(Prots) == len(Teffs)
 
     if Prot_errs is None:
         Prot_errs = 0.01*Prots
+
     if Teff_errs is None:
         Teff_errs = 100
+
+    if star_ids is None:
+        star_ids = [None]*len(Prots)
+    else:
+        assert len(star_ids) == len(Prots)
 
     outdir = os.path.join(LOCALDIR, "gyrointerp")
     if not os.path.exists(outdir): os.mkdir(outdir)
@@ -631,10 +648,11 @@ def gyro_age_posterior_list(
     age_scale = "default"
     hyperparameters = "default"
 
-    tasks = [(_prot, _teff, _proterr, _tefferr, age_grid, outdir, bounds_error,
-              interp_method, n, age_scale, hyperparameters, N_grid)
-             for _prot, _teff, _proterr, _tefferr
-             in zip(Prots, Teffs, Prot_errs, Teff_errs)]
+    tasks = [(_prot, _teff, _proterr, _tefferr, _star_id, age_grid, outdir,
+              bounds_error, interp_method, n, age_scale, hyperparameters,
+              N_grid)
+             for _prot, _teff, _proterr, _tefferr, _star_id
+             in zip(Prots, Teffs, Prot_errs, Teff_errs, star_ids)]
 
     N_tasks = len(tasks)
     print(f"Got N_tasks={N_tasks}...")
