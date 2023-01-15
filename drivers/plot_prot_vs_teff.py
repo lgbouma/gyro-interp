@@ -8,6 +8,20 @@ if not os.path.exists(PLOTDIR):
     os.mkdir(PLOTDIR)
 outdir = PLOTDIR
 
+# figure 1b
+all_clusters = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+                 'Praesepe', 'NGC-6811']
+ap.plot_prot_vs_teff(
+    outdir, all_clusters
+)
+slow_seq_ages = [0.5*(300+670)]
+model_ids = ['α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811']
+for logy in [0, 1]:
+    ap.plot_prot_vs_teff(
+        outdir, all_clusters, slow_seq_ages=slow_seq_ages, model_ids=model_ids, logy=logy
+    )
+assert 0
+
 # figure 1a
 all_clusters1 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
                  'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
@@ -16,19 +30,6 @@ for logy in [0, 1]:
     ap.plot_prot_vs_teff(
         outdir, all_clusters1, slow_seq_ages=slow_seq_ages, logy=logy
     )
-
-# figure 1b
-all_clusters = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-                 'Praesepe', 'NGC-6811']
-ap.plot_prot_vs_teff(
-    outdir, all_clusters
-)
-slow_seq_ages = list(np.arange(100, 1100, 100))
-for logy in [0, 1]:
-    ap.plot_prot_vs_teff(
-        outdir, all_clusters, slow_seq_ages=slow_seq_ages, logy=logy
-    )
-assert 0
 
 # just models
 all_clusters1 = [None]

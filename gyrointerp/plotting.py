@@ -128,12 +128,13 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
         color = d[reference_cluster][1]
         label = d[reference_cluster][2]
         zorder = d[reference_cluster][3]
+        marker = d[reference_cluster][4]
 
         sel = df.flag_benchmark_period
 
         ax.scatter(
             df[sel].Teff_Curtis20, df[sel].Prot, color=color, alpha=1,
-            s=25, rasterized=False, label=label, marker='o', edgecolors='k',
+            s=25, rasterized=False, label=label, marker=marker, edgecolors='k',
             linewidths=0.3, zorder=zorder
         )
 
@@ -155,7 +156,7 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                 Teff, model_id, poly_order=poly_order
             )
             ax.plot(
-                Teff, Prot, color=color, linewidth=2, zorder=-1, alpha=0.9
+                Teff, Prot, color=color, linewidth=2, zorder=-1, alpha=0.7
             )
 
     if isinstance(slow_seq_ages, list):
@@ -576,11 +577,18 @@ def _plot_prot_vs_teff_residual(
 
         # Evalute the width of the "good" part of the residual
         sel_prot = (Prot_residual > -2) & (Prot_residual < 2)
+        sel_prot_slowoutlier = (Prot_residual >= 2)
+        sel_prot_fastoutlier = (Prot_residual <= -2)
         sel_teff = (Teff > sel_teff_range[0]) & (Teff < sel_teff_range[1])
         if tefflim_ss:
             sel = sel_teff & sel_prot
+            sel_slowoutlier = sel_teff & sel_prot_slowoutlier
+            sel_fastoutlier = sel_teff & sel_prot_fastoutlier
         else:
             sel = sel_prot
+            sel_slowoutlier = sel_prot_slowoutlier
+            sel_fastoutlier = sel_prot_fastoutlier
+
         _prot_good_chunk = Prot_residual[sel]
         N_good_chunk = len(_prot_good_chunk)
         N_outlier = len(Prot_residual[sel_teff & ~sel_prot])
@@ -617,9 +625,14 @@ def _plot_prot_vs_teff_residual(
             linewidths=0.3, zorder=zorder
         )
         ax.scatter(
-            Teff[~sel], Prot_residual[~sel], color=color, alpha=0.8, s=15,
-            rasterized=False, marker='s', edgecolors='k', linewidths=0.3,
-            zorder=zorder-1
+            Teff[sel_fastoutlier], Prot_residual[sel_fastoutlier], color=color,
+            alpha=0.8, s=15, rasterized=False, marker='s', edgecolors='k',
+            linewidths=0.3, zorder=zorder-1
+        )
+        ax.scatter(
+            Teff[sel_slowoutlier], Prot_residual[sel_slowoutlier], color=color,
+            alpha=0.8, s=15, rasterized=False, marker='X', edgecolors='k',
+            linewidths=0.3, zorder=zorder-1
         )
 
         if model_id in ['α Per', '120-Myr', '300-Myr']:

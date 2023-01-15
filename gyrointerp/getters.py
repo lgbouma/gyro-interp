@@ -81,19 +81,19 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     # prot/teff dataframe, RGB color, label, zorder
     z0 = 2
     d = {
-        'α Per': [df_aper, cmap[0], '80 Myr α Per', z0+12],
-        'Pleiades': [df_plei, cmap[1], '120 Myr Pleiades', z0+2],
-        'Blanco-1': [df_bla1, cmap[1], '120 Myr Blanco-1', z0+2],
-        'Psc-Eri': [df_psceri, cmap[1], '120 Myr Psc-Eri', z0+2],
-        'NGC-3532': [df_3532, cmap[2], '300 Myr NGC-3532', z0+4],
-        'Group-X':  [df_grpx, cmap[2], '300 Myr Group-X', z0+4],
-        'Praesepe': [df_prae, cmap[3], '670 Myr Praesepe', z0+6],
-        'NGC-6811': [df_6811, cmap[4], '1 Gyr NGC-6811', z0+8],
-        'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10],
-        'Ruprecht-147': [df_r147, cmap[5], '2.7 Gyr Rup-147', z0+10],
-        '120-Myr': [None, cmap[1], '', None],
-        '300-Myr': [None, cmap[2], '', None],
-        '2.6-Gyr': [None, cmap[5], '', None],
+        'α Per': [df_aper, cmap[0], '80 Myr α Per', z0+12, "o"],
+        'Pleiades': [df_plei, cmap[1], '120 Myr Pleiades', z0+2, "o"],
+        'Blanco-1': [df_bla1, cmap[1], '120 Myr Blanco-1', z0+2, "8"],
+        'Psc-Eri': [df_psceri, cmap[1], '120 Myr Psc-Eri', z0+2, "p"],
+        'NGC-3532': [df_3532, cmap[2], '300 Myr NGC-3532', z0+4, "o"],
+        'Group-X':  [df_grpx, cmap[2], '300 Myr Group-X', z0+4, "8"],
+        'Praesepe': [df_prae, cmap[3], '670 Myr Praesepe', z0+6, "o"],
+        'NGC-6811': [df_6811, cmap[4], '1 Gyr NGC-6811', z0+8, "o"],
+        'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10, "o"],
+        'Ruprecht-147': [df_r147, cmap[5], '2.7 Gyr Rup-147', z0+10, "o"],
+        '120-Myr': [None, cmap[1], '', None, None],
+        '300-Myr': [None, cmap[2], '', None, None],
+        '2.6-Gyr': [None, cmap[5], '', None, None],
     }
 
     return d
