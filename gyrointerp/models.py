@@ -57,7 +57,8 @@ def teff_zams(age, bounds_error='limit'):
 
     # linear interpolation
     spl = make_interp_spline(df['age'], np.log10(df['Teff']), k=1)
-    teff0 = 10**spl(np.log10(age*1e6))
+    with np.errstate(divide='ignore'):
+        teff0 = 10**spl(np.log10(age*1e6))
 
     max_teff = 10**spl(np.log10(80*1e6))
     min_teff = 10**spl(np.log10(1e9))

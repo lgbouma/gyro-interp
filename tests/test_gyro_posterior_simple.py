@@ -11,6 +11,7 @@ def test_gyro_posterior_simple():
 
     #
     # check sun-like star near NGC-3532
+    # NOTE: this is also a regression test from a case mentioned in the ms
     #
     age_grid = np.linspace(0, 2700, 501)
     Teff, Teff_err = 5800, 50
