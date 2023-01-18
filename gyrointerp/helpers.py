@@ -1,13 +1,28 @@
 """
 Reusable functions.
 
-    given_grid_post_get_summary_statistics
+    get_summary_statistics
+        given_grid_post_get_summary_statistics
     left_merge
     prepend_colstr
     given_dr2_get_dr3_dataframes
 """
 import os
 import numpy as np, pandas as pd
+
+def get_summary_statistics(age_grid, age_post, N=int(1e5)):
+    """
+    Given an age posterior over a grid, determine summary statistics (peak
+    location, +/-sigma intervals, etc).  Do this by sampling `N` times, with
+    replacement, from the posterior, weighting by the probability.
+
+    Returns:
+        dictionary containing the summary statistics.
+    """
+    return given_grid_post_get_summary_statistics(
+        age_grid, age_post, N=N
+    )
+
 
 def given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
     """
