@@ -1,12 +1,40 @@
 """
 Reusable functions.
 
-    get_summary_statistics
-        given_grid_post_get_summary_statistics
-    left_merge
-    prepend_colstr
-    given_dr2_get_dr3_dataframes
+    | get_summary_statistics
+    | given_grid_post_get_summary_statistics
+    | left_merge
+    | prepend_colstr
+    | given_dr2_get_dr3_dataframes
 """
+#############
+## LOGGING ##
+#############
+import logging
+from gyrointerp import log_sub, log_fmt, log_date_fmt
+
+DEBUG = False
+if DEBUG:
+    level = logging.DEBUG
+else:
+    level = logging.INFO
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(
+    level=level,
+    style=log_sub,
+    format=log_fmt,
+    datefmt=log_date_fmt,
+)
+
+LOGDEBUG = LOGGER.debug
+LOGINFO = LOGGER.info
+LOGWARNING = LOGGER.warning
+LOGERROR = LOGGER.error
+LOGEXCEPTION = LOGGER.exception
+
+#############
+## IMPORTS ##
+#############
 import os
 import numpy as np, pandas as pd
 
@@ -114,8 +142,8 @@ def given_dr2_get_dr3_dataframes(dr2_source_ids, runid_dr2, runid_dr3,
         given_dr2_sourceids_get_edr3_xmatch, given_source_ids_get_gaia_data
     )
 
-    print(42*'-')
-    print(runid_dr2)
+    LOGINFO(42*'-')
+    LOGINFO(runid_dr2)
 
     # Crossmatch from Gaia DR2->DR3.
     dr2_x_dr3_df = given_dr2_sourceids_get_edr3_xmatch(
@@ -134,12 +162,12 @@ def given_dr2_get_dr3_dataframes(dr2_source_ids, runid_dr2, runid_dr3,
             drop_duplicates(subset='dr2_source_id', keep='first')
     )
     s_dr3 = get_dr3_xm(dr2_x_dr3_df)
-    print(10*'-')
-    print(s_dr3.describe())
-    print(10*'-')
+    LOGINFO(10*'-')
+    LOGINFO(s_dr3.describe())
+    LOGINFO(10*'-')
     if len(s_dr3) != len(np.unique(dr2_source_ids)):
-        print('Got bad dr2<->dr3 match')
-        print(len(s_dr3), len(np.unique(dr2_source_ids)))
+        LOGINFO('Got bad dr2<->dr3 match')
+        LOGINFO(len(s_dr3), len(np.unique(dr2_source_ids)))
         import IPython; IPython.embed()
     assert len(s_dr3) == len(np.unique(dr2_source_ids))
 

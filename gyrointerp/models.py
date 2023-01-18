@@ -3,16 +3,44 @@ Functions to fit rotation-Teff sequences, or to quickly return the results of
 those fits (including their interpolations!)
 
 Contents:
-    reference_cluster_slow_sequence
-    slow_sequence
-    slow_sequence_residual
+    | reference_cluster_slow_sequence
+    | slow_sequence
+    | slow_sequence_residual
 
 Helper functions:
-    logistic
-    teff_zams
-    teff_0
-    g_lineardecay
+    | logistic
+    | teff_zams
+    | teff_0
+    | g_lineardecay
 """
+#############
+## LOGGING ##
+#############
+import logging
+from gyrointerp import log_sub, log_fmt, log_date_fmt
+
+DEBUG = False
+if DEBUG:
+    level = logging.DEBUG
+else:
+    level = logging.INFO
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(
+    level=level,
+    style=log_sub,
+    format=log_fmt,
+    datefmt=log_date_fmt,
+)
+
+LOGDEBUG = LOGGER.debug
+LOGINFO = LOGGER.info
+LOGWARNING = LOGGER.warning
+LOGERROR = LOGGER.error
+LOGEXCEPTION = LOGGER.exception
+
+#############
+## IMPORTS ##
+#############
 import os, pickle
 from gyrointerp.paths import DATADIR
 import pandas as pd, numpy as np
@@ -21,7 +49,6 @@ from os.path import join
 from copy import deepcopy
 
 from scipy.interpolate import interp1d, PchipInterpolator
-
 from scipy.stats import norm, uniform
 
 ###########
@@ -460,7 +487,7 @@ def slow_sequence(
         # if it were the age of the youngest reference cluster
         if age < reference_ages[0]:
             if verbose:
-                print("Warning! Star is younger than the youngest reference cluster.")
+                LOGWARNING("Warning! Star is younger than the youngest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
             elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
@@ -472,7 +499,7 @@ def slow_sequence(
         # if it were the age of the oldest reference cluster
         elif age > reference_ages[-1] and bounds_error != '4gyrlimit':
             if verbose:
-                print("Warning! Star is older than the oldest reference cluster.")
+                LOGWARNING("Warning! Star is older than the oldest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
             elif bounds_error == 'limit':
@@ -529,7 +556,7 @@ def slow_sequence(
 
             elif interp_method == "skumanich_vary_n":
                 if init_n is not None:
-                    print("Over-riding n in interp_method skumanich_vary_n")
+                    LOGINFO("Over-riding n in interp_method skumanich_vary_n")
                 n = np.log(P1/P0) / np.log(t1/t0)
                 fn = lambda age: P0 * (age/t0)**n
 
@@ -650,11 +677,11 @@ def reference_cluster_slow_sequence(
 
         with open(outpath, 'w') as file_handle:
             np.savetxt(file_handle, coeffs, fmt='%.18e')
-        print(f"Wrote {outpath}")
+        LOGINFO(f"Wrote {outpath}")
 
     else:
         if verbose:
-            print(f"Found {outpath}, loading...")
+            LOGINFO(f"Found {outpath}, loading...")
 
     coeffs = np.genfromtxt(outpath)
 

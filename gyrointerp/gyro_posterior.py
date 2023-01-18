@@ -10,6 +10,35 @@ Under-the-hood:
     | _get_pop_samples
     | _agethreaded_gyro_age_posterior
 """
+#############
+## LOGGING ##
+#############
+
+import logging
+from gyrointerp import log_sub, log_fmt, log_date_fmt
+
+DEBUG = False
+if DEBUG:
+    level = logging.DEBUG
+else:
+    level = logging.INFO
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(
+    level=level,
+    style=log_sub,
+    format=log_fmt,
+    datefmt=log_date_fmt,
+)
+
+LOGDEBUG = LOGGER.debug
+LOGINFO = LOGGER.info
+LOGWARNING = LOGGER.warning
+LOGERROR = LOGGER.error
+LOGEXCEPTION = LOGGER.exception
+
+#############
+## IMPORTS ##
+#############
 import os, pickle
 from glob import glob
 from gyrointerp.paths import DATADIR, LOCALDIR
@@ -17,8 +46,7 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from numpy import array as nparr
 from os.path import join
 import warnings
-
-from scipy.stats import norm, uniform
+from scipy.stats import norm
 
 from gyrointerp.models import slow_sequence_residual, slow_sequence
 from gyrointerp.age_scale import agedict
@@ -50,7 +78,7 @@ def _agethreaded_gyro_age_posterior(
 
     # print a warning - this functoin should rarely be used.
     # TODO: remove it entirely?
-    print(
+    LOGWARNING(
         "WRN! The speedup from _agethreaded_gyro_age_posterior is not good."
     )
     #
@@ -61,9 +89,6 @@ def _agethreaded_gyro_age_posterior(
 
     if Teff_err is None:
         Teff_err = 100
-
-    if N_grid < 512:
-        print("WARNING! N_grid must be >=512 to get converged results.")
 
     #
     # special return cases
@@ -147,8 +172,8 @@ def _gyro_age_posterior_worker(task):
     assert y_grid.ndim == 1
 
     if verbose:
-        print(age)
-        print(f"{datetime.now().isoformat()} begin 0")
+        LOGINFO(age)
+        LOGINFO(f"{datetime.now().isoformat()} begin 0")
 
     gaussian_Prots = []
 
@@ -164,8 +189,8 @@ def _gyro_age_posterior_worker(task):
     )
 
     if verbose:
-        print(f"{datetime.now().isoformat()} end 0")
-        print(f"{datetime.now().isoformat()} begin 1")
+        LOGINFO(f"{datetime.now().isoformat()} end 0")
+        LOGINFO(f"{datetime.now().isoformat()} begin 1")
 
     # probability of a given residual (data-model) over dimensions of
     # y_grid X Teff_grid
@@ -176,15 +201,15 @@ def _gyro_age_posterior_worker(task):
     )
 
     if verbose:
-        print(f"{datetime.now().isoformat()} end 1")
-        print(f"{datetime.now().isoformat()} begin 2")
+        LOGINFO(f"{datetime.now().isoformat()} end 1")
+        LOGINFO(f"{datetime.now().isoformat()} begin 2")
 
     integrand = resid_y_Teff * gaussian_Prots * gaussian_teff[None, :]
 
     p_age = np.trapz(np.trapz(integrand, teff_grid, axis=1), y_grid)
 
     if verbose:
-        print(f"{datetime.now().isoformat()} end 2")
+        LOGINFO(f"{datetime.now().isoformat()} end 2")
 
     return p_age
 
@@ -298,13 +323,13 @@ def gyro_age_posterior(
         Teff_err = 100
 
     if Teff_err < 50:
-        print(
+        LOGWARNING(
             "WARNING: Teff uncertainties below 50 K are probably overly "
             "optimistic. Only do this if you have good reason to."
         )
 
     if Prot_err < 0.03:
-        print(
+        LOGWARNING(
             "WARNING: imposing period uncertainty floor of 0.03d "
             "The purpose of this floor is to prevent N_grid "
             "from growing too large.  This is justified "
@@ -330,7 +355,7 @@ def gyro_age_posterior(
                 f"{datetime.now().isoformat()} "
                 f"Prot {Prot}, Teff {Teff}, N_grid {N_grid}"
             )
-            print(msg)
+            LOGINFO(msg)
 
     # Numerical tests for convergence (/tests/test_gyro_posterior_grid.py)
     # indicate we can go a little below the default grid resolution and still
@@ -450,19 +475,19 @@ def _one_star_age_posterior_worker(task):
         })
         outpath = cachepath.replace(".csv", "_posterior.csv")
         df.to_csv(outpath, index=False)
-        print(f"Wrote {outpath}")
+        LOGINFO(f"Wrote {outpath}")
 
         d = given_grid_post_get_summary_statistics(age_grid, age_post)
         d['Prot'] = Prot
         d['Teff'] = Teff
         df = pd.DataFrame(d, index=[0])
         df.to_csv(cachepath, index=False)
-        print(f"Wrote {cachepath}")
+        LOGINFO(f"Wrote {cachepath}")
 
         return cachepath
 
     else:
-        print(f"Found {cachepath}")
+        LOGINFO(f"Found {cachepath}")
         return cachepath
 
 
@@ -540,8 +565,8 @@ def gyro_age_posterior_mcmc(
               for paramdict in popn_parameter_list]
 
     N_tasks = len(tasks)
-    print(f"Got N_tasks={N_tasks}...")
-    print(f"{datetime.now().isoformat()} begin")
+    LOGINFO(f"Got N_tasks={N_tasks}...")
+    LOGINFO(f"{datetime.now().isoformat()} begin")
 
     nworkers = mp.cpu_count()
     maxworkertasks= 1000
@@ -551,21 +576,21 @@ def gyro_age_posterior_mcmc(
     pool.close()
     pool.join()
 
-    print(f"{datetime.now().isoformat()} end")
+    LOGINFO(f"{datetime.now().isoformat()} end")
 
     #
     # draw the samples, and numerically construct the final pdf.
     #
     cachepaths = [c.replace(".csv", "_posterior.csv") for c in cachepaths]
 
-    print(42*'-')
-    print(f"Got {len(cachepaths)} cachepaths (from {len(tasks)})...")
-    print(42*'-')
+    LOGINFO(42*'-')
+    LOGINFO(f"Got {len(cachepaths)} cachepaths (from {len(tasks)})...")
+    LOGINFO(42*'-')
 
     if len(cachepaths) < len(tasks):
-        print(42*'-')
-        print('WARNING! Got fewer outputs than expected.')
-        print(42*'-')
+        LOGINFO(42*'-')
+        LOGINFO('WARNING! Got fewer outputs than expected.')
+        LOGINFO(42*'-')
 
     age_samples = []
     for cachepath in cachepaths:
@@ -655,8 +680,8 @@ def gyro_age_posterior_list(
              in zip(Prots, Teffs, Prot_errs, Teff_errs, star_ids)]
 
     N_tasks = len(tasks)
-    print(f"Got N_tasks={N_tasks}...")
-    print(f"{datetime.now().isoformat()} begin")
+    LOGINFO(f"Got N_tasks={N_tasks}...")
+    LOGINFO(f"{datetime.now().isoformat()} begin")
 
     nworkers = mp.cpu_count()
 
@@ -669,7 +694,7 @@ def gyro_age_posterior_list(
     pool.close()
     pool.join()
 
-    print(f"{datetime.now().isoformat()} end")
+    LOGINFO(f"{datetime.now().isoformat()} end")
 
 
 if __name__ == "__main__":

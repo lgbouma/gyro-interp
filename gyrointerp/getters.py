@@ -17,6 +17,34 @@ Implemented:
     | get_NGC6819
     | get_Ruprecht147
 """
+#############
+## LOGGING ##
+#############
+import logging
+from gyrointerp import log_sub, log_fmt, log_date_fmt
+
+DEBUG = False
+if DEBUG:
+    level = logging.DEBUG
+else:
+    level = logging.INFO
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(
+    level=level,
+    style=log_sub,
+    format=log_fmt,
+    datefmt=log_date_fmt,
+)
+
+LOGDEBUG = LOGGER.debug
+LOGINFO = LOGGER.info
+LOGWARNING = LOGGER.warning
+LOGERROR = LOGGER.error
+LOGEXCEPTION = LOGGER.exception
+
+#############
+## IMPORTS ##
+#############
 import os
 import numpy as np, pandas as pd
 from astropy.table import Table
@@ -110,7 +138,7 @@ def get_NGC6819(overwrite=0):
     cachepath = os.path.join(outdir, "Curtis_2020_ngc6819_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -197,7 +225,7 @@ def get_NGC6819(overwrite=0):
     )
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -221,7 +249,7 @@ def get_Ruprecht147(overwrite=0):
     cachepath = os.path.join(outdir, "Curtis_2020_rup147_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -312,7 +340,7 @@ def get_Ruprecht147(overwrite=0):
 
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -336,7 +364,7 @@ def get_NGC6811(overwrite=0):
     cachepath = os.path.join(outdir, "Curtis_2019_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -414,7 +442,7 @@ def get_NGC6811(overwrite=0):
             f'versus bp_rp, and save to {rverror_outliercsv}\n'
         )
         errmsg += 42*'-'
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError(errmsg)
 
     assert os.path.exists(camd_outliercsv)
@@ -460,7 +488,7 @@ def get_NGC6811(overwrite=0):
     mdf = mdf.rename({"Per":"Prot"}, axis='columns')
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -487,7 +515,7 @@ def get_Blanco1(overwrite=0):
     cachepath = os.path.join(outdir, f"{authoryr}_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     csvpath = os.path.join(DATADIR, "literature",
@@ -559,7 +587,7 @@ def get_Blanco1(overwrite=0):
             f'versus bp_rp, and save to {rverror_outliercsv}\n'
         )
         errmsg += 42*'-'
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError(errmsg)
 
     assert os.path.exists(camd_outliercsv)
@@ -603,7 +631,7 @@ def get_Blanco1(overwrite=0):
     mdf = mdf.rename({"P_adopt": "Prot"}, axis='columns')
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -627,7 +655,7 @@ def get_Pleiades(overwrite=0):
     cachepath = os.path.join(outdir, "Rebull_2016_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -670,8 +698,8 @@ def get_Pleiades(overwrite=0):
     mdf = left_merge(df, epic_df, 'EPIC', 'epic_number')
 
     N_missing = len(mdf[pd.isnull(mdf.dr2_source_id)])
-    print(f'Missing {N_missing}/{len(df)} in the Rebull16->GDR2 crossmatch.')
-    print('Dropping them!')
+    LOGINFO(f'Missing {N_missing}/{len(df)} in the Rebull16->GDR2 crossmatch.')
+    LOGINFO('Dropping them!')
 
     mdf = mdf[~pd.isnull(mdf.dr2_source_id)]
     mdf['dr2_source_id'] = mdf.dr2_source_id.astype(str)
@@ -744,7 +772,7 @@ def get_Pleiades(overwrite=0):
             f'versus bp_rp, and save to {rverror_outliercsv}\n'
         )
         errmsg += 42*'-'
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError(errmsg)
 
     assert os.path.exists(camd_outliercsv)
@@ -824,7 +852,7 @@ def get_Pleiades(overwrite=0):
     )
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -848,7 +876,7 @@ def get_NGC3532(overwrite=0):
     cachepath = os.path.join(outdir, "Fritzewski_2021_X_DR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -912,12 +940,12 @@ def get_NGC3532(overwrite=0):
     )
     if not os.path.exists(tempcsv):
         mdf.to_csv(tempcsv, index=False)
-        print(42*'-')
-        print(f'Wrote {tempcsv}.  Open in glue, and manually select CAMD '
+        LOGINFO(42*'-')
+        LOGINFO(f'Wrote {tempcsv}.  Open in glue, and manually select CAMD '
               'outliers in M_G vs bp_rp, g_rp, bp_g, V-Ks_0, and write '
               'to {camd_outliercsv}.  Do the same in radial_velocity_error '
               'versus bp_rp, and save to {rverror_outliercsv}')
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError
 
     assert os.path.exists(camd_outliercsv)
@@ -973,7 +1001,7 @@ def get_NGC3532(overwrite=0):
     )
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -986,7 +1014,7 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
     cachepath = os.path.join(outdir, "Rampalli_2021_X_DR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     table_path = os.path.join(DATADIR, "literature",
@@ -1059,9 +1087,9 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
             drop_duplicates(subset='dr3_source_id', keep='first')
     )
     s_dr2 = get_dr2_xm(dr2_x_dr3_df)
-    print(10*'-')
-    print(s_dr2.describe())
-    print(10*'-')
+    LOGINFO(10*'-')
+    LOGINFO(s_dr2.describe())
+    LOGINFO(10*'-')
 
     dr2_source_ids = np.array(s_dr2.dr2_source_id).astype(np.int64)
     gcdf = given_source_ids_get_gaia_data(
@@ -1125,12 +1153,12 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
     )
     if not os.path.exists(tempcsv):
         mdf.to_csv(tempcsv, index=False)
-        print(42*'-')
-        print(f'Wrote {tempcsv}.  Open in glue, and manually select CAMD '
+        LOGINFO(42*'-')
+        LOGINFO(f'Wrote {tempcsv}.  Open in glue, and manually select CAMD '
               'outliers in M_G vs bp_rp, g_rp, bp_g, V-Ks_0, and write '
               'to {camd_outliercsv}.  Do the same in radial_velocity_error '
               'versus bp_rp, and save to {rverror_outliercsv}')
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError
 
     assert os.path.exists(camd_outliercsv)
@@ -1193,7 +1221,7 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
     mdf['dr2_source_id'] = mdf.dr2_source_id.astype(str)
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -1219,7 +1247,7 @@ def get_PscEri(overwrite=0):
     cachepath = os.path.join(outdir, f"{authoryr}_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -1295,7 +1323,7 @@ def get_PscEri(overwrite=0):
             f'versus bp_rp, and save to {rverror_outliercsv}\n'
         )
         errmsg += 42*'-'
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError(errmsg)
 
     assert os.path.exists(camd_outliercsv)
@@ -1335,7 +1363,7 @@ def get_PscEri(overwrite=0):
     )
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -1360,7 +1388,7 @@ def get_GroupX(overwrite=0):
     cachepath = os.path.join(outdir, "Messina_2022_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     fitspath = os.path.join(DATADIR, "literature",
@@ -1375,7 +1403,7 @@ def get_GroupX(overwrite=0):
     N_stars = len(tic_ids)
     from astrobase.services.identifiers import tic_to_gaiadr2
     for ix, tic_id in enumerate(tic_ids):
-        print(f"{ix}/{N_stars}...")
+        LOGINFO(f"{ix}/{N_stars}...")
         dr2_source_ids.append(tic_to_gaiadr2(tic_id))
     assert len(dr2_source_ids) == len(tic_ids)
 
@@ -1454,7 +1482,7 @@ def get_GroupX(overwrite=0):
             f'versus bp_rp, and save to {rverror_outliercsv}\n'
         )
         errmsg += 42*'-'
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError(errmsg)
 
     assert os.path.exists(camd_outliercsv)
@@ -1502,7 +1530,7 @@ def get_GroupX(overwrite=0):
     mdf = mdf.rename({"Per":"Prot"}, axis='columns')
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf
 
@@ -1547,7 +1575,7 @@ def get_alphaPer(overwrite=0):
 
     df['flag_benchmark_period'] = df['flag_pass_author_quality']
 
-    print(f"Found {cachepath}; returning.")
+    LOGINFO(f"Found {cachepath}; returning.")
     return df
 
 
@@ -1572,7 +1600,7 @@ def get_alphaPer_construct(overwrite=0):
     cachepath = os.path.join(outdir, f"{authoryr}_X_GDR3_supplemented.csv")
 
     if os.path.exists(cachepath) and not overwrite:
-        print(f"Found {cachepath}, and not overwrite; returning.")
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
         return pd.read_csv(cachepath)
 
     csvpath = os.path.join(DATADIR, "literature",
@@ -1661,7 +1689,7 @@ def get_alphaPer_construct(overwrite=0):
             f'versus bp_rp, and save to {rverror_outliercsv}\n'
         )
         errmsg += 42*'-'
-        print(42*'-')
+        LOGINFO(42*'-')
         raise AssertionError(errmsg)
 
     assert os.path.exists(camd_outliercsv)
@@ -1699,6 +1727,6 @@ def get_alphaPer_construct(overwrite=0):
     mdf = mdf.drop(['Unamed: 0'], axis='columns')
 
     mdf.to_csv(cachepath, index=False)
-    print(f"Wrote {cachepath}")
+    LOGINFO(f"Wrote {cachepath}")
 
     return mdf

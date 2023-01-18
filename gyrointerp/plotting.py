@@ -1,26 +1,54 @@
 """
-Catch-all file for plotting scripts.  Contents:
+Catch-all file for plotting scripts.  Some of these plots are included in the
+gyro-interp manuscript.  Contents:
 
-    plot_prot_vs_teff
-    plot_prot_vs_teff_residual
-    plot_sub_praesepe_selection_cut
-    plot_slow_sequence_residual
-    plot_age_posterior (deprecated)
-    plot_age_posteriors
-    plot_cdf_fast_slow_ratio
-    plot_data_vs_model_prot
-    plot_fit_gyro_model
-    plot_empirical_limits_of_gyrochronology
-    plot_n_vs_teff_vs_time
-    plot_prot_vs_time_fixed_teff
+    | plot_prot_vs_teff
+    | plot_prot_vs_teff_residual
+    | plot_sub_praesepe_selection_cut
+    | plot_slow_sequence_residual
+    | plot_age_posteriors
+    | plot_cdf_fast_slow_ratio
+    | plot_data_vs_model_prot
+    | plot_fit_gyro_model
+    | plot_empirical_limits_of_gyrochronology
+    | plot_n_vs_teff_vs_time
+    | plot_prot_vs_time_fixed_teff
 
 Helpers:
-    _given_ax_append_spectral_types
+    | _given_ax_append_spectral_types
 
-    Sub-plot makers, to prevent code duplication:
-        _plot_slow_sequence_residual
-        _plot_prot_vs_teff_residual
+Sub-plot makers, to prevent code duplication:
+    | _plot_slow_sequence_residual
+    | _plot_prot_vs_teff_residual
 """
+#############
+## LOGGING ##
+#############
+import logging
+from gyrointerp import log_sub, log_fmt, log_date_fmt
+
+DEBUG = False
+if DEBUG:
+    level = logging.DEBUG
+else:
+    level = logging.INFO
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(
+    level=level,
+    style=log_sub,
+    format=log_fmt,
+    datefmt=log_date_fmt,
+)
+
+LOGDEBUG = LOGGER.debug
+LOGINFO = LOGGER.info
+LOGWARNING = LOGGER.warning
+LOGERROR = LOGGER.error
+LOGEXCEPTION = LOGGER.exception
+
+#############
+## IMPORTS ##
+#############
 import os, pickle
 from glob import glob
 from os.path import join
@@ -34,8 +62,6 @@ from matplotlib.colors import LogNorm, Normalize
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.ticker import ScalarFormatter
 from matplotlib.lines import Line2D
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 from numpy import array as nparr
@@ -69,8 +95,8 @@ def _given_ax_append_spectral_types(
     sptypes, xtickvals = getter(
         _sptypes
     )
-    print(sptypes)
-    print(xtickvals)
+    LOGINFO(sptypes)
+    LOGINFO(xtickvals)
 
     xvals = np.linspace(min(xlim), max(xlim), 100)
     tax.plot(xvals, np.ones_like(xvals), c='k', lw=0) # hidden, but fixes axis.
@@ -509,7 +535,7 @@ def plot_cdf_fast_slow_ratio(
         csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
                                f'{model_id}_cdf_fast_slow_ratio_data{ib}.csv')
         outdf.to_csv(csvpath, index=False)
-        print(f"Wrote {csvpath}")
+        LOGINFO(f"Wrote {csvpath}")
 
         ix += 1
 
@@ -606,7 +632,7 @@ def _plot_prot_vs_teff_residual(
             f'Nnotconverged={N_tot_not_sel_teff}.\n'
             f'std_Prot: {std_good_chunk:.3f} d,  mad_good_chunk: {mad_good_chunk:.3f} d.'
         )
-        print(msg)
+        LOGINFO(msg)
 
         age_txt = " ".join(label.split(" ")[:-1])
         if tefflim_ss:
@@ -865,7 +891,7 @@ def plot_data_vs_model_prot(
         sigma_period = 0.51
         for ix in range(N_to_show):
             if ix % 8 == 0:
-                print(age, ix)
+                LOGINFO(age, ix)
             sample = sel_samples[ix, :]
             #a1, y_g, logk0, logk1, logf = theta
             popn_parameters = {
@@ -957,7 +983,7 @@ def _plot_slow_sequence_residual(
             f'r_obs = {num}/{denom} = {r_obs:.2f}. '
             f'r_model = {r_model:.2f}. '
         )
-        print(msg)
+        LOGINFO(msg)
 
     resid_Teff = np.trapz(resid_y_Teff, y_grid, axis=0)
     resid_Teffs.append(resid_Teff)
@@ -1245,7 +1271,7 @@ def plot_age_posteriors(
                 )
                 df['age_post_mcmc'] = age_post_mcmc
             df.to_csv(cachepath)
-            print(f"Wrote {cachepath}")
+            LOGINFO(f"Wrote {cachepath}")
 
         df = pd.read_csv(cachepath)
         age_grid = np.array(df.age_grid)
@@ -1422,12 +1448,12 @@ def plot_fit_gyro_model(outdir, modelid):
     df['logk1'] = np.log(df.k1)
     df = df.drop(['k1'], axis='columns')
 
-    print(df.sort_values(by='chi_sq_red').head(n=20))
+    LOGINFO(df.sort_values(by='chi_sq_red').head(n=20))
 
     map_row = df.sort_values(by='chi_sq_red').head(n=1)
     outpath = os.path.join(outdir, f"map_row_{modelid}.csv")
     map_row.to_csv(outpath, index=False)
-    print(f"Wrote {outpath}")
+    LOGINFO(f"Wrote {outpath}")
 
     vmin = np.nanmin(df.chi_sq_red)
 
@@ -1480,12 +1506,12 @@ def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
     df['logk1'] = np.log(df.k1)
     df = df.drop(['k1'], axis='columns')
 
-    print(df.sort_values(by='chi_sq_red').head(n=20))
+    LOGINFO(df.sort_values(by='chi_sq_red').head(n=20))
 
     map_row = df.sort_values(by='chi_sq_red').head(n=1)
     outpath = os.path.join(outdir, f"map_row_{modelid}.csv")
     map_row.to_csv(outpath, index=False)
-    print(f"Wrote {outpath}")
+    LOGINFO(f"Wrote {outpath}")
 
     vmin = np.nanmin(df.chi_sq_red)
 
@@ -1575,7 +1601,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale, interp_method,
                 if len(_p1) > 0:
                     p1sig[ix, iy] = _p1
                 else:
-                    print(f"ix: {ix}, iy {iy}, Teff {x}, Prot {y} got nan")
+                    LOGINFO(f"ix: {ix}, iy {iy}, Teff {x}, Prot {y} got nan")
                     p1sig[ix, iy] = np.nan
 
                 _m1 = df.loc[sel, '-1sigmapct']
@@ -1666,8 +1692,8 @@ def plot_empirical_limits_of_gyrochronology(
             f"abs 95th: {np.nanpercentile(np.abs(dmedian),95):.3f}\n"
             f"abs 99th: {np.nanpercentile(np.abs(dmedian),99):.3f}\n"
         )
-        print(42*'-')
-        print(msg)
+        LOGINFO(42*'-')
+        LOGINFO(msg)
 
     # Make plot
     set_style("science")

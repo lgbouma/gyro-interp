@@ -1,6 +1,6 @@
 """
 Contents:
-    get_chi_sq_red
+    | get_chi_sq_red
 """
 import numpy as np, pandas as pd
 import os
