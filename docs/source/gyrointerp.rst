@@ -1,8 +1,29 @@
 gyrointerp package
 ==================
 
-Submodules
-----------
+gyrointerp.gyro\_posterior module
+---------------------------------
+
+.. automodule:: gyrointerp.gyro_posterior
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gyrointerp.models module
+------------------------
+
+.. automodule:: gyrointerp.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gyrointerp.getters module
+-------------------------
+
+.. automodule:: gyrointerp.getters
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 gyrointerp.age\_scale module
 ----------------------------
@@ -20,42 +41,10 @@ gyrointerp.extinctionpriors module
    :undoc-members:
    :show-inheritance:
 
-gyrointerp.getters module
--------------------------
-
-.. automodule:: gyrointerp.getters
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gyrointerp.gyro\_posterior module
----------------------------------
-
-.. automodule:: gyrointerp.gyro_posterior
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 gyrointerp.helpers module
 -------------------------
 
 .. automodule:: gyrointerp.helpers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gyrointerp.models module
-------------------------
-
-.. automodule:: gyrointerp.models
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gyrointerp.paths module
------------------------
-
-.. automodule:: gyrointerp.paths
    :members:
    :undoc-members:
    :show-inheritance:
@@ -72,14 +61,6 @@ gyrointerp.teff module
 ----------------------
 
 .. automodule:: gyrointerp.teff
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: gyrointerp
    :members:
    :undoc-members:
    :show-inheritance:

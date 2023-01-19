@@ -1,12 +1,15 @@
 """
 These functions return the rotation periods and effective temperatures for
 single members of benchmark open clusters.  These are the functions used to
-acquire and clean the data behind Figure 1 of BPH23.
+acquire and clean the data behind Figure 1 of BPH23.  Generally, most users
+will want to just download the data from the paper, rather than using these
+functions.
 
-Meta-wrapper:
+Get all available cluster data, in α Per, Pleiades, Blanco-1, Psc-Eri,
+NGC-3532, Group-X, Praesepe, NGC-6811, NGC-6819, and Ruprecht-147:
     | _get_cluster_Prot_Teff_data
 
-Implemented:
+Get and clean individual cluster data:
     | get_alphaPer
     | get_Pleiades
     | get_Blanco1
@@ -1555,7 +1558,7 @@ def get_alphaPer(overwrite=0):
 
 def get_alphaPer_construct(overwrite=0):
     """
-    Constructor for `get_alphaPer`
+    Constructor for ``getters.get_alphaPer``
     """
 
     cluster = 'alpha-per'

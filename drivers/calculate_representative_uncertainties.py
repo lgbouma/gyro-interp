@@ -6,7 +6,7 @@ abstract, and throughout the manuscript.  Writes to stdout.
 import numpy as np
 from gyrointerp import gyro_age_posterior
 from gyrointerp.models import slow_sequence
-from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.helpers import get_summary_statistics
 
 # Sun-like stars
 age_grid = np.linspace(0, 2600, 100)
@@ -20,6 +20,6 @@ for Teff in Teffs:
         age_posterior = gyro_age_posterior(
           Prot, Teff, Prot_err=Prot_err, Teff_err=Teff_err, age_grid=age_grid
         )
-        d = given_grid_post_get_summary_statistics(age_grid, age_posterior)
+        d = get_summary_statistics(age_grid, age_posterior)
         print(f"Teff: {Teff}, age: {age} Myr, med: {d['median']:.1f}, "+
               f"+1sig%: {100*d['+1sigmapct']:.1f}%, -1sig%: {100*d['-1sigmapct']:.1f}%")

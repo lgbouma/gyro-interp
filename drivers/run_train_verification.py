@@ -8,7 +8,7 @@ import os
 import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from gyrointerp.getters import _get_cluster_Prot_Teff_data
 from gyrointerp.gyro_posterior import gyro_age_posterior_list
-from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.helpers import get_summary_statistics
 from glob import glob
 from aesthetic.plot import set_style, savefig
 from gyrointerp.paths import LOCALDIR, RESULTSDIR
@@ -126,7 +126,7 @@ def plot_posteriors():
             ax.plot(age_grid, 1e3*final_post, alpha=1,
                     zorder=zorder+1, lw=0.3, c='k')
 
-        d = given_grid_post_get_summary_statistics(age_grid, final_post)
+        d = get_summary_statistics(age_grid, final_post)
         print(d)
         summaries.append(d)
 

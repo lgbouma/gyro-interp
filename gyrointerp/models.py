@@ -1,17 +1,15 @@
 """
-Functions to fit rotation-Teff sequences, or to quickly return the results of
-those fits (including their interpolations!)
+Functions to fit rotation versus effective temperature sequences, or to quickly
+return the results of those fits (including their interpolations!)
 
 Contents:
-    | reference_cluster_slow_sequence
-    | slow_sequence
-    | slow_sequence_residual
+    | ``reference_cluster_slow_sequence``
+    | ``slow_sequence``
+    | ``slow_sequence_residual``
 
 Helper functions:
-    | logistic
-    | teff_zams
-    | teff_0
-    | g_lineardecay
+    | ``teff_zams``
+    | ``g_lineardecay``
 """
 #############
 ## LOGGING ##
@@ -54,22 +52,12 @@ from scipy.stats import norm, uniform
 ###########
 # helpers #
 ###########
-def logistic(x, x0, L=1, k=0.1):
-    # larger k makes the cutoff sharper
-    num = L
-    denom = 1 + np.exp(-k * (x-x0))
-    return num / denom
-
-
 def teff_zams(age, bounds_error='limit'):
     """
     Physics-informed MIST effective temperature for the effective temperature a
-    star has when it arrives on the ZAMS.
-
-    Defined for age from 80 to 1000 Myr.  If `bounds_error=='limit'`, then set
-    as whatever the lowest and highest values are.
-
-    Tested at /tests/plot_teff_cuts.py
+    star has when it arrives on the ZAMS.  Changes over 80 to 1000 Myr (the
+    floor beyond 1000 Myr is well below the 3800 K cool limit of BPH23).  For a
+    test, see ``/tests/plot_teff_cuts.py``.
     """
     if isinstance(age, (float,int)):
         age = np.array([age])
@@ -100,7 +88,16 @@ def teff_zams(age, bounds_error='limit'):
     return teff0
 
 
-def teff_0(age, bounds_error='4gyrlimit'):
+def _logistic(x, x0, L=1, k=0.1):
+    """
+    Logistic function; larger k makes the cutoff sharper
+    """
+    num = L
+    denom = 1 + np.exp(-k * (x-x0))
+    return num / denom
+
+
+def _teff_0(age, bounds_error='4gyrlimit'):
     """
     Naive, by-eye midpoint for how the slow sequence taper moves with age.
     Defined for age from 120 to 1000 Myr.  If `bounds_error=='limit'`, then set
@@ -128,13 +125,13 @@ def teff_0(age, bounds_error='4gyrlimit'):
     return teff0
 
 
-def g_lineardecay(age, bounds_error='4gyrlimit', y0=1/2):
+def g_lineardecay(age, bounds_error='4gyrlimit', y_g=1/2):
     """
-    How the third uniform component amplitude from slow_sequence_residual
-    decreases with age Full amplitude at 120 Myr.  `y0` amplitude by 300 Myr
-    (eg. 1/2, 1/4, 1/6).
-    Decreasing linearly thereafter, and floor at zero.  Defined for age from
-    120 to 1000 Myr.
+    Function *g(t)* from BPH23 defining the linear rate at which the uniform
+    component amplitude from ``models.slow_sequence_residual`` decreases with
+    age.  Unity at <=120 Myr, decreasing linearly to  `y_g` by 300 Myr (eg.
+    1/2, 1/4, 1/6).  Decreases linearly thereafter, and once it reaches zero,
+    it stays at zero.
     """
 
     if isinstance(age, (float,int)):
@@ -142,7 +139,7 @@ def g_lineardecay(age, bounds_error='4gyrlimit', y0=1/2):
 
     # units: 1/Myr
     y1 = 1
-    slope = (y1 - y0) / (300 - 120)
+    slope = (y1 - y_g) / (300 - 120)
     c = y1*1.
 
     c_uniform = -(age-120) * slope + c
@@ -178,52 +175,56 @@ def slow_sequence_residual(
     """
     Given an effective temperature and an age, return the 2-D distribution of
     residuals around and underneath the slow sequence, sampled onto grids of
-    "y_grid" X "teff_grid", where `y_grid` is the residual of (rotation period
-    data - model).
+    *y_grid* X *teff_grid*, where *y_grid* is the residual of (rotation period
+    data - mean gyrochronal model).  This is Equation 7 of BPH23.
 
-    This model for the residual has a choice between two or three components:
+    The two components of the residual are:
 
-        * a gaussian in "y_grid" , with an age-varying cutoff in Teff, imposed
-        as a logistic taper.
+        * a gaussian in *y_grid* , with an age-varying cutoff in Teff
+          (``teff_zams``), imposed as a logistic taper.
 
         * an age-varying and Teff-varying uniform distribution, multiplied by
-        the inverse of the gaussian's taper (but with independent scale
-        length), and then truncated to ensure that stars rotate faster than
-        zero days, and to ensure that we model only the fast sequence.  This
-        uniform distribution is also tapered by a logistic function at the
-        "slow" end to yield a smoother transition to the gaussian.
+          the inverse of the gaussian's taper (but with independent scale
+          length), and then truncated to ensure that stars rotate faster than
+          zero days, and to ensure that we model only the fast sequence.  This
+          uniform distribution is also tapered by a logistic function at the
+          "slow" end to yield a smoother transition to the gaussian.
 
     Args:
-        y_grid, teff_grid, poly_order, reference_model_ids, reference_ages:
-            self-explanatory, except for `y_grid`, which was defined further up
-            in the docstring.
+        teff_grid (np.ndarray):
+            As in ``models.slow_sequence``.
 
-        bounds_error : str
-            "nan", "limit" or "4gyrlimit".  Extrapolation behaviors are as follows.
-            If "limit", return the limiting rotation period at the closest
-            cluster given in ``reference_model_ids``.  If "4gyrlimit",
-            extrapolate out to 4 Gyr based on the ``reference_model_ids`` and
-            the adopted interpolation method, regardless of where they
-            truncate.  Past 4Gyr, take the same behavior as "limit".  If "nan",
-            ages above or below the minimum reference age return nans
+        y_grid (np.ndarray):
+            A grid over the residual of (rotation period - mean gyrochronal
+            model).
 
-        interp_method : str
-            Implemented interpolation methods include "skumanich_vary_n",
-            "alt", "diff", "skumanich_fix_n_0.XX", "1d_linear", "1d_slinear",
-            "1d_quadratic", "1d_pchip", and "pchip_m67".  The latter is the
-            default method, because it yields evolution of rotation periods in
-            time that are smooth and by design fit the cluster data from the
-            age of alpha-Per through M67.  Unless you know what you are doing,
-            "pchip_m67" is recommended".  "1d_linear", "1d_slinear", and
-            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
-            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
+        poly_order (int):
+            As in ``models.slow_sequence``.
 
-        popn_parameters: (str) "default", or (dict) containing the
-        population-level free parameters.  Keys of "a0", "a1", "k0", "k1",
-        "y_g", "l_hidden", and "k_hidden" must all be specified.
+        reference_model_ids (list):
+            As in ``models.slow_sequence``.
+
+        reference_ages (list):
+            As in ``models.slow_sequence``.
+
+        interp_method (str):
+            As in ``models.slow_sequence``.
+
+        bounds_error (str):
+            As in ``models.slow_sequence``.
+
+        popn_parameters (str or dict):
+            "default", or a dict containing the population-level free
+            parameters.  Keys of "a0", "a1", "k0", "k1", "y_g", "l_hidden", and
+            "k_hidden" must all be specified.
 
     Returns:
-        resid_y_Teff: 2d array with dimension (N_y_grid x N_teff_grid)
+
+        np.ndarray : resid_y_Teff
+
+            2d array with dimension (N_y_grid x N_teff_grid), containing the
+            probability distribution of the residual over the dimensions of *y*
+            and *Teff*.
     """
 
     assert len(reference_ages) == len(reference_model_ids)
@@ -273,12 +274,12 @@ def slow_sequence_residual(
 
     # Add the tapering cutoff over a Teff grid using a logistic function.
     # Its midpoint is a function of time.  There are two implemented choices:
-    # teff_0 and teff_zams.  teff_0 is defined s.t. at 120 Myr it is 4500 K.
+    # _teff_0 and teff_zams.  _teff_0 is defined s.t. at 120 Myr it is 4500 K.
     # By 300 Myr it is 4000 K, and at older times it goes below 3800 K.  The
     # alternative teff_zams is more physics-inspired -- at any given time, it
     # is the effective temperature of the lowest-mass star that has just
     # arrived on the ZAMS (as determined using the MIST models).
-    teff_logistic_taper = logistic(
+    teff_logistic_taper = _logistic(
         teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k0
     )
 
@@ -299,7 +300,7 @@ def slow_sequence_residual(
 
     # Taper the "upper" part of the uniform ("fast rotator") distribution to
     # avoid overlap with the slow sequence.
-    taper_y = 1 - logistic(y_grid, l_hidden, L=1, k=k_hidden)
+    taper_y = 1 - _logistic(y_grid, l_hidden, L=1, k=k_hidden)
 
     uniform_taper_y = uniform_y * taper_y
 
@@ -323,13 +324,13 @@ def slow_sequence_residual(
     # Another inverse logistic taper, same Teff dependence, but with a softer
     # smoothing length.
     uniform_y_Teff_1 = 1.*uniform_y_Teff * (
-        1-logistic(
+        1-_logistic(
             teff_grid, teff_zams(age, bounds_error=bounds_error), L=1, k=k1
         )
     )
 
     a0 = a0
-    a1_prefactor = a1 * g_lineardecay(age, bounds_error=bounds_error, y0=y_g)
+    a1_prefactor = a1 * g_lineardecay(age, bounds_error=bounds_error, y_g=y_g)
 
     # Initial iteration of model
     resid_y_Teff_0 = a0*gaussian_y_Teff + a1_prefactor*uniform_y_Teff_1
@@ -356,58 +357,68 @@ def slow_sequence(
     interp_method='pchip_m67',
     n=None):
     """
-    Model for a star's rotation period based on its age and effective
-    temperature, as derived from interpolation using reference clusters with
-    known ages.   This function assumes that the star is on the slow sequence.
-
-    Age must be between the lowest and highest reference age, otherwise an
-    error will be raised.  Teff must be between 3800 and 6200 K.
+    Given an age and a set of temperatures, return the implied slow sequence
+    rotation periods, as derived from interpolation using the reference
+    clusters with known ages.   This function is the "mean gyrochronal model",
+    i.e., it assumes slow sequence evolution.
 
     Args:
 
-        age : int or float.
+        age (int or float):
             An integer or float corresponding to the age for which we want a
             rotation period.  Units: Myr (=10^6 years).
 
-        Teff : float or iterable of floats.
+        Teff (float or iterable of floats):
             Effective temperature(s) of the sample to be dated.  Units: Kelvin.
+            Must be between 3800 and 6200 K.
 
-        reference_model_ids : list
+        reference_model_ids (list):
             This list can include any of
             ``['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
             'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr',
             'NGC-6819', 'Ruprecht-147', 'M67']``
-            The default is set as described in the manuscript.  120-Myr and
-            300-Myr are concenations of the relevant clusters.
+            The default is set as described in the manuscript, to enable
+            gyro-age derivations between 0.08-2.6 Gyr.  Note that "120-Myr" and
+            "300-Myr" are concenations of the relevant clusters.
 
-        reference_ages : iterable of floats
-            Ages (units of Myr) corresponding to reference_model_ids.
+        reference_ages (iterable of floats):
+            Ages (units of Myr) corresponding to ``reference_model_ids``.
 
-        verbose : bool
+        verbose (bool):
             True or False to choose whether to print error messages.  Default
             is False
 
-        bounds_error : str
-            "nan", "limit" or "4gyrlimit".  Extrapolation behaviors are as follows.
-            If "limit", return the limiting rotation period at the closest
-            cluster given in ``reference_model_ids``.  If "4gyrlimit",
-            extrapolate out to 4 Gyr based on the ``reference_model_ids`` and
-            the adopted interpolation method, regardless of where they
-            truncate.  Past 4Gyr, take the same behavior as "limit".  If "nan",
-            ages above or below the minimum reference age return nans
+        interp_method (str):
+            How will you interpolate between the polynomial fits to the
+            reference open clusters? "pchip_m67" is the suggested default
+            method, which uses Piecewise Cubic Hermite Interpolating
+            Polynomials (PCHIP) to interpolate over not only 0.8-2.6 Gyr, but
+            also sets the gradient in Prot vs Time in the 1-2.6 Gyr interval
+            based on the observations of M67 from `Barnes+2016
+            <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_
+            and `Dungee+2022
+            <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_.
+            This yields an evolution of the rotation period envelope that is
+            smooth and by design fits the cluster data from the age of
+            alpha-Per through M67.  Other available interpolation methods
+            include "skumanich_vary_n", "alt", "diff", "skumanich_fix_n_0.XX",
+            "1d_linear", "1d_slinear", "1d_quadratic", and "1d_pchip", some of
+            which are described in Appendix A of BPH23.   Unless you know what
+            you are doing, "pchip_m67" is recommended.
 
-        interp_method : str
-            Implemented interpolation methods include "skumanich_vary_n",
-            "alt", "diff", "skumanich_fix_n_0.XX", "1d_linear", "1d_slinear",
-            "1d_quadratic", "1d_pchip", and "pchip_m67".  The latter is the
-            default method, because it yields evolution of rotation periods in
-            time that are smooth and by design fit the cluster data from the
-            age of alpha-Per through M67.  Unless you know what you are doing,
-            "pchip_m67" is recommended".  "1d_linear", "1d_slinear", and
-            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
-            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
+        bounds_error (str):
+            How will you extrapolate at <0.08 Gyr and >2.6 Gyr?  Available
+            options are "nan", "limit" or "4gyrlimit".  If "limit", then
+            extrapolate by returning the fixed limiting rotation period at the
+            oldest or youngest cluster given in
+            ``models.slow_sequence.reference_model_ids``.  If "4gyrlimit" (the
+            suggested default), extrapolate out to 4 Gyr by also including M67.
+            Past 4Gyr, use the same behavior as "limit".  If one is interested
+            in obtaining unbiased ages near the recommended 2.6 Gyr limit of
+            this code, use "4gyrlimit".  Finally, if "nan", ages above or below
+            the minimum reference age return NaNs.
 
-        n : None, int, or float
+        n (None, int, or float):
             Power-law index analogous to the Skumanich braking index, but
             different in detail (see the implementation).  This is used only if
             ``interp_method == "alt"`` or ``interp_method == "diff"``, neither
@@ -415,9 +426,10 @@ def slow_sequence(
 
     Output:
 
-        Numpy array containing period estimate at the given effective
-        temperatures and age, in the same units as the provided reference
-        periods.
+        np.ndarray : Prot_slow_sequence
+
+            Numpy array containing period estimate for the slow sequence at the
+            given effective temperatures and age, in units of days.
     """
 
     assert len(reference_ages) == len(reference_model_ids)
@@ -525,6 +537,10 @@ def slow_sequence(
                 # special case: extrapolate based on oldest two clusters
                 # needed for interpolation methods that require a rotation
                 # period interval: "alt", "diff", and "skumanich_vary_n".
+                # for pchip_m67, this is extraneous (if we get to this point
+                # and interp_method == "pchip_m67", and bounds_error ==
+                # "4gyrlimit", then we will extrapolate using
+                # all_reference_model_ids, which includes M67).
                 glb_ix = -2
                 lub_ix = -1
             else:
@@ -587,36 +603,47 @@ def slow_sequence(
 
             periods.append(period)
 
-    return_arr = np.array(periods)
+    Prot_slow_sequence = np.array(periods)
 
-    if return_arr.shape[-1] == 1:
-        return_arr = return_arr.flatten()
+    if Prot_slow_sequence.shape[-1] == 1:
+        Prot_slow_sequence = Prot_slow_sequence.flatten()
 
-    return return_arr
+    return Prot_slow_sequence
 
 
 def reference_cluster_slow_sequence(
     Teff, model_id, poly_order=7, verbose=True
     ):
     """
-    Given Teff, get Prot implied by a polymial fit to the Prot-Teff slow
-    sequence of a given cluster between 3800 and 6200 K.  Note -- this means
-    the upper envelope.
+    Given a set of temperatures, get the rotation periods implied by a polymial
+    fit to the Prot-Teff slow sequence of a particular cluster between 3800 and
+    6200 K.
 
     Args:
 
-        Teff (np.ndarray / float / list-like iterable): effective temperature
-        in Kelvin.  Curtis+2020 Gaia DR2 BP-RP scale, or spectroscopic
-        effective temperatures, preferred above all other options.
+        Teff (np.ndarray / float / list-like iterable):
+            Effective temperature in Kelvin.  Curtis+2020 Gaia DR2 BP-RP scale,
+            or spectroscopic effective temperatures, preferred above all other
+            options.
 
-        model_id (str): any of ``allowed_model_ids``:
-            ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+        model_id (str):
+            String identifying the desired reference cluster.  Can be any of
+            ``['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
             'Group-X', 'Praesepe', 'NGC-6811', '120-Myr', '300-Myr',
-            'NGC-6819', 'Ruprecht-147', '2.6-Gyr', 'M67']
-        where '120-Myr' will concatenate of Pleiades, Blanco-1, and
-        Psc-Eri, and '300-Myr' will concatenate NGC-3532 and Group-X.
+            'NGC-6819', 'Ruprecht-147', '2.6-Gyr', 'M67']``,
+            where '120-Myr' will concatenate of Pleiades, Blanco-1, and
+            Psc-Eri into one polynomial fit, and '300-Myr' will concatenate
+            NGC-3532 and Group-X.
 
-        poly_order (int): integer for the polynomial fit.
+        poly_order (int):
+            Integer order of the polynomial fit.
+
+    Returns:
+
+        np.ndarray : Prot_model
+
+            Numpy array containing rotation periods for each requested
+            temperature.
     """
 
     if isinstance(Teff, (list, float, int)):

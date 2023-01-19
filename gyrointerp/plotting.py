@@ -66,12 +66,12 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 from numpy import array as nparr
 
-from gyrointerp.paths import DATADIR, RESULTSDIR, LOCALDIR
+from gyrointerp.paths import DATADIR, RESULTSDIR, CACHEDIR
 from gyrointerp.models import (
     reference_cluster_slow_sequence, slow_sequence, slow_sequence_residual
 )
 from gyrointerp.getters import _get_cluster_Prot_Teff_data
-from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.helpers import get_summary_statistics
 from gyrointerp.gyro_posterior import gyro_age_posterior, gyro_age_posterior_mcmc
 from gyrointerp.age_scale import agedict
 
@@ -877,7 +877,7 @@ def plot_data_vs_model_prot(
         ax.plot(teff_midway, model_ratio, c='gray', ls='-', marker='X',
                 label='Best-fit Model', zorder=1, ms=4, lw=1, mew=0)
 
-        pklpath = os.path.join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02",
+        pklpath = os.path.join(CACHEDIR, "fitgyro_emcee_v02",
                                "fit_120-Myr_300-Myr_Praesepe.pkl")
         with open(pklpath, 'rb') as f:
             d = pickle.load(f)
@@ -1279,7 +1279,7 @@ def plot_age_posteriors(
         if full_mcmc:
             age_post_mcmc = np.array(df.age_post_mcmc)
 
-        d = given_grid_post_get_summary_statistics(age_grid, age_post)
+        d = get_summary_statistics(age_grid, age_post)
         d['Prot'] = Prot
         d['Teff'] = Teff
         summary_df = pd.DataFrame(d, index=[0])
@@ -1569,7 +1569,7 @@ def _get_empgyro_grid_data(imagestr, n, poly_order, age_scale, interp_method,
 
     typestr = 'limitgrid_defaultparameters'
     cachedir = os.path.join(
-        LOCALDIR, "gyrointerp",
+        CACHEDIR,
         f"prot_teff_grid_n{n}_reluncpt1pct_{age_scale}_{interp_method}"
     )
     _fpaths = [

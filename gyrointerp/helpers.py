@@ -1,11 +1,11 @@
 """
-Reusable functions.
+This module contains reusable helper functions.  The most generally useful one
+will be ``get_summary_statistics``.
 
-    | get_summary_statistics
-    | given_grid_post_get_summary_statistics
-    | left_merge
-    | prepend_colstr
-    | given_dr2_get_dr3_dataframes
+    | ``get_summary_statistics``
+    | ``left_merge``
+    | ``prepend_colstr``
+    | ``given_dr2_get_dr3_dataframes``
 """
 #############
 ## LOGGING ##
@@ -40,27 +40,30 @@ import numpy as np, pandas as pd
 
 def get_summary_statistics(age_grid, age_post, N=int(1e5)):
     """
-    Given an age posterior over a grid, determine summary statistics (peak
-    location, +/-sigma intervals, etc).  Do this by sampling `N` times, with
-    replacement, from the posterior, weighting by the probability.
+    Given an age posterior probability density, ``age_post``, over a grid over
+    ages, ``age_grid``, determine summary statistics for the posterior (its
+    median, mean, +/-1 and 2-sigma intervals, etc).  Do this by sampling `N`
+    times from the posterior, with replacement, while weighting by the
+    probability.
 
     Returns:
-        dictionary containing the summary statistics.
+
+        dict : summary_statistics
+
+            Dictionary containing keys and values for median, mean, peak
+            (mode), +/-1sigma, +/-2sigma, +/-3sigma, and +/-1sigmapct.  The
+            units of all values are megayears, except for *+/-1sigmapct*, which
+            is the relative +/-1-sigma uncertainty normalized by the median of
+            the posterior, and is dimensionless.
     """
-    return given_grid_post_get_summary_statistics(
+    # This function is a thin wrapper to _given_grid_post_get_summary_statistics
+    return _given_grid_post_get_summary_statistics(
         age_grid, age_post, N=N
     )
 
 
-def given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
-    """
-    Given an age posterior over a grid, determine summary statistics (peak
-    location, +/-sigma intervals, etc).  Do this by sampling `N` times, with
-    replacement, from the posterior, weighting by the probability.
+def _given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
 
-    Returns:
-        dictionary containing the summary statistics.
-    """
     age_peak = int(age_grid[np.argmax(age_post)])
 
     df = pd.DataFrame({'age':age_grid, 'p':age_post})

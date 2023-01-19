@@ -6,13 +6,13 @@ calculates gyrochronal ages by interpolating between open cluster rotation
 sequences.
 
 ``gyrointerp`` packages the model from Bouma, Palumbo & Hillenbrand (2023) 
-into a fast and easy-to-use framework.  The examples below will walk you
+into a fast and easy-to-use framework.  The documentation below will walk you
 through the most common use-cases.
 
 ``gyrointerp`` is designed to meet the needs of working astronomers with
 interests in gyrochronal age measurement, and we encourage community
-involvement.  If you find a bug or want to request a feature, please create an
-`issue on Github <https://github.com/lgbouma/gyro-interp>`_. 
+involvement.  If you find a bug or would like to request a feature, please
+create an `issue on Github <https://github.com/lgbouma/gyro-interp>`_. 
 
 .. |br| raw:: html
 
@@ -25,6 +25,7 @@ involvement.  If you find a bug or want to request a feature, please create an
 Attribution:
 ++++++++++++
 
+The reference for both the software and method is
 `Bouma, Palumbo & Hillenbrand (2023)<LINKPENDING>`_.
 
 

@@ -15,7 +15,7 @@ from gyrointerp.gyro_posterior import (
     gyro_age_posterior, _one_star_age_posterior_worker
 )
 from gyrointerp.paths import RESULTSDIR, LOCALDIR
-from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.helpers import get_summary_statistics
 
 def main(n=None, age_scale="default", interp_method="pchip_m67",
          grid_resolution="coarse"):

@@ -12,7 +12,7 @@ from gyrointerp.models import slow_sequence, slow_sequence_residual
 from gyrointerp.age_scale import agedict
 
 from aesthetic.plot import set_style, savefig
-from gyrointerp.paths import LOCALDIR, RESULTSDIR
+from gyrointerp.paths import RESULTSDIR
 
 from astropy import units as u
 

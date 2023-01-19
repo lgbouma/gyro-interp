@@ -9,7 +9,7 @@ from astropy.table import Table
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from numpy import array as nparr
 
-from gyrointerp.paths import DATADIR, RESULTSDIR, LOCALDIR
+from gyrointerp.paths import DATADIR, RESULTSDIR, CACHEDIR
 
 from astropy.coordinates import SkyCoord
 from astropy import units as u
@@ -311,7 +311,7 @@ def main():
         cluster = "M34"
         cache_id = f"train_verification/{cluster}".replace(" ","_")
 
-        cachedir = join(LOCALDIR, "gyrointerp", cache_id)
+        cachedir = join(CACHEDIR, cache_id)
         dstdir = cachedir.replace("M34","M34-no-binaries")
         if not os.path.exists(dstdir): os.mkdir(dstdir)
 

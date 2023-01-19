@@ -1,14 +1,14 @@
 """
-Contents:
-    | gyro_age_posterior
-    | gyro_age_posterior_mcmc
-    | gyro_age_posterior_list
+Main drivers:
+    | ``gyro_age_posterior``
+    | ``gyro_age_posterior_list``
+    | ``gyro_age_posterior_mcmc``
 
 Under-the-hood:
-    | _gyro_age_posterior_worker
-    | _one_star_age_posterior_worker
-    | _get_pop_samples
-    | _agethreaded_gyro_age_posterior
+    | ``_gyro_age_posterior_worker``
+    | ``_one_star_age_posterior_worker``
+    | ``_get_pop_samples``
+    | ``_agethreaded_gyro_age_posterior``
 """
 #############
 ## LOGGING ##
@@ -41,7 +41,7 @@ LOGEXCEPTION = LOGGER.exception
 #############
 import os, pickle
 from glob import glob
-from gyrointerp.paths import DATADIR, LOCALDIR
+from gyrointerp.paths import DATADIR, CACHEDIR
 import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from numpy import array as nparr
 from os.path import join
@@ -50,7 +50,7 @@ from scipy.stats import norm
 
 from gyrointerp.models import slow_sequence_residual, slow_sequence
 from gyrointerp.age_scale import agedict
-from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.helpers import get_summary_statistics
 
 from datetime import datetime
 import multiprocessing as mp
@@ -217,83 +217,113 @@ def _gyro_age_posterior_worker(task):
 def gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 3000, 500),
-    verbose=False, bounds_error='4gyrlimit', interp_method='pchip_m67', n=None,
-    N_grid='default', age_scale='default', popn_parameters='default'
+    interp_method='pchip_m67', bounds_error='4gyrlimit', n=None,
+    N_grid='default', age_scale='default', popn_parameters='default',
+    verbose=False
     ):
     """
-    Given a single star's rotation period and effective temperature, and the
-    optional uncertainties (all ints or floats), calculate the probability of a
-    given age assuming the ``gyrointerp.models.slow_sequence_residual`` model
-    holds.
+    Given a single star's rotation period and effective temperature, and
+    (optionally) their uncertainties, what is the posterior probability
+    distribution for its age?
 
-    If Prot_err and Teff_err are not given, they are assumed to be 1% relative
-    and 100 K, respectively.  One suggested effective temperature scale is
-    implemented in ``gyrointerp.teff``, in the
+    The answer returned by this code assumes that the
+    ``gyrointerp.models.slow_sequence_residual`` model holds, which is the
+    probability distribution described in BPH23 for the distribution of
+    rotation periods at any given age and temperature.
+
+    If Prot_err and Teff_err are not specified, they are assumed to be 1%
+    relative and 100 K, respectively.  One suggested effective temperature
+    scale is implemented in ``gyrointerp.teff``, in the
     ``given_dr2_BpmRp_AV_get_Teff_Curtis2020`` function.  This assumes you have
     an accurate estimate for the reddening.  Spectroscopic temperatures are
-    also good options, though they should preferably be calibrated against the
-    Curtis+2020 effective temperature scale (2020ApJ...904..140C, Appendix A).
+    also good, though they would ideally be calibrated against the
+    effective temperature scale described in Appendix A of `Curtis+2020
+    <https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract>`_.
 
     Args:
 
-        Prot, Prot_err : int or float.
-            Units of days.  Must be positive.
+        Prot (int or float):
+            Rotation period in units of days.
 
-        Teff, Teff_err : int or float.
-            Units of degrees Kelvin.  Must be positive.
+        Prot_err (int or float):
+            Rotation period uncertainty in units of days.
 
-        age_grid : np.ndarray.
-            Grid over which the age posterior is evaluated, units are fixed to
-            be Myr (10^6 years).  A fine choice if ``bounds_error ==
-            '4gyrlimit'`` and ``interp_method == 'pchip_m67'`` is
-            np.linspace(0, 3000, 500).
+        Teff: (int or float):
+            Effective temperature in units of degrees Kelvin.  Must be between
+            3800 and 6200 K.
 
-        bounds_error : str
-            "nan", "limit" or "4gyrlimit".  Extrapolation behaviors are as follows.
-            If "limit", return the limiting rotation period at the closest
-            cluster given in ``reference_model_ids``.  If "4gyrlimit",
-            extrapolate out to 4 Gyr based on the ``reference_model_ids`` and
-            the adopted interpolation method, regardless of where they
-            truncate.  Past 4Gyr, take the same behavior as "limit".  If "nan",
-            ages above or below the minimum reference age return nans
+        Teff_err (int or float):
+            Effective temperature uncertainty in units of degrees Kelvin.
 
-        interp_method : str
-            Implemented interpolation methods include "skumanich_vary_n",
-            "alt", "diff", "skumanich_fix_n_0.XX", "1d_linear", "1d_slinear",
-            "1d_quadratic", "1d_pchip", and "pchip_m67".  The latter is the
-            default method, because it yields evolution of rotation periods in
-            time that are smooth and by design fit the cluster data from the
-            age of alpha-Per through M67.  Unless you know what you are doing,
-            "pchip_m67" is recommended".  "1d_linear", "1d_slinear", and
-            "1d_quadratic" are as in ``scipy.interpolate.interp1d``.
-            "1d_pchip" is ``scipy.interpolate.PchipInterpolator``.
+        age_grid (np.ndarray):
+            Grid over which the age posterior is evaluated; units here and
+            throughout are fixed to be megayears (10^6 years).  A fine choice
+            is 500 points uniformly distributed between 0 and 3000 Myr:
+            ``np.linspace(0, 3000, 500)``, assuming that the default choices
+            of ``bounds_error == '4gyrlimit'`` and ``interp_method ==
+            'pchip_m67'`` are being used.
 
-        n : None, int, or float
+        interp_method (str):
+            How will you interpolate between the polynomial fits to the
+            reference open clusters? "pchip_m67" is the suggested default
+            method, which uses Piecewise Cubic Hermite Interpolating
+            Polynomials (PCHIP) to interpolate over not only 0.08-2.6 Gyr, but
+            also sets the gradient in Prot vs Time in the 1-2.6 Gyr interval
+            based on the observations of M67 from `Barnes+2016
+            <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_
+            and `Dungee+2022
+            <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_.
+            This yields an evolution of the rotation period envelope that is
+            smooth and by design fits the cluster data from the age of
+            alpha-Per through M67.  Other available interpolation methods
+            include "skumanich_vary_n", "alt", "diff", "skumanich_fix_n_0.XX",
+            "1d_linear", "1d_slinear", "1d_quadratic", and "1d_pchip", some of
+            which are described in Appendix A of BPH23.   Unless you know what
+            you are doing, "pchip_m67" is recommended.
+
+        bounds_error (str):
+            How will you extrapolate at <0.08 Gyr and >2.6 Gyr?  Available
+            options are "nan", "limit" or "4gyrlimit".  If "limit", then
+            extrapolate by returning the fixed limiting rotation period at the
+            oldest or youngest cluster given in
+            ``models.slow_sequence.reference_model_ids``.  If "4gyrlimit" (the
+            suggested default), extrapolate out to 4 Gyr by also including M67.
+            Past 4Gyr, use the same behavior as "limit".  If one is interested
+            in obtaining unbiased ages near the recommended 2.6 Gyr limit of
+            this code, use "4gyrlimit", otherwise "limit" will overestimate the
+            probability density beyond 2.6 Gyr.  Finally, if "nan", ages above
+            or below the minimum reference age return NaNs.
+
+        n (None, int, or float):
             Power-law index analogous to the Skumanich braking index, but
-            different in detail (see the implementation).  This is used only if
-            ``interp_method == "alt"`` or ``interp_method == "diff"``, neither
-            of which is recommended for most users.  Default is None.
+            different in detail (read the source code to see how).  This is
+            used only if ``interp_method == "alt"`` or ``interp_method ==
+            "diff"``, neither of which is recommended for most users.  Default
+            is None.
 
-        N_grid : str or int.
+        N_grid (str or int):
             The number of grid points in effective temperature and
             residual-period over which the integration is performed to evaluate
-            the posterior.  "default" sets it to ``N_grid =
-            (Prot_grid_range)/Prot_err``, where "Prot_grid_range" is set to 20
-            days, the range of the grid used in the integration.   This default
-            ensures convergence;  numerical tests show convergence down to
-            ~0.7x smaller grid sizes.  If an integer is passed, will use that
-            instead.
+            the posterior (Equation 1 of BPH23).  "default" sets it to ``N_grid
+            = (Prot_grid_range)/Prot_err``, where "Prot_grid_range" is set to
+            20 days, the range of the grid used in the integration.   This
+            default ensures convergence, because numerical tests show
+            convergence down to ~0.7x smaller grid sizes.  If an integer is
+            passed, will use that instead.  For most users, "default" is best.
 
-        age_scale : str.
+        age_scale (str):
             "default", "1sigmaolder", or "1sigmayounger".  Shifts the entire
             age scale appropriately, based on the user's beliefs about what
             ages of reference clusters are correct.  The scale is as described
-            in the manuscript, and defined in /gyrointerp/age_scale.py
+            in the systematic uncertainty tests of BPH23, and defined in
+            ``gyrointerp.age_scale``.
 
-        popn_parameters : str.
+        popn_parameters (str):
             "default", or (dict) containing the population-level free
             parameters.  Keys of "a0", "a1", "k0", "k1", "y_g", "l_hidden", and
-            "k_hidden" must all be specified.
+            "k_hidden" must all be specified.  Wrapped by
+            ``gyro_age_posterior_mcmc``, for users who wish to do the
+            population-level hyperparameter sampling described by BPH23.
 
     Returns:
 
@@ -477,7 +507,7 @@ def _one_star_age_posterior_worker(task):
         df.to_csv(outpath, index=False)
         LOGINFO(f"Wrote {outpath}")
 
-        d = given_grid_post_get_summary_statistics(age_grid, age_post)
+        d = get_summary_statistics(age_grid, age_post)
         d['Prot'] = Prot
         d['Teff'] = Teff
         df = pd.DataFrame(d, index=[0])
@@ -493,9 +523,10 @@ def _one_star_age_posterior_worker(task):
 
 def _get_pop_samples(N_pop_samples):
 
-    # TODO: cache this in an accessible way so that 
+    # TODO: cache this posterior in an accessible way so that 
     # TODO: all users can use gyro_age_posterior_mcmc
-    pklpath = os.path.join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02",
+    # this pickle file is the posterior 
+    pklpath = os.path.join(CACHEDIR, "fitgyro_emcee_v02",
                            "fit_120-Myr_300-Myr_Praesepe.pkl")
     with open(pklpath, 'rb') as f:
         d = pickle.load(f)
@@ -532,23 +563,44 @@ def gyro_age_posterior_mcmc(
     N_post_samples=10000, cachedir=None
     ):
     """
-    Same as gyro_age_posterior, but sampling over the population-level
-    parameters a1/a0, ln k0, ln k1, and y_g.
+    Given the rotation period and effective temperature of a single star,
+    sample over the population-level hyperparameters a1/a0, ln k0, ln k1, and
+    y_g to determine the posterior probability distribution of the age.
+    These are the dotted lines in the upper panel of Fig3 in BPH23.
 
-    Arguments are as in gyro_age_posterior, but with three additions:
+    Parallelization is done over the hyperparameters.  However, the
+    computational cost for a given star is about 1000x that of running the
+    best-fit hyperparameters, as implemented in ``gyro_age_posterior``.  Use of
+    this function is therefore generally not recommended, unless you have an
+    understood need for doing things this way.
 
-        N_pop_samples (int): the number of draws from the posteriors for the
-        aforementioned parameters to average over.
+    Arguments are as in ``gyro_age_posterior``, but with four additions:
 
-        N_post_samples (int): for each of the above draws, the number of draws
-        from the resulting age posterior to cache before concatenating them all
-        together.
+    Args:
 
-        cachedir (str): path to directory where individual posteriors will be
-        cached (for every star, `N_post_samples` files will be written here!)
+        cache_id (str):
+            The output posteriors will be cached to
+            ``~/.gyrointerp_cache/{cache_id}`` (required).
 
-    Parallelizes over the population-parameters samples.  Takes 3 minutes to
-    run `N_post_samples=512` on a 64 core machine.
+        N_pop_samples (int):
+            The number of draws from the posteriors for the aforementioned
+            parameters to average over.
+
+        N_post_samples (int):
+            For each of the above draws, the number of draws from the resulting
+            age posterior to cache before concatenating them all together.
+
+        cachedir (str):
+            Path to directory where individual posteriors will be cached (for
+            every star, `N_post_samples` files will be written here!).  It is
+            highly recommended that you specify this.
+
+    Returns:
+
+        np.ndarray : p_ages
+
+            Numpy array containing posterior probabilities at each point of the
+            age_grid.  Values are NaN if Teff outside of [3800, 6200] K.
     """
 
     assert isinstance(cachedir, str)
@@ -618,15 +670,15 @@ def gyro_age_posterior_list(
     bounds_error='4gyrlimit', interp_method='pchip_m67'
     ):
     """
-    Given lists of rotation periods and effective temperatures, run them in
-    parallel.  This functions as a thin wrapper to gyro_age_posterior assuming
+    Given rotation periods and effective temperatures for many stars, run them
+    in parallel.  This is a thin wrapper to ``gyro_age_posterior`` assuming
     default parameters.
 
     Args:
 
         cache_id (str):
             The output posteriors will be cached to
-            ``$LOCALDIR/gyrointerp/{cache_id}``.
+            ``~/.gyrointerp_cache/{cache_id}`` (required).
 
         Prots (np.ndarray):
             1-D array of rotation periods
@@ -643,11 +695,16 @@ def gyro_age_posterior_list(
             100K by default.
 
         star_ids (np.ndarray of strings):
-            Arbitrary strings naming your stars.  For example, if you give
-            "TIC1234567", posteriors will be written to CSV files with a
+            Arbitrary strings naming your stars; optional.  For example, if you
+            give "TIC1234567", posteriors will be written to CSV files with a
             pattern matching
             ``TIC1234567_ProtXX.XXXX_TeffYYYY.Y_limitgrid_defaultparameters.csv``.
             If None, then the identifier is omitted.
+
+    Returns:
+
+        Nothing; the output posteriors however are cached to
+        ``~/.gyrointerp_cache/{cache_id}``
     """
 
     assert len(Prots) == len(Teffs)
@@ -663,10 +720,10 @@ def gyro_age_posterior_list(
     else:
         assert len(star_ids) == len(Prots)
 
-    outdir = os.path.join(LOCALDIR, "gyrointerp")
+    outdir = CACHEDIR
     if not os.path.exists(outdir): os.mkdir(outdir)
 
-    outdir = os.path.join(LOCALDIR, "gyrointerp", cache_id)
+    outdir = os.path.join(CACHEDIR, cache_id)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     n = None
@@ -695,11 +752,3 @@ def gyro_age_posterior_list(
     pool.join()
 
     LOGINFO(f"{datetime.now().isoformat()} end")
-
-
-if __name__ == "__main__":
-    # testing
-    Prot = 6
-    Teff = 5500
-    age_grid = np.linspace(0, 3000, 50)
-    age_post = gyro_age_posterior(Prot, Teff, age_grid=age_grid)

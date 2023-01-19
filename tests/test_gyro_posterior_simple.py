@@ -5,7 +5,7 @@ gets an age near 300 Myr, with a statistical precision between 16-33%.
 import os, pytest
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
 from gyrointerp.gyro_posterior import gyro_age_posterior
-from gyrointerp.helpers import given_grid_post_get_summary_statistics
+from gyrointerp.helpers import get_summary_statistics
 
 def test_gyro_posterior_simple():
 
@@ -21,7 +21,7 @@ def test_gyro_posterior_simple():
         Prot, Teff, Teff_err=Teff_err, age_grid=age_grid, verbose=False
     )
 
-    r = given_grid_post_get_summary_statistics(age_grid, age_post)
+    r = get_summary_statistics(age_grid, age_post)
 
     assert abs(r['median'] - 300) < 20
     assert abs(r['peak'] - 300) < 30
@@ -39,7 +39,7 @@ def test_gyro_posterior_simple():
         Prot, Teff, Teff_err=Teff_err, age_grid=age_grid, verbose=False
     )
 
-    r = given_grid_post_get_summary_statistics(age_grid, age_post)
+    r = get_summary_statistics(age_grid, age_post)
 
     assert abs(r['median'] - 2600) < 200
     assert abs(r['mean'] - 2600) < 200
