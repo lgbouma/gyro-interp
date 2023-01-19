@@ -1,11 +1,6 @@
 """
 This module contains reusable helper functions.  The most generally useful one
 will be ``get_summary_statistics``.
-
-    | ``get_summary_statistics``
-    | ``left_merge``
-    | ``prepend_colstr``
-    | ``given_dr2_get_dr3_dataframes``
 """
 #############
 ## LOGGING ##
@@ -45,6 +40,22 @@ def get_summary_statistics(age_grid, age_post, N=int(1e5)):
     median, mean, +/-1 and 2-sigma intervals, etc).  Do this by sampling `N`
     times from the posterior, with replacement, while weighting by the
     probability.
+
+    Args:
+
+        age_grid (np.ndarray):
+            Array-like of ages, in units of megayears.  For instance, the
+            default *age_grid* in ``gyro_posterior.gyro_age_posterior`` is
+            ``np.linspace(0, 3000, 500)``.
+
+        age_post (np.ndarray):
+            Posterior probability distribution for ages; length should match
+            *age_grid*.  The posterior probabilities returned
+            by``gyro_posterior.gyro_age_posterior`` and
+            ``gyro_posterior.gyro_age_posterior_list`` are examples that would
+            work.  Generally, this helper function works for any grid and
+            probability distribution.
+
 
     Returns:
 
@@ -134,11 +145,9 @@ def left_merge(df0, df1, col0, col1):
 
 def given_dr2_get_dr3_dataframes(dr2_source_ids, runid_dr2, runid_dr3,
                                  overwrite=False):
-    """
-    dr2_source_ids: np.ndarray of np.int64 Gaia DR2 source identifiers.
-    runid_dr2: arbitrary string to identify the DR2->DR3 xmatch query
-    runid_dr3: arbitrary (different) string to identify the DR3 query
-    """
+    # dr2_source_ids: np.ndarray of np.int64 Gaia DR2 source identifiers.
+    # runid_dr2: arbitrary string to identify the DR2->DR3 xmatch query
+    # runid_dr3: arbitrary (different) string to identify the DR3 query
 
     # pip install cdips
     from cdips.utils.gaiaqueries import (
@@ -171,7 +180,8 @@ def given_dr2_get_dr3_dataframes(dr2_source_ids, runid_dr2, runid_dr3,
     if len(s_dr3) != len(np.unique(dr2_source_ids)):
         LOGINFO('Got bad dr2<->dr3 match')
         LOGINFO(len(s_dr3), len(np.unique(dr2_source_ids)))
-        import IPython; IPython.embed()
+        raise AssertionError
+
     assert len(s_dr3) == len(np.unique(dr2_source_ids))
 
     dr3_source_ids = np.array(s_dr3.dr3_source_id).astype(np.int64)

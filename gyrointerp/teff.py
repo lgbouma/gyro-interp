@@ -3,9 +3,7 @@ This module contains functions for calculating photometric effective
 temperatures.
 
 Contents:
-    | given_dr2_BpmRp_AV_get_Teff_Curtis2020
-    | _given_VmKs_get_Teff
-    | _given_GmKs_get_Teff
+    | ``given_dr2_BpmRp_AV_get_Teff_Curtis2020``
 """
 import os
 import numpy as np, pandas as pd

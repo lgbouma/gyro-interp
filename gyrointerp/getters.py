@@ -5,8 +5,7 @@ acquire and clean the data behind Figure 1 of BPH23.  Generally, most users
 will want to just download the data from the paper, rather than using these
 functions.
 
-Get all available cluster data, in α Per, Pleiades, Blanco-1, Psc-Eri,
-NGC-3532, Group-X, Praesepe, NGC-6811, NGC-6819, and Ruprecht-147:
+Get all available cluster data:
     | _get_cluster_Prot_Teff_data
 
 Get and clean individual cluster data:

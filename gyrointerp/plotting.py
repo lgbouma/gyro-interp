@@ -2,24 +2,22 @@
 Catch-all file for plotting scripts.  Some of these plots are included in the
 gyro-interp manuscript.  Contents:
 
-    | plot_prot_vs_teff
-    | plot_prot_vs_teff_residual
-    | plot_sub_praesepe_selection_cut
-    | plot_slow_sequence_residual
-    | plot_age_posteriors
-    | plot_cdf_fast_slow_ratio
-    | plot_data_vs_model_prot
-    | plot_fit_gyro_model
-    | plot_empirical_limits_of_gyrochronology
-    | plot_n_vs_teff_vs_time
-    | plot_prot_vs_time_fixed_teff
+    | ``plot_prot_vs_teff``
+    | ``plot_prot_vs_teff_residual``
+    | ``plot_slow_sequence_residual``
+    | ``plot_age_posteriors``
+    | ``plot_cdf_fast_slow_ratio``
+    | ``plot_data_vs_model_prot``
+    | ``plot_empirical_limits_of_gyrochronology``
+    | ``plot_n_vs_teff_vs_time``
+    | ``plot_prot_vs_time_fixed_teff``
 
 Helpers:
-    | _given_ax_append_spectral_types
+    | ``_given_ax_append_spectral_types``
 
 Sub-plot makers, to prevent code duplication:
-    | _plot_slow_sequence_residual
-    | _plot_prot_vs_teff_residual
+    | ``_plot_slow_sequence_residual``
+    | ``_plot_prot_vs_teff_residual``
 """
 #############
 ## LOGGING ##
@@ -119,21 +117,23 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
                       slow_seq_ages=None, hide_ax=0, logo_colors=0,
                       logy=False, n=None, interp_method='pchip_m67'):
     """
-    reference_clusters: list containing any of
-        ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-        'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+    Plot Figure 1 of BPH23.
 
-    model_ids: iterable of strings, to be called by
-    models.reference_cluster_slow_sequence.  Any of:
+    Args:
 
-        ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-        'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr']
+        reference_clusters (list):
+            List containing any of ``['Pleiades', 'Blanco-1', 'Psc-Eri',
+            'NGC-3532', 'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819',
+            'Ruprecht-147']``
 
-    poly_order: integer polynomial order for the reference cluster mean model.
-    Default is 7, which seems to do the best job across all clusters.
+        model_ids (iterable of strings):
+            To be called by ``models.reference_cluster_slow_sequence``.  Any
+            of: ``['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+            'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr']``
 
-    slow_seq_ages: optional list of ages, in Myr, for slow sequence models
-    to underplot (e.g., [120, 150, 200, 250]).
+        slow_seq_ages (optional list of ages):
+            Ages in Myr, for slow sequence models to underplot (e.g., ``[120,
+            150, 200, 250]``).
     """
     # Get data
     N_colors = 6
@@ -269,17 +269,8 @@ def plot_prot_vs_teff_residual(
     outdir, reference_clusters, model_ids, poly_order=7
     ):
     """
-    reference_clusters: list containing any of
-        ['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe',
-        'NGC-6811', 'NGC-6819', 'Ruprecht-147']
-
-    model_ids: iterable of strings, to be called by
-    models.reference_cluster_slow_sequence.  Any of:
-
-        ['Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr']
-
-    poly_order: integer polynomial order for the reference cluster mean model.
-    Default is 7, which seems to do the best job across all clusters.
+    Analogous to the top row of Figure 2 in BPH23.  Not used
+    (``plot_data_vs_model_prot`` supercedes this function).
     """
 
     allowed_model_ids = [
@@ -341,11 +332,9 @@ def plot_cdf_fast_slow_ratio(
     include_binaries=0
     ):
     """
-    Plot: RATIO of cumulative distribution functions, showing the cdf(Teff) for
-    the fast and slow sequence at various times.
-
-    poly_order: integer polynomial order for the reference cluster mean model.
-    Default is 7, which seems to do the best job across all clusters.
+    Plot the cumulative distribution functions for various cluster, showing the
+    cdf(Teff) for the fast and slow sequence at various times.  This plot did
+    not make the manuscript.
     """
 
     # model_ids: iterable of strings, to be called by
@@ -740,20 +729,13 @@ def plot_data_vs_model_prot(
     include_binaries=0,
     ):
     """
-    9 (or 12)-panel plot.  Requires: having previously run plot_cdf_fast_slow_ratio.
+    Figure 2 of BPH23.  9 (or 12)-panel plot.  This is a dense plot that
+    summarizes the entire modeling effort, as well as how good our model is
+    doing!
 
-    Top row: Data-Mean actual stars for 120Myr,300Myr,670Myr
-        i.e., plot_prot_vs_teff_residual
-    Middle row: The smooth 2d model, same ages
-        i.e., plot_slow_sequence_residual
-    Bottom row: Comparison between data & smooth 2d model via dN/dTeff
-        i.e. plot_cdf_fast_slow_ratio
+    Requires: having previously run plot_cdf_fast_slow_ratio.
 
-    This is a dense plot that summarizes the entire modeling effort, as well as
-    how good our model is doing!
-
-    ----------
-    model_ids: iterable of strings, to be called by
+    *model_ids* is an iterable of strings, to be called by
     models.reference_cluster_slow_sequence.
     """
 
@@ -1143,103 +1125,15 @@ def plot_slow_sequence_residual(outdir, ages, bounds_error='nan'):
 
 
 
-def plot_sub_praesepe_selection_cut(mdf5, poly_order=7):
-    """
-    make figure showing which stars have rotation periods that are being
-    selected via "sub-praesepe"
-    (called from drivers/build_koi_table.py)
-    """
-
-    plt.close("all")
-    fig, ax = plt.subplots(figsize=(4,3))
-
-    csvpath = join(
-        DATADIR, 'interim', 'slow_sequence_manual_selection',
-        'Praesepe_slow_sequence.csv'
-    )
-    df_prae = pd.read_csv(csvpath)
-
-    teff_model = np.arange(3800, 6200+1, 1)
-    prot_model = reference_cluster_slow_sequence(
-        teff_model, "Praesepe", poly_order=poly_order
-    )
-
-    ax.scatter(
-        df_prae["Teff"], df_prae["Prot"], c='C0', marker='o', zorder=4,
-        s=3, linewidths=0.5, label='Praesepe'
-    )
-    ax.plot(
-        teff_model, prot_model, c='C0', ls='-', zorder=3, lw=1
-    )
-
-    period_cols = ['s19_Prot', 's21_Prot', 'm14_Prot', 'm15_Prot']
-
-    for period_col in period_cols:
-        # all KOIs
-        if period_col == 's19_Prot':
-            ax.scatter(
-                mdf5["adopted_Teff"], mdf5[period_col], c='darkgray', marker='o',
-                zorder=0, s=1, linewidths=0, label='KOIs'
-            )
-        else:
-            # legend label trick
-            ax.scatter(
-                mdf5["adopted_Teff"], mdf5[period_col], c='darkgray', marker='o',
-                zorder=0, s=1, linewidths=0
-            )
-
-        # KOIs below Praesepe
-        sel_teff_range = (
-            (mdf5["adopted_Teff"] >= 3800)
-            &
-            (mdf5["adopted_Teff"] <= 6200)
-        )
-
-        period_val = mdf5[period_col][sel_teff_range]
-        teff_val = mdf5["adopted_Teff"][sel_teff_range]
-
-        sel_below_Praesepe = (
-            period_val < reference_cluster_slow_sequence(
-                teff_val, "Praesepe", poly_order=poly_order
-            )
-        )
-
-        if period_col == 's19_Prot':
-            ax.scatter(
-                teff_val[sel_below_Praesepe], period_val[sel_below_Praesepe],
-                c='C1', marker='o', zorder=4, linewidths=0.5, s=2,
-                label='KOIs below Praesepe'
-            )
-        else:
-            # legend label trick
-            ax.scatter(
-                teff_val[sel_below_Praesepe], period_val[sel_below_Praesepe],
-                c='C1', marker='o', zorder=4, linewidths=0.5, s=2,
-            )
-
-    ax.legend(loc='upper left', fontsize='xx-small', framealpha=1)
-
-    ax.update({
-        'xlabel': 'B+20 Teff',
-        'ylabel': 'Prot [M14,M15,S19,S21]',
-        'ylim': [0,20],
-        'xlim': [6500, 3600]
-    })
-
-    outdir = join(RESULTSDIR, 'debug')
-    if not os.path.exists(outdir): os.mkdir(outdir)
-    outpath = join(
-        outdir, f"koi_table_sub_praesepe_selection_cut_poly{poly_order}.png"
-    )
-    fig.savefig(outpath, dpi=350, bbox_inches='tight')
-
-
 def plot_age_posteriors(
     Prots, Teff, outdir,
     age_grid=np.linspace(0, 2600, 500),
     bounds_error='limit',
     full_mcmc=False
     ):
+    """
+    Top panels of Figure 3 in BPH23.
+    """
 
     #
     # Calculate the age posterior
@@ -1428,9 +1322,9 @@ def _given_params_plot_imshow(ax, xkey, ykey, df, vmin, i, j, map_row):
         pass
 
 
-def plot_fit_gyro_model(outdir, modelid):
+def _plot_fit_gyro_model(outdir, modelid):
     """
-    Corner plot showing chi^2 surface
+    Deprecated corner plot showing chi^2 surface
     """
 
     Bstr = 'logB' if 'zeroB' not in modelid else 'B'
@@ -1484,7 +1378,7 @@ def plot_fit_gyro_model(outdir, modelid):
     savefig(fig, outpath, dpi=400, writepdf=False)
 
 
-def DEPRECATED_plot_fit_gyro_model(outdir, modelid):
+def _DEPRECATED_plot_fit_gyro_model(outdir, modelid):
     """
     DEPRECATED
 
@@ -1639,19 +1533,11 @@ def plot_empirical_limits_of_gyrochronology(
     grid_resolution='coarse'
     ):
     """
-    Map out precision of gyro posteriors as a function of Prot and Teff.
+    Map out precision of gyro posteriors as a function of Prot and Teff (lower
+    panels of Fig 3 in BPH23).
 
-    args:
-
-        poly_order: integer polynomial order for the reference cluster mean
-        model.  Default is 7, which seems to do the best job across all
-        clusters.
-
-        slow_seq_ages: optional list of ages, in Myr, for slow sequence models
-        to underplot (e.g., [100, 200, 400]).
-
-        age_scale: "default", "1sigmaolder", or "1sigmayounger".  Shifts the
-        entire age scale appropriately.
+    *age_scale*: "default", "1sigmaolder", or "1sigmayounger".  Shifts the
+    entire age scale appropriately.
     """
 
     allowedstrs = [
@@ -1925,6 +1811,12 @@ def plot_empirical_limits_of_gyrochronology(
 def plot_n_vs_teff_vs_time(
     outdir,
     ):
+    """
+    If you take the ratios of the slow sequence polynomials, you can define
+    a piecewise power-law spin-down, Prot ~ t^n.  This is described in Appendix
+    A of BPH23.  This plot shows the power-law index, n, as a function of
+    temperature for each time interval.  It did not make the manuscript.
+    """
 
     #
     # Calculate the age posterior
@@ -1996,7 +1888,11 @@ def plot_n_vs_teff_vs_time(
 def plot_prot_vs_time_fixed_teff(
     outdir, teff, interp_methods, xscale='log'
     ):
+    """
+    Generates the first figure in the Appendix of BPH23.
+    """
 
+    # github.com/lgbouma/gilly, setup.py installable
     from gilly.gyrochronology import (
         MamajekHillenbrand08_gyro_Prot, SpadaLanzafame20_gyro_Prot,
         Angus19_gyro_Prot
