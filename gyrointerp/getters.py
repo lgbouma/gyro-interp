@@ -1,6 +1,7 @@
 """
-Functions to get the rotation periods and effective temperatures for single
-members of benchmark open clusters.
+These functions return the rotation periods and effective temperatures for
+single members of benchmark open clusters.  These are the functions used to
+acquire and clean the data behind Figure 1 of BPH23.
 
 Meta-wrapper:
     | _get_cluster_Prot_Teff_data
@@ -70,9 +71,9 @@ from gyrointerp.helpers import (
 
 def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     """
-    Wrapper to gyrointerp.getters to retrieve dataframes of reference cluster
-    data, as well as to define the colors / labels / zorders used across many
-    plots.
+    This function retrieves dataframes of all available reference cluster data.
+    It also defines the colors / labels / zorders used across many plots in the
+    BPH23 manuscript.
     """
     assert N_colors in [5,6]
 
@@ -230,17 +231,15 @@ def get_NGC6819(overwrite=0):
     return mdf
 
 
-
 def get_Ruprecht147(overwrite=0):
     """
     Return Curtis+2020 (Table 1) rotation period dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
+    _plus_ the usual Gaia DR3 columns.
 
     NOTE:
-        the "flag_possible_binary" flag in this case is weaker than in the
+        The "flag_possible_binary" flag in this case is weaker than in the
         other comparison clusters, because there aren't very many good stars.
-
-    ... plus the usual Gaia DR3 columns.
     """
 
     cluster = 'ruprecht147'
@@ -349,13 +348,8 @@ def get_NGC6811(overwrite=0):
     """
     Returns the Curtis+2019 (Table 1) rotation period dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     cluster = 'ngc6811'
@@ -498,14 +492,8 @@ def get_Blanco1(overwrite=0):
     """
     Returns the Gillen+2020 (Table 1) rotation period dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     cluster = 'blanco1'
@@ -640,13 +628,8 @@ def get_Pleiades(overwrite=0):
     """
     Returns the Rebull+2016 (Table 2) rotation period dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     cluster = 'pleiades'
@@ -861,13 +844,8 @@ def get_NGC3532(overwrite=0):
     """
     Returns the Fritzewski+2021 rotation period dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     cluster = 'ngc3532'
@@ -1007,6 +985,12 @@ def get_NGC3532(overwrite=0):
 
 
 def get_Praesepe_Rampalli_2021(overwrite=0):
+    """
+    Returns the Rampalli+2021 Praesepe rotation period dataframe with keys:
+    "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
+    """
 
     cluster = 'praesepe_rampalli2021'
     outdir = os.path.join(DATADIR, "interim", cluster)
@@ -1230,14 +1214,8 @@ def get_PscEri(overwrite=0):
     """
     Returns the Curtis+2019 (Table 2) rotation period dataframe with keys:
     "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     cluster = 'psc-eri'
@@ -1372,14 +1350,8 @@ def get_GroupX(overwrite=0):
     """
     Returns the Messina+2022 rotation period dataframe with keys: "Prot",
     "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     cluster = 'groupx'
@@ -1537,8 +1509,10 @@ def get_GroupX(overwrite=0):
 
 def get_alphaPer(overwrite=0):
     """
-    Returns the Boyle+ in prep dataframe with keys:
-    "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
+    Returns the Boyle & Bouma 2023 rotation period dataframe with keys: "Prot",
+    "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
+    _plus_ "flag_possible_binary", "flag_ruwe_outlier", "flag_camd_outlier",
+    "flag_rverror_outlier", _plus_ the usual Gaia DR3 columns.
     """
 
     # NOTE: overwrite has no effect for alpha-Per CSV.
@@ -1581,16 +1555,7 @@ def get_alphaPer(overwrite=0):
 
 def get_alphaPer_construct(overwrite=0):
     """
-    Constructs the Boyle+ in prep dataframe, with keys:
-    "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration),
-
-        plus:
-            "flag_possible_binary",
-            "flag_ruwe_outlier",
-            "flag_camd_outlier",
-            "flag_rverror_outlier",
-        plus:
-            the usual Gaia DR3 columns.
+    Constructor for `get_alphaPer`
     """
 
     cluster = 'alpha-per'

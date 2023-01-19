@@ -1,6 +1,7 @@
 """
-This module defines a dictionary containing the default cluster age scale, as
-well as the assumed +1sigma and -1sigma uncertainties on those ages.
+This module contains a dictionary defining the default cluster age scale, as
+well as the assumed +1sigma and -1sigma uncertainties on those ages.  These
+data are the same as Table 1 in BPH23.
 """
 
 agedict = {

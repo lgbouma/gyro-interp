@@ -1,18 +1,11 @@
-.. |br| raw:: html
-
-   <br />
-
-.. image:: gyrointerp_logo.png
-   :width: 50%
-   :align: center
-
------
+gyro-interp
+++++++++++++
 
 Hi!  Welcome to the documentation for ``gyrointerp``, a Python package that
 calculates gyrochronal ages by interpolating between open cluster rotation
 sequences.
 
-``gyrointerp`` packages the model from Palumbo, Bouma & Hillenbrand (2023) 
+``gyrointerp`` packages the model from Bouma, Palumbo & Hillenbrand (2023) 
 into a fast and easy-to-use framework.  The examples below will walk you
 through the most common use-cases.
 
@@ -21,11 +14,18 @@ interests in gyrochronal age measurement, and we encourage community
 involvement.  If you find a bug or want to request a feature, please create an
 `issue on Github <https://github.com/lgbouma/gyro-interp>`_. 
 
+.. |br| raw:: html
+
+   <br />
+
+.. image:: gyrointerp_logo.png
+   :width: 50%
+   :align: center
+
 Attribution:
 ++++++++++++
 
-If you use ``gyrointerp`` in your work, please cite `Palumbo, Bouma &
-Hillenbrand (2023)<LINKPENDING>`_.
+`Bouma, Palumbo & Hillenbrand (2023)<LINKPENDING>`_.
 
 
 User Guide:

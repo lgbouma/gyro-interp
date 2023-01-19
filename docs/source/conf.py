@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('../../gyrointerp/'))
 # -- Project information -----------------------------------------------------
 
 project = 'gyro-interp'
-copyright = '2022, Luke Bouma, Elsa Palumbo'
-author = 'Luke Bouma, Elsa Palumbo'
+copyright = '2023 Luke Bouma et al'
+author = 'Luke Bouma et al'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'

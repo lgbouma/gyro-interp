@@ -33,7 +33,7 @@ which will execute the tests.  This takes about two minutes on my laptop.
 Given a star's rotation period, effective temperature, and uncertainties, what
 is the gyrochronological age posterior over a grid spanning 0 to 2.6 Gyr?
 
-```
+```python
 import numpy as np
 from gyrointerp import gyro_age_posterior
 

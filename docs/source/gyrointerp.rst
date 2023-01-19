@@ -12,34 +12,10 @@ gyrointerp.age\_scale module
    :undoc-members:
    :show-inheritance:
 
-gyrointerp.binary\_checker module
----------------------------------
-
-.. automodule:: gyrointerp.binary_checker
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 gyrointerp.extinctionpriors module
 ----------------------------------
 
 .. automodule:: gyrointerp.extinctionpriors
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gyrointerp.fitting module
--------------------------
-
-.. automodule:: gyrointerp.fitting
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gyrointerp.gaia module
-----------------------
-
-.. automodule:: gyrointerp.gaia
    :members:
    :undoc-members:
    :show-inheritance:

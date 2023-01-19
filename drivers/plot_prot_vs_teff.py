@@ -14,11 +14,10 @@ all_clusters = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-
 ap.plot_prot_vs_teff(
     outdir, all_clusters
 )
-slow_seq_ages = [0.5*(300+670)]
 model_ids = ['α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811']
 for logy in [0, 1]:
     ap.plot_prot_vs_teff(
-        outdir, all_clusters, slow_seq_ages=slow_seq_ages, model_ids=model_ids, logy=logy
+        outdir, all_clusters, model_ids=model_ids, logy=logy
     )
 assert 0
 

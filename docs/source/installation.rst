@@ -27,8 +27,8 @@ If you just want to know a star's gyrochronal age given its rotation period and
 effective temperature, the installation above is sufficient.  However, the full
 set of available functionality in the package includes pre-cooked queries to
 Gaia DR3 to check whether a given star is likely to be a binary.  If you wish
-to run such queries, you will also need to install the ``astroquery`` and
-``cdips`` libraries:
+to run such queries, one way involves using the ``astroquery`` and ``cdips``
+libraries:
 
 .. code-block:: bash
   
