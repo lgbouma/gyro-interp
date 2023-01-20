@@ -55,10 +55,19 @@ from astropy.io import fits
 from copy import deepcopy
 from matplotlib import cm
 
-from cdips.utils.gaiaqueries import (
-    given_dr2_sourceids_get_edr3_xmatch, given_dr3_sourceids_get_dr2_xmatch,
-    given_source_ids_get_gaia_data, given_source_ids_get_neighbor_counts
-)
+try:
+    from cdips.utils.gaiaqueries import (
+        given_dr3_sourceids_get_dr2_xmatch, given_source_ids_get_gaia_data,
+        given_source_ids_get_neighbor_counts
+    )
+    HAVE_GAIA_UTILS = 1
+except AssertionError as e:
+    # if cdips is not installed (github.com/lgbouma/cdips), and specifically if
+    # the gaia credentials have not been correctly configured at
+    # ~/.gaia_credentials per ``cdips.utils.gaiaqueries``, suppress the
+    # associated error.
+    LOGWARNING(e)
+    HAVE_GAIA_UTILS = 0
 
 from gyrointerp.paths import LOCALDIR, DATADIR, RESULTSDIR
 from gyrointerp.extinctionpriors import extinction_A_V_dict
