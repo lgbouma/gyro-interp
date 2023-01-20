@@ -2,7 +2,7 @@ Examples
 ========================================
 
 Gyrochronal age for one star
-++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++
 
 Given a single star's rotation period, effective temperature, and
 uncertainties, what is the gyrochronological age posterior over a grid spanning
@@ -46,7 +46,7 @@ posterior using matplotlib:
 
 
 Gyrochronal ages for many stars
-++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++
 
 Given the rotation periods, temperatures, and uncertainties for many stars,
 what are the implied age posteriors?
@@ -94,20 +94,79 @@ what are the implied age posteriors?
       main()
 
 In this example we guarded the multiprocessing being executed in
-*gyro_age_posterior_list* in a *__main__* block, per the suggestion in the
+``gyro_age_posterior_list`` in a ``__main__`` block, per the suggestion in the
 `multiprocessing docs
 <https://docs.python.org/3/library/multiprocessing.html>`_.  This example also
 takes about 30 seconds to run on my laptop, so the multithreading is doing what
 we want.
 
 
-Auxiliary tools
-++++++++++++++++++++
+.. _visual interpolation:
 
-**Comparing a single star's rotation period against open cluster populations**
-(TODO: add this plot)
+Visual interpolation for a star's age
+++++++++++++++++++++++++++++++++++++++++
+We sometimes might want to look at where a given star falls in the
+rotation-temperature plan in comparison to known reference clusters.  This is a
+good sanity check, because if a star has a rotation period that corresponds to
+lots of possible ages, we should be sure that that this expectation is being
+mirrored in the age posteriors!  Accounting for this type of intrinsic
+population level scatter is in fact the main aim of the BPH23 model.
 
-**Plotting the gyro posterior**
-(TODO: embed plot)
+.. code-block:: python
 
+  from gyrointerp.plotting import plot_prot_vs_teff
 
+  # write the results to this directory
+  outdir = "./"
+
+  # show these cluster Prot vs Teff datasets
+  reference_clusters = [
+      'α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
+      'Praesepe', 'NGC-6811'
+  ]
+
+  # underplot these polynomial fits
+  model_ids = [
+      'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811'
+  ]
+
+  # overplot these stars with big markers
+  custom_stardict = {
+      "Kepler-1643": {"Prot":5.1, "Teff":4916, "m":"s", "c":"red"},
+      "TOI-1136": {"Prot":8.7, "Teff":5770, "m":"X", "c":"pink"},
+      "TOI-1937 A": {"Prot":6.6, "Teff":5798, "m":"P", "c":"aqua"},
+  }
+
+  # make the plot
+  plot_prot_vs_teff(
+      outdir, reference_clusters=reference_clusters, model_ids=model_ids,
+      custom_stardict=custom_stardict, writepdf=0
+  )
+
+which yields the following plot:
+
+.. |br| raw:: html
+
+   <br />
+
+.. image:: example_plot.png
+   :width: 95%
+   :align: center
+
+Kepler-1643, TOI-1136, and TOI-1937 provide three interestingly different
+examples.  Kepler-1643 is `~40 Myr old based on cluster membership
+<https://ui.adsabs.harvard.edu/abs/2022AJ....164..215B/abstract>`_, and it
+hosts a close-in mini-Neptune around twice the size of Earth.  TOI-1136 is a
+`field star with six known transiting planets
+<https://arxiv.org/abs/2210.09283>`_, and rotation is currently the most
+constraining line of evidence for its ~700 Myr age.  Finally, TOI-1937 is a
+system for which gyrochronology should probably not be applied.  The reasons
+are that it is `both a known binary
+<https://ui.adsabs.harvard.edu/abs/2022arXiv221015473Y/abstract>`_, with a
+widely-separated companion, and the primary also hosts a hot Jupiter, which
+`might spin up the primary
+<https://ui.adsabs.harvard.edu/abs/2021ApJ...919..138T/abstract>`_ through
+tides.  This kind of interaction is exactly the kind of thing that we tried to
+avoid by cleaning out binaries in BPH23!  While it is in principle possible to
+construct models that account for known tidal or other spin-up, the BPH23 model
+does not attempt to do this.

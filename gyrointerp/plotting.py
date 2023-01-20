@@ -112,28 +112,87 @@ def _given_ax_append_spectral_types(
 ############
 # plotters #
 ############
-def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
-                      model_ids=None, poly_order=7,
-                      slow_seq_ages=None, hide_ax=0, logo_colors=0,
-                      logy=False, n=None, interp_method='pchip_m67'):
+def plot_prot_vs_teff(
+    outdir,
+    reference_clusters=['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                        'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819',
+                        'Ruprecht-147'],
+    slow_seq_ages=None,
+    model_ids=None,
+    custom_stardict=None,
+    interp_method='pchip_m67',
+    show_binaries=0, poly_order=7,
+    hide_ax=0, logo_colors=0, logy=0, writepdf=1):
     """
-    Plot Figure 1 of BPH23.
+    Plot rotation periods versus temperatures for known reference clusters.
+    This the plotter used for Figure 1 of BPH23.  To make analogous figures
+    with your favorite stars overplotted, you can use the ``custom_stardict``
+    keyword argument, with syntax like this following:
+
+    .. code-block:: python
+
+       custom_stardict = {
+           "TOI-1136": {"Prot":8.7, "Teff":5770, "m":"X", "c":"yellow"},
+           "TOI-1937": {"Prot":6.6, "Teff":5798, "m":"+", "c":"lime"},
+       }
+
+    where the "m" marker value needs to be readable by matplotlib, and
+    the "c" color value is a named matplotlib color.  Additional details
+    follow.
 
     Args:
 
-        reference_clusters (list):
-            List containing any of ``['Pleiades', 'Blanco-1', 'Psc-Eri',
-            'NGC-3532', 'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819',
-            'Ruprecht-147']``
+        outdir (str):
+            Path to directory at which the plot will be written.
 
-        model_ids (iterable of strings):
-            To be called by ``models.reference_cluster_slow_sequence``.  Any
-            of: ``['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-            'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr']``
+        reference_clusters (list of strings):
+            List of strings containing any of ``['Pleiades', 'Blanco-1',
+            'Psc-Eri', 'NGC-3532', 'Group-X', 'Praesepe', 'NGC-6811',
+            'NGC-6819', 'Ruprecht-147']``
 
         slow_seq_ages (optional list of ages):
-            Ages in Myr, for slow sequence models to underplot (e.g., ``[120,
-            150, 200, 250]``).
+            Ages in Myr for interpolated slow sequence models to underplot
+            (e.g., ``[100, 200, 300, 1000]``).
+
+        model_ids (iterable of strings):
+            If you want to underplot the colored polynomial fits to the
+            individual clusters, write in the names of your preferred fits
+            here.  These can be any of: ``['Pleiades', 'Blanco-1', 'Psc-Eri',
+            'NGC-3532', 'Group-X', 'Praesepe', 'NGC-6811', '120-Myr',
+            '300-Myr', '2.6-Gyr']``.
+
+        custom_stardict (dict):
+            Dictionary which can be used to show how individual stars compare
+            against the cluster sequences.  If passed, the structure of the
+            dictionary should match that  described at the beginning of the
+            docstring.
+
+        interp_method (str):
+            How will you interpolate between the polynomial fits to the
+            reference open clusters? "pchip_m67" is the suggested default
+            method.  Additional details are in the docstring for
+            ``gyro_posterior.gyro_age_posterior``.
+
+        show_binaries (bool):
+            Whether to show the stars that are suspected binaries, according to
+            the flags described in Sec 2.3 of BPH23.
+
+        poly_order (int):
+            Integer order of the polynomial fit.
+
+        hide_ax (bool):
+            Whether you want to show the matplotlib axes.  Most people will
+            want these.
+
+        logo_colors (bool):
+            Whether you want to adopt an alternative colorscheme used to make
+            the gyro-interp logo.  You usually will not.
+
+        logy (bool):
+            Whether you want to set the y-axis to be on a logarithmic scale.
+
+        writepdf (bool):
+            Whether to write a pdf as well as a png version of the plot.
     """
     # Get data
     N_colors = 6
@@ -189,11 +248,28 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
         Teff = np.linspace(3800, 6200, 100)
         for slow_seq_age in slow_seq_ages:
             Prot = slow_sequence(
-                Teff, slow_seq_age, poly_order=poly_order, n=n,
+                Teff, slow_seq_age, poly_order=poly_order,
                 interp_method=interp_method
             )
             ax.plot(
                 Teff, Prot, color='lightgray', linewidth=1, zorder=-1
+            )
+
+    if isinstance(custom_stardict, dict):
+
+        keys = "Prot,Teff,m,c".split(",")
+        for name, v in custom_stardict.items():
+            for key, _ in v.items():
+                assert key in v
+
+        for name, v in custom_stardict.items():
+            _Prot = v["Prot"]
+            _Teff = v["Teff"]
+            _m = v["m"]
+            _c = v["c"]
+            ax.scatter(
+                _Teff, _Prot, color=_c, alpha=1, s=90, marker=_m,
+                edgecolors='k', linewidths=0.3, zorder=999, label=name
             )
 
     if not hide_ax:
@@ -247,8 +323,6 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
             f"_{slow_seq_ages[0]}_to_{slow_seq_ages[-1]}"
         )
     ns = ''
-    if n is not None:
-        ns = f"_n{n}"
     im = ''
     if im is not None:
         im = f"_interpmethod{interp_method}"
@@ -259,9 +333,10 @@ def plot_prot_vs_teff(outdir, reference_clusters, show_binaries=0,
     if logy:
         ly = 'logy'
 
-    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}{ns}.png')
+    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}.png')
+    outpath = outpath.replace(" ", "_")
 
-    savefig(fig, outpath, dpi=400, writepdf=1)
+    savefig(fig, outpath, dpi=400, writepdf=writepdf)
 
 
 

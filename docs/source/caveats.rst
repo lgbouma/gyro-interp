@@ -43,6 +43,10 @@ A few ways to determine whether your star might be a binary include:
   star.  With the resulting sample of stars, check whether your star is an
   outlier in the HR diagram.  This can be an indication of photometric binarity.
 
+As mentioned in the section on :ref:`visual interpolation`, the same types of
+considerations apply to hot Jupiter systems, or any kinds of systems in which
+tidal effects might alter the star's rotation period.
+
 Generally speaking, the best approaches will differ based on your stars of
 interest.  A few separate utilities that can help in assessing these types of
 utilties are available through
