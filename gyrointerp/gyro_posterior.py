@@ -3,12 +3,6 @@ Main drivers:
     | ``gyro_age_posterior``
     | ``gyro_age_posterior_list``
     | ``gyro_age_posterior_mcmc``
-
-Under-the-hood:
-    | ``_gyro_age_posterior_worker``
-    | ``_one_star_age_posterior_worker``
-    | ``_get_pop_samples``
-    | ``_agethreaded_gyro_age_posterior``
 """
 #############
 ## LOGGING ##
@@ -232,12 +226,13 @@ def gyro_age_posterior(
     rotation periods at any given age and temperature.
 
     If Prot_err and Teff_err are not specified, they are assumed to be 1%
-    relative and 100 K, respectively.  One suggested effective temperature
+    relative and 100 K, respectively.  Spectroscopic temperature are
+    acceptable, though the preferred effective temperature
     scale is implemented in ``gyrointerp.teff``, in the
-    ``given_dr2_BpmRp_AV_get_Teff_Curtis2020`` function.  This assumes you have
-    an accurate estimate for the reddening.  Spectroscopic temperatures are
-    also good, though they would ideally be calibrated against the
-    effective temperature scale described in Appendix A of `Curtis+2020
+    ``given_dr2_BpmRp_AV_get_Teff_Curtis2020`` function.  This requires an
+    accurate estimate for the reddening.  Whatever your effective
+    temperature scale, it should ideally be compared against that in Appendix A
+    of `Curtis+2020
     <https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract>`_.
 
     Args:
@@ -667,7 +662,7 @@ def gyro_age_posterior_mcmc(
 def gyro_age_posterior_list(
     cache_id, Prots, Teffs, Prot_errs=None, Teff_errs=None,
     star_ids=None, age_grid=np.linspace(0, 3000, 500), N_grid='default',
-    bounds_error='4gyrlimit', interp_method='pchip_m67'
+    bounds_error='4gyrlimit', interp_method='pchip_m67', nworkers=None
     ):
     """
     Given rotation periods and effective temperatures for many stars, run them
@@ -701,10 +696,15 @@ def gyro_age_posterior_list(
             ``TIC1234567_ProtXX.XXXX_TeffYYYY.Y_limitgrid_defaultparameters.csv``.
             If None, then the identifier is omitted.
 
+        nworkers (int or None):
+            Number of workers to thread over.  By default, will be taken to be
+            all available CPU cores.
+
     Returns:
 
-        Nothing; the output posteriors however are cached to
-        ``~/.gyrointerp_cache/{cache_id}``
+        List of paths to all available output posteriors at
+        ``~/.gyrointerp_cache/{cache_id}``.  If you re-use your *cache_id*, this
+        means you will get more than you asked for!
     """
 
     assert len(Prots) == len(Teffs)
@@ -713,7 +713,7 @@ def gyro_age_posterior_list(
         Prot_errs = 0.01*Prots
 
     if Teff_errs is None:
-        Teff_errs = 100
+        Teff_errs = 100*np.ones(len(Prots))
 
     if star_ids is None:
         star_ids = [None]*len(Prots)
@@ -738,11 +738,15 @@ def gyro_age_posterior_list(
 
     N_tasks = len(tasks)
     LOGINFO(f"Got N_tasks={N_tasks}...")
-    LOGINFO(f"{datetime.now().isoformat()} begin")
+    LOGINFO(f"{datetime.now().isoformat()} beginning gyro_age_posterior_list")
 
-    nworkers = mp.cpu_count()
+    if nworkers is None:
+        nworkers = mp.cpu_count()
 
     maxworkertasks= 1000
+
+    os.environ['NUMEXPR_MAX_THREADS'] = str(nworkers)
+    os.environ['NUMEXPR_NUM_THREADS'] = str(nworkers)
 
     pool = mp.Pool(nworkers, maxtasksperchild=maxworkertasks)
 
@@ -751,4 +755,12 @@ def gyro_age_posterior_list(
     pool.close()
     pool.join()
 
-    LOGINFO(f"{datetime.now().isoformat()} end")
+    LOGINFO(f"{datetime.now().isoformat()} end gyro_age_posterior_list")
+
+    csvpaths = (
+        glob(os.path.join(outdir, "*posterior.csv"))
+    )
+
+    LOGINFO(f"Returning N={len(csvpaths)} paths to posteriors.")
+
+    return csvpaths

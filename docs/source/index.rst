@@ -7,11 +7,12 @@ sequences.
 
 ``gyrointerp`` packages the model from Bouma, Palumbo & Hillenbrand (2023) 
 into a fast and easy-to-use framework.  The documentation below will walk you
-through the most common use-cases.
+through the most common use-cases.  For brevity, we'll refer to that paper as
+BPH23.
 
-``gyrointerp`` is designed to meet the needs of working astronomers with
+This package is designed to meet the needs of working astronomers with
 interests in gyrochronal age measurement, and we encourage community
-involvement.  If you find a bug or would like to request a feature, please
+involvement.  If you find a bug or would like to request a feature, please do
 create an `issue on Github <https://github.com/lgbouma/gyro-interp>`_. 
 
 .. |br| raw:: html
@@ -38,6 +39,7 @@ User Guide:
 
     installation
     examples
+    caveats
     gyrointerp
 
 Changelog:
