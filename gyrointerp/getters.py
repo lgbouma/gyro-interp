@@ -3,7 +3,9 @@ These functions return the rotation periods and effective temperatures for
 single members of benchmark open clusters.  These are the functions used to
 acquire and clean the data behind Figure 1 of BPH23.  Generally, most users
 will want to just download the data from the paper, rather than using these
-functions.
+functions.  An additional dependency if you do want to use them is the
+``cdips`` module, best installed via a setup.py install from
+https://github.com/lgbouma/cdips.
 
 Get all available cluster data:
     | _get_cluster_Prot_Teff_data

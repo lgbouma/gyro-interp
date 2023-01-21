@@ -14,6 +14,8 @@ gyro-interp manuscript.  Contents:
 
 Helpers:
     | ``_given_ax_append_spectral_types``
+    | ``_load_PecautMamajek_table``
+    | ``_get_SpType_Teff_correspondence``
 
 Sub-plot makers, to prevent code duplication:
     | ``_plot_slow_sequence_residual``
@@ -85,11 +87,10 @@ def _given_ax_append_spectral_types(
     ax,
     _sptypes=['F2V','F5V','G2V','K0V','K5V','M0V','M3V']):
     # Append SpTypes (ignoring reddening)
-    from cdips.utils.mamajek import get_SpType_Teff_correspondence
 
     tax = ax.twiny()
     xlim = ax.get_xlim()
-    getter = get_SpType_Teff_correspondence
+    getter = _get_SpType_Teff_correspondence
     sptypes, xtickvals = getter(
         _sptypes
     )
@@ -107,6 +108,43 @@ def _given_ax_append_spectral_types(
     tax.xaxis.set_ticks_position('top')
     tax.tick_params(axis='x', which='minor', top=False)
     tax.get_yaxis().set_tick_params(which='both', direction='in')
+
+
+def _load_PecautMamajek_table():
+
+    mamajekpath = (
+        "https://www.dropbox.com/s/qfhes2nfey8bj0d/"
+        "EEM_dwarf_UBVIJHK_colors_Teff_20220416.txt?dl=1"
+    )
+
+    mamajek_df = pd.read_csv(
+        mamajekpath, comment='#', delim_whitespace=True
+    )
+    mamajek_df = mamajek_df[mamajek_df.Teff < 41000]
+    mamajek_df = mamajek_df.reset_index(drop=True)
+
+    return mamajek_df
+
+
+def _get_SpType_Teff_correspondence(
+    sptypes=['A0V','F0V','G0V','K2V','K5V','M0V','M3V','M5V'],
+    ):
+
+    mamajek_df = _load_PecautMamajek_table()
+
+    sel = (
+        (mamajek_df['Bp-Rp'] != '...')
+    )
+
+    sdf = mamajek_df[sel]
+
+    Teffs = []
+    for sptype in sptypes:
+        Teffs.append(float(sdf.loc[sdf.SpT==sptype]['Teff']))
+
+    sptypes = [s.replace('V','') for s in sptypes]
+
+    return np.array(sptypes), np.array(Teffs)
 
 
 ############
@@ -1959,6 +1997,7 @@ def plot_n_vs_teff_vs_time(
     })
 
     savefig(fig, outpath, dpi=400, writepdf=1)
+
 
 def plot_prot_vs_time_fixed_teff(
     outdir, teff, interp_methods, xscale='log'
