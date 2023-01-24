@@ -695,6 +695,8 @@ def _plot_prot_vs_teff_residual(
         sel = df.flag_benchmark_period
         if include_binaries:
             sel = (~pd.isnull(df.Prot)) & (~pd.isnull(df.Teff_Curtis20))
+            if reference_cluster == 'α Per':
+                sel &= df.flag_in_core
 
         Teff = nparr(df[sel].Teff_Curtis20)
         Prot = nparr(df[sel].Prot)

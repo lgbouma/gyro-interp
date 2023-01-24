@@ -1536,6 +1536,7 @@ def get_alphaPer(overwrite=0):
     cachepath = os.path.join(outdir, f"{authoryr}_DR3_supp.csv")
 
     if os.path.exists(cachepath):
+        LOGINFO(f"Found {cachepath}; returning.")
         return pd.read_csv(cachepath)
 
     df0 = pd.read_csv(os.path.join(
@@ -1545,8 +1546,22 @@ def get_alphaPer(overwrite=0):
         outdir, "Boyle_inprep_X_GDR3_supplemented.csv")
     )
 
+    core_csv_path = os.path.join(outdir, "core_select_vl_vb_X_Y_Z.csv")
+    if os.path.exists(core_csv_path):
+        # hand-tuned core selection to match Boyle+Bouma 2023, for purposes of
+        # the appendix figure.  these cuts were performed in the
+        # core_select_vl_vb_X_Y_Z.glu glue session, to match the vl/vb/X/Y/Z
+        # cuts described in the aforementioned manuscript.
+        df2 = pd.read_csv(core_csv_path)
+    else:
+        df2 = None
+
     df = df0.merge(df1, how='left', left_on='dr3_source_id',
                    right_on='dr3_source_id', suffixes=("", "_supp"))
+
+    if df2 is not None:
+        in_core = df.dr3_source_id.isin(df2.dr3_source_id)
+        df['flag_in_core'] = in_core
 
     df = df.rename(
         {'Teff_Curtis20':'Teff_Curtis20_fixedreddening'},
@@ -1562,7 +1577,9 @@ def get_alphaPer(overwrite=0):
 
     df['flag_benchmark_period'] = df['flag_pass_author_quality']
 
-    LOGINFO(f"Found {cachepath}; returning.")
+    df.to_csv(cachepath, index=False)
+
+    LOGINFO(f"Wrote {cachepath}; returning.")
     return df
 
 
