@@ -1,5 +1,5 @@
 import os
-import gyrointerp.plotting as ap
+import gyrointerp.plotting as gp
 from gyrointerp.paths import RESULTSDIR
 
 PLOTDIR = os.path.join(RESULTSDIR, 'prot_vs_time_fixed_teff')
@@ -19,7 +19,7 @@ for teff, _n in zip(teffs, n):
         "pchip_m67"
     ]
 
-    ap.plot_prot_vs_time_fixed_teff(PLOTDIR, teff, interp_methods,
+    gp.plot_prot_vs_time_fixed_teff(PLOTDIR, teff, interp_methods,
                                     xscale='log')
-    ap.plot_prot_vs_time_fixed_teff(PLOTDIR, teff, interp_methods,
+    gp.plot_prot_vs_time_fixed_teff(PLOTDIR, teff, interp_methods,
                                     xscale='linear')

@@ -1,5 +1,5 @@
 import os
-import gyrointerp.plotting as ap
+import gyrointerp.plotting as gp
 from gyrointerp.paths import RESULTSDIR
 import numpy as np, pandas as pd
 
@@ -31,7 +31,7 @@ for t in Teffs_Prots:
         outdir, f"Teff{Teff}_Prots{'_'.join(Prots.astype(str))}"
     )
     if not os.path.exists(_outdir): os.mkdir(_outdir)
-    ap.plot_age_posteriors(
+    gp.plot_age_posteriors(
         Prots, Teff, _outdir, age_grid=age_grid, full_mcmc=1
     )
 assert 0
@@ -46,7 +46,7 @@ if not os.path.exists(PLOTDIR):
 outdir = PLOTDIR
 for t in Teffs_Prots:
     Teff, Prots = t
-    ap.plot_age_posteriors(
+    gp.plot_age_posteriors(
         Prots, Teff, outdir, age_grid=age_grid
     )
 

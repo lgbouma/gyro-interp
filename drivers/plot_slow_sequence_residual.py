@@ -1,5 +1,5 @@
 import os
-import gyrointerp.plotting as ap
+import gyrointerp.plotting as gp
 from gyrointerp.paths import RESULTSDIR
 
 PLOTDIR = os.path.join(RESULTSDIR, 'slow_sequence_residual')
@@ -10,12 +10,12 @@ outdir = PLOTDIR
 #
 # many clusters, overplotted
 #
-ap.plot_slow_sequence_residual(
+gp.plot_slow_sequence_residual(
     outdir, ages=[10, 50, 120, 200, 300, 400], bounds_error='limit'
 )
-ap.plot_slow_sequence_residual(
+gp.plot_slow_sequence_residual(
     outdir, ages=[120, 300, 670, 1000]
 )
-ap.plot_slow_sequence_residual(
+gp.plot_slow_sequence_residual(
     outdir, ages=[120, 200, 300, 400, 500, 670]
 )
