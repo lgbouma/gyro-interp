@@ -518,7 +518,9 @@ def _one_star_age_posterior_worker(task):
 
 def _get_pop_samples(N_pop_samples):
 
-    from gyrointerp.helpers import get_population_hyperparameter_samples
+    from gyrointerp.helpers import (
+        get_population_hyperparameter_posterior_samples
+    )
     flat_samples = get_population_hyperparameter_posterior_samples()
 
     np.random.seed(42)

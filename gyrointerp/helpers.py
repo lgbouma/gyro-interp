@@ -31,6 +31,7 @@ LOGEXCEPTION = LOGGER.exception
 ## IMPORTS ##
 #############
 import os
+from os.path import join
 import numpy as np, pandas as pd
 
 def get_summary_statistics(age_grid, age_post, N=int(1e5)):
@@ -234,7 +235,7 @@ def get_population_hyperparameter_posterior_samples():
         # Pull the population-level hyperparameters from an external cache if
         # they are not already downloaded.
         dropboxlink = (
-            'https://www.dropbox.com/s/eokfpwltj3u0e93/fit_120-Myr_300-Myr_Praesepe.csv.gz?dl=1'
+            'https://www.dropbox.com/s/ywe3z8ez2ll871m/fit_120-Myr_300-Myr_Praesepe.csv?dl=1'
         )
         df = pd.read_csv(dropboxlink)
         df.to_csv(csvpath, index=False)

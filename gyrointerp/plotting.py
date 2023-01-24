@@ -972,7 +972,9 @@ def plot_data_vs_model_prot(
         ax.plot(teff_midway, model_ratio, c='gray', ls='-', marker='X',
                 label='Best-fit Model', zorder=1, ms=4, lw=1, mew=0)
 
-        from gyrointerp.helpers import get_population_hyperparameter_samples
+        from gyrointerp.helpers import (
+            get_population_hyperparameter_posterior_samples
+        )
         flat_samples = get_population_hyperparameter_posterior_samples()
 
         np.random.seed(42)

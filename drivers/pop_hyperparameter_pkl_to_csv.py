@@ -26,7 +26,7 @@ df = pd.DataFrame({
     'log_f': flat_samples[:,4]
 })
 
-csvpath = join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02", "fit_120-Myr_300-Myr_Praesepe.csv.gz")
+csvpath = join(LOCALDIR, "gyrointerp", "fitgyro_emcee_v02", "fit_120-Myr_300-Myr_Praesepe.csv")
 
 df.to_csv(csvpath, index=False)
 print(f"Wrote {csvpath}")
