@@ -518,14 +518,8 @@ def _one_star_age_posterior_worker(task):
 
 def _get_pop_samples(N_pop_samples):
 
-    # TODO: cache this posterior in an accessible way so that 
-    # TODO: all users can use gyro_age_posterior_mcmc
-    # this pickle file is the posterior 
-    pklpath = os.path.join(CACHEDIR, "fitgyro_emcee_v02",
-                           "fit_120-Myr_300-Myr_Praesepe.pkl")
-    with open(pklpath, 'rb') as f:
-        d = pickle.load(f)
-        flat_samples = d['flat_samples']
+    from gyrointerp.helpers import get_population_hyperparameter_samples
+    flat_samples = get_population_hyperparameter_posterior_samples()
 
     np.random.seed(42)
     sel_samples = flat_samples[

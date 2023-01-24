@@ -972,11 +972,8 @@ def plot_data_vs_model_prot(
         ax.plot(teff_midway, model_ratio, c='gray', ls='-', marker='X',
                 label='Best-fit Model', zorder=1, ms=4, lw=1, mew=0)
 
-        pklpath = os.path.join(CACHEDIR, "fitgyro_emcee_v02",
-                               "fit_120-Myr_300-Myr_Praesepe.pkl")
-        with open(pklpath, 'rb') as f:
-            d = pickle.load(f)
-            flat_samples = d['flat_samples']
+        from gyrointerp.helpers import get_population_hyperparameter_samples
+        flat_samples = get_population_hyperparameter_posterior_samples()
 
         np.random.seed(42)
         N_to_show = 64
