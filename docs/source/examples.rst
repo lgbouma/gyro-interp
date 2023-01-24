@@ -13,8 +13,13 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
   import numpy as np
   from gyrointerp import gyro_age_posterior
 
-  Prot, Prot_err = 6, 0.2
-  Teff, Teff_err = 5500, 100
+  # units: days
+  Prot, Prot_err = 11, 0.2
+
+  # units: kelvin
+  Teff, Teff_err = 4500, 100
+
+  # uniformly spaced grid between 0 and 2600 megayears
   age_grid = np.linspace(0, 2600, 500)
 
   # calculate the age posterior at each age in `age_grid`
@@ -23,7 +28,7 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
   )
 
   # calculate dictionary of summary statistics
-  from gyrointerp.helpers import get_summary_statistics
+  from gyrointerp import get_summary_statistics
   result = get_summary_statistics(age_grid, age_posterior)
 
   print(f"Age = {result['median']} +{result['+1sigma']} -{result['-1sigma']} Myr.")
@@ -40,9 +45,23 @@ posterior using matplotlib:
   ax.update({
       'xlabel': 'Age [Myr]',
       'ylabel': 'Probability ($10^{-3}\,$Myr$^{-1}$)',
-      'xlim': [0, 1000]
+      'title': f'Prot = {Prot}d, Teff = {Teff}K',
+      'xlim': [0,2000]
   })
   plt.show()
+
+.. |br| raw:: html
+
+   <br />
+
+.. image:: example_post.png
+   :width: 50%
+   :align: center
+
+This age posterior is highly asymmetric because this particular rotation
+period and temperature overlap with the era of "`stalled spin-down
+<https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract>`_".
+
 
 
 Gyrochronal ages for many stars
@@ -60,8 +79,10 @@ what are the implied age posteriors?
   def main():
 
       N_stars = os.cpu_count()
+
       Teffs = np.linspace(4000, 5500, N_stars)
-      Teff_errs = 100 *np.ones(N_stars)
+      Teff_errs = 100 * np.ones(N_stars)
+
       # at >~20 days, assume a few percent relative uncertainty on periods
       Prots = np.linspace(15, 22, N_stars)
       Prot_errs = 0.03 * Prots
@@ -69,14 +90,15 @@ what are the implied age posteriors?
       # The output posteriors will be cached at ~/.gyrointerp_cache/{cache_id}
       cache_id = 'my_awesome_stars'
 
-      # That 5500 K star with Prot = 22 days is near the Ruprecht-147 sequence.
+      # A 5500 K star with Prot = 22 d will be near the Ruprecht-147 sequence.
       # Let's extend the age_grid up to 4000 Myr (4 Gyr); the extrapolation 
-      # past 2.6 Gyr is based on the M67 data.
+      # past 2.6 Gyr will be based on the M67 data.
       age_grid = np.linspace(0, 4000, 500)
 
       # Let's pass optional star IDs to name the posterior csv files.
       star_ids = [f"FOO{ix}" for ix in range(N_stars)]
 
+      # This function will compute the posteriors, and cache them to CSV files
       csvpaths = gyro_age_posterior_list(
           cache_id, Prots, Teffs, Prot_errs=Prot_errs, Teff_errs=Teff_errs,
           star_ids=star_ids, age_grid=age_grid, bounds_error="4gyrlimit",
@@ -97,26 +119,26 @@ In this example we guarded the multiprocessing being executed in
 ``gyro_age_posterior_list`` in a ``__main__`` block, per the suggestion in the
 `multiprocessing docs
 <https://docs.python.org/3/library/multiprocessing.html>`_.  This example also
-takes about 30 seconds to run on my laptop, so the multithreading is doing what
-we want.
+takes about 30 seconds to run on my laptop.  Compared to the single-star case,
+this means that the multithreading is doing what we want.
 
 
 .. _visual interpolation:
 
 Visual interpolation for a star's age
 ++++++++++++++++++++++++++++++++++++++++
-We sometimes might want to look at where a given star falls in the
-rotation-temperature plan in comparison to known reference clusters.  This is a
-good sanity check, because if a star has a rotation period that corresponds to
-lots of possible ages, we should be sure that that this expectation is being
-mirrored in the age posteriors!  Accounting for this type of intrinsic
-population level scatter is in fact the main aim of the BPH23 model.
+We sometimes might want to examine where a given star falls in the
+rotation-temperature plane in comparison to known reference clusters.  If a
+star has a rotation period that corresponds to lots of possible ages, we should
+be sure that that this expectation is being mirrored in the age posteriors!
+Accounting for this type of intrinsic population level scatter is one of the
+main goals of the BPH23 model.
 
 .. code-block:: python
 
   from gyrointerp.plotting import plot_prot_vs_teff
 
-  # write the results to this directory
+  # write the results to the current working directory
   outdir = "./"
 
   # show these cluster Prot vs Teff datasets
@@ -150,7 +172,7 @@ which yields the following plot:
    <br />
 
 .. image:: example_plot.png
-   :width: 95%
+   :width: 80%
    :align: center
 
 Kepler-1643, TOI-1136, and TOI-1937 provide three interestingly different

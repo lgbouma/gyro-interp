@@ -18,10 +18,10 @@ Next, install ``gyrointerp``:
     $ pip install gyrointerp
 
 We recommend installing and running ``gyrointerp`` in a conda virtual
-environment. Install *anaconda* or *miniconda* `here
-<https://conda.io/miniconda.html>`_, then see instructions `here
-<https://conda.io/docs/user-guide/tasks/manage-environments.html>`_ to learn
-more about *conda* virtual environments.
+environment.  You can install anaconda or miniconda `here
+<https://conda.io/miniconda.html>`_; the instructions `here
+<https://conda.io/docs/user-guide/tasks/manage-environments.html>`_ provide
+more information about conda virtual environments.
 
 **Issues?**
 

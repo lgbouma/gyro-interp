@@ -12,20 +12,23 @@ useful.  At older ages, the effects of stellar evolution begin to become
 important, especially for the more massive stars.
 
 If you have auxiliary data, such as stellar surface gravities derived from
-spectra, they can help determine whether this model is applicable to your star.
+spectra, they can help determine whether your star might have undergone
+significant nuclear evolution -- in other words whether it is a subgiant or
+even a giant.  If it is, this model is not applicable.
+
 
 Binarity
 ++++++++++++++++++++
 
-Before applying gyrochronology, it's worth asking whether your star is
-potentially a binary.  If it is, you should proceed carefully, both due to
-potential biases in temperature and rotation period measurements, and due to
-the physical effects that even a widely-separated companion can have on a
-star's spin-down.
+Before applying gyrochronology, it's worth asking whether your star might be a
+binary.  If it is, you should proceed carefully.  Binarity can observationally
+bias temperature and rotation period measurements.  There is also a physical
+concern that even a widely-separated companion might influence a star's
+spin-down, by encouraging early dispersal of the protostellar disk.
 
 A few ways to determine whether your star might be a binary include:
 
-* Obtain high resolution images, and determine whether there are nearby
+* Get high resolution images, and determine whether there are nearby
   companions.  You can also check the Gaia point source catalog for such
   companions, though you may not achieve the same contrast limits close to the
   star.
