@@ -2154,7 +2154,7 @@ def plot_prot_vs_time_fixed_teff(
 
     ax.update({
         'ylabel': 'Residual [%]',
-        'xlabel': 'Time [Myr]',
+        'xlabel': 'Age [Myr]',
         'ylim': [-33, 33]
     })
     for axis in [ax.xaxis, ax.yaxis]:
