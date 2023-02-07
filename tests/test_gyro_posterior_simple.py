@@ -33,6 +33,7 @@ def test_gyro_posterior_simple():
     # check sun-like star near Ruprecht-147, to ensure extrapolation is working
     #
     age_grid = np.linspace(0, 5000, 501)
+    Teff, Teff_err = 5800, 50
     Prot = 17
 
     age_post = gyro_age_posterior(
@@ -43,7 +44,7 @@ def test_gyro_posterior_simple():
 
     assert abs(r['median'] - 2600) < 200
     assert abs(r['mean'] - 2600) < 200
-    assert 300 < r['+1sigma'] < 400
+    assert 200 < r['+1sigma'] < 300
     assert 200 < r['-1sigma'] < 300
 
 
