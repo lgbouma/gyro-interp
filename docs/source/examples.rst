@@ -24,8 +24,15 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
 
   # calculate the age posterior at each age in `age_grid`
   age_posterior = gyro_age_posterior(
-      Prot, Teff, Prot_err=Prot_err, Teff_err=Teff_err, age_grid=age_grid
+      Prot, Teff,
+      Prot_err=Prot_err, Teff_err=Teff_err,
+      age_grid=age_grid
   )
+
+This takes about 30 seconds to run on my laptop.  You can then use a helper
+function to calculate summary statistics of interest:
+
+.. code-block:: python
 
   # calculate dictionary of summary statistics
   from gyrointerp import get_summary_statistics
@@ -33,8 +40,7 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
 
   print(f"Age = {result['median']} +{result['+1sigma']} -{result['-1sigma']} Myr.")
 
-This takes about 30 seconds to run on my laptop.  You can then plot the
-posterior using matplotlib:
+You can also plot the posterior using matplotlib:
 
 .. code-block:: python
 
