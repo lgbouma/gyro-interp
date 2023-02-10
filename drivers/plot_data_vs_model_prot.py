@@ -10,7 +10,7 @@ outdir = PLOTDIR
 #
 # many clusters, overplotted
 #
-for include_binaries in [1,0]:
+for include_binaries in [0,1]:
     gp.plot_data_vs_model_prot(
         outdir,
         model_ids=['α Per', '120-Myr', '300-Myr', 'Praesepe'],

@@ -767,7 +767,7 @@ def _plot_prot_vs_teff_residual(
             linewidths=0.3, zorder=zorder-1
         )
 
-        if model_id in ['α Per', '120-Myr', '300-Myr']:
+        if model_id in ['α Per', '120-Myr', '300-Myr', 'Praesepe']:
             _Teff = np.linspace(3800, 6200, 1000)
             _Prot_model = reference_cluster_slow_sequence(
                 _Teff, model_id, poly_order=poly_order
@@ -931,6 +931,8 @@ def plot_data_vs_model_prot(
     resid_Teffs = []
     bounds_error = 'limit'
     for ax, age in zip(axs, ages):
+        ax.set_rasterized(True)
+        ax.set_facecolor("white")
         resid_Teffs, teff_grid = _plot_slow_sequence_residual(
             fig, ax, age, bounds_error, resid_Teffs, showtxt=0, showcolorbar=0,
             popn_parameters=popn_parameters, include_binaries=include_binaries

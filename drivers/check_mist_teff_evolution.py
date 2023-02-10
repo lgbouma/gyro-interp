@@ -88,10 +88,11 @@ for differential in [1,0]:
             for ix, mass in enumerate(masses):
 
                 df = dfd[mass]
+                MAX_AGE = 2.7e9
                 if youngerages:
-                    sel = (df.star_age > 10e6) & (df.star_age < 2.7e9)
+                    sel = (df.star_age > 10e6) & (df.star_age < MAX_AGE)
                 else:
-                    sel = (df.star_age > 80e6) & (df.star_age < 2.7e9)
+                    sel = (df.star_age > 80e6) & (df.star_age < MAX_AGE)
                 df = df[sel].reset_index()
 
                 color = cmap[ix]
@@ -119,7 +120,7 @@ for differential in [1,0]:
                     10**xnew, 10**smooth, lw=0.5, c=color, zorder=-1, label=mass
                 )
 
-            xlim = [10e6, 2.7e9] if youngerages else [80e6, 2.7e9]
+            xlim = [10e6, MAX_AGE] if youngerages else [80e6, MAX_AGE]
             ax.update({
                 'xlim': xlim,
                 'xlabel': 'Time [yr]',
