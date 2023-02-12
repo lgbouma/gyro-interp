@@ -37,7 +37,7 @@ def main(n=None, age_scale="default", interp_method="pchip_m67",
 
     age_grid = np.linspace(0, 2600, 500)
     teffmin, teffmax = 3800, 6200
-    protmin, protmax = 0, 23
+    protmin, protmax = 0, 23.5
     if grid_resolution == "fine":
         Teff_grid = np.arange(teffmin, teffmax+10, 10)
         Prot_grid = np.arange(protmin, protmax+0.1, 0.1)
@@ -50,8 +50,8 @@ def main(n=None, age_scale="default", interp_method="pchip_m67",
     N_grid = 'default'
 
     tasks = [
-        (_prot, _teff, age_grid, outdir, bounds_error, interp_method, n,
-         age_scale, parameters, N_grid)
+        (_prot, _teff, None, None, None, age_grid, outdir, bounds_error,
+         interp_method, n, age_scale, parameters, N_grid)
          for _prot, _teff in product(Prot_grid, Teff_grid)
     ]
 

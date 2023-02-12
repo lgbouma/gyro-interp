@@ -1767,7 +1767,7 @@ def plot_empirical_limits_of_gyrochronology(
     #newcmp = ListedColormap(_cmap)
 
     teffmin, teffmax = 3800, 6200
-    protmin, protmax = 0, 23
+    protmin, protmax = 0, 23.5
 
     if imagestr in singleaxstrs:
         _p = ax.imshow(
@@ -1835,11 +1835,11 @@ def plot_empirical_limits_of_gyrochronology(
         cb.set_label('$\Delta t$ [Myr]')
 
     if imagestr in singleaxstrs:
-        ax.set_ylim([0, 23])
+        ax.set_ylim([0, 23.5])
         ax.set_yticks([0, 5, 10, 15, 20])
     elif 'both' in imagestr:
         for ax in axs[:-1]:
-            ax.set_ylim([0, 23])
+            ax.set_ylim([0, 23.5])
             ax.set_yticks([0, 5, 10, 15, 20])
         axs[1].set_yticklabels([])
 
@@ -1886,6 +1886,27 @@ def plot_empirical_limits_of_gyrochronology(
                     linestyle=linestyle, zorder=999
                 )
 
+
+    if isinstance(slow_seq_ages, (list, np.ndarray)):
+        x_age_s = [
+            (5650, 500, '0.5'),
+            (5450, 1000, '1.0'),
+            (4920, 1500, '1.5'),
+            (4820, 2000, '2.0'),
+            (4820, 2500, '2.5')
+        ]
+        for t in x_age_s:
+            x,age,s = t[0], t[1], t[2]
+            bbox = dict(facecolor='lightgray', alpha=1, pad=0,
+                        edgecolor='lightgray')
+            y = slow_sequence(x, age, poly_order=7)
+
+            if 'both' in imagestr:
+                for ax in axs[:-1]:
+                    ax.text(x, y, s, ha='center', va='center',
+                            fontsize='x-small', bbox=bbox, zorder=9999)
+
+
     if imagestr in singleaxstrs:
         ax.set_xlabel("Effective Temperature [K]")
         ax.set_ylabel("Rotation Period [days]")
@@ -1914,11 +1935,12 @@ def plot_empirical_limits_of_gyrochronology(
     s = f'_n{n}'
     ss = f'_scale-{age_scale}'
     _is = f"_{interp_method}"
+    gr = f"_{grid_resolution}"
     if isinstance(slow_seq_ages, (list, np.ndarray)):
         slow_seq_ages = np.array(slow_seq_ages).astype(str)
         m = f"_slowseq_poly{poly_order}_" + "_".join(slow_seq_ages)
 
-    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}{ss}{_is}.png')
+    outpath = join(outdir, f'{imagestr}_{basename}{s}{m}{ss}{_is}{gr}.png')
 
     if 'both' in imagestr:
         fig.tight_layout(h_pad=0.4, w_pad=0.4)
