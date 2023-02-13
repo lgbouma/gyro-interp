@@ -29,6 +29,21 @@ Attribution:
 The reference for both the software and method is
 `Bouma, Palumbo & Hillenbrand (2023)<LINKPENDING>`_.
 
+The references for the rotation period data upon which the code is based are
+as follows.
+
+* α Per: `Boyle & Bouma (2023) <https://ui.adsabs.harvard.edu/abs/2022arXiv221109822B/abstract>`_
+* Pleiades: `Rebull et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016AJ....152..113R/abstract>`_
+* Blanco-1: `Gillen et al. (2020) <https://ui.adsabs.harvard.edu/abs/2020MNRAS.492.1008G/abstract>`_
+* Psc-Eri: `Curtis et al. (2019a) <https://ui.adsabs.harvard.edu/abs/2019AJ....158...77C/abstract>`_
+* NGC-3532: `Fritzewski et al. (2022) <https://ui.adsabs.harvard.edu/abs/2021A%26A...652A..60F/abstract>`_
+* Group-X: `Messina et al. (2022) <https://ui.adsabs.harvard.edu/abs/2022A%26A...657L...3M/abstract>`_
+* Praesepe: `Rampalli et al. (2021) <https://ui.adsabs.harvard.edu/abs/2021ApJ...921..167R/abstract>`_
+* NGC-6811: `Curtis et al. (2019b) <https://ui.adsabs.harvard.edu/abs/2019ApJ...879...49C/abstract>`_
+* NGC-6819: `Meibom et al. (2015) <https://ui.adsabs.harvard.edu/abs/2015Natur.517..589M/abstract>`_
+* Ruprecht-147 `Curtis et al. (2020) <https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract>`_
+* M67: `Barnes et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_ and `Dungee et al (2022) <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_.
+
 
 User Guide:
 ++++++++++++
@@ -40,6 +55,7 @@ User Guide:
     installation
     examples
     caveats
+    faqs
     gyrointerp
 
 Changelog:

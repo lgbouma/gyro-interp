@@ -84,12 +84,11 @@ what are the implied age posteriors?
 
   def main():
 
+      # Define temperatures, periods, and uncertainties for some stars.
+      # At >~20 days, assume a few percent relative uncertainty on periods.
       N_stars = os.cpu_count()
-
       Teffs = np.linspace(4000, 5500, N_stars)
       Teff_errs = 100 * np.ones(N_stars)
-
-      # at >~20 days, assume a few percent relative uncertainty on periods
       Prots = np.linspace(15, 22, N_stars)
       Prot_errs = 0.03 * Prots
 
