@@ -131,7 +131,7 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
         'Group-X':  [df_grpx, cmap[2], '300 Myr Group-X', z0+4, "8"],
         'Praesepe': [df_prae, cmap[3], '670 Myr Praesepe', z0+6, "o"],
         'NGC-6811': [df_6811, cmap[4], '1 Gyr NGC-6811', z0+8, "o"],
-        'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10, "o"],
+        'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10, "8"],
         'Ruprecht-147': [df_r147, cmap[5], '2.7 Gyr Rup-147', z0+10, "o"],
         '120-Myr': [None, cmap[1], '', None, None],
         '300-Myr': [None, cmap[2], '', None, None],
