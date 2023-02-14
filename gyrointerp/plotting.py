@@ -160,7 +160,7 @@ def plot_prot_vs_teff(
     custom_stardict=None,
     interp_method='pchip_m67',
     show_binaries=0, poly_order=7,
-    hide_ax=0, logo_colors=0, logy=0, writepdf=1):
+    hide_ax=0, logo_colors=0, logy=0, writepdf=1, show_resid=0):
     """
     Plot rotation periods versus temperatures for known reference clusters.
     This the plotter used for Figure 1 of BPH23.  To make analogous figures
@@ -231,6 +231,13 @@ def plot_prot_vs_teff(
 
         writepdf (bool):
             Whether to write a pdf as well as a png version of the plot.
+
+        show_resid (bool):
+            This option requires only a single ``model_id`` to be passed.
+            If true, it will subtract that modelid from any of the requested
+            ``reference_clusters``.  The number of points and free parameters
+            (from ``poly_order``) will be used to calculate the reduced χ^2,
+            and the BIC.
     """
     # Get data
     N_colors = 6
@@ -239,8 +246,13 @@ def plot_prot_vs_teff(
     # Make plot
     set_style("science")
 
-    fig, ax = plt.subplots()
-    #fig, ax = plt.subplots(figsize=(3.3, 4))
+    if not show_resid:
+        # default figsize is 6.4 x 4.8
+        fig, ax = plt.subplots()
+    else:
+        fig, axs = plt.subplots(figsize=(6.4, 4.8*2), nrows=2)
+        ax = axs[0]
+        ax1 = axs[1]
 
     for reference_cluster in reference_clusters:
 
@@ -281,6 +293,98 @@ def plot_prot_vs_teff(
             ax.plot(
                 Teff, Prot, color=color, linewidth=2, zorder=-1, alpha=0.7
             )
+
+    if show_resid:
+        assert len(model_ids) == 1
+        model_id = model_ids[0]
+
+        N_stars = 0
+        chi_sq = 0
+
+        for reference_cluster in reference_clusters:
+
+            df = d[reference_cluster][0]
+            color = d[reference_cluster][1]
+            label = d[reference_cluster][2]
+            zorder = d[reference_cluster][3]
+            marker = d[reference_cluster][4]
+
+            sel = df.flag_benchmark_period
+
+            data_Prot = nparr(df[sel].Prot)
+            data_Teff = nparr(df[sel].Teff_Curtis20)
+
+            model_Prot = reference_cluster_slow_sequence(
+                data_Teff, model_id, poly_order=poly_order
+            )
+
+            Prot_residual = data_Prot - model_Prot
+            sigma = 0.51
+
+            sel_prot = (Prot_residual > -1) & (Prot_residual < 1)
+            sel_prot_slowoutlier = (Prot_residual >= 1)
+            sel_prot_fastoutlier = (Prot_residual <= -1)
+
+            this_chisq = np.sum(Prot_residual[sel_prot]**2 / sigma**2)
+            chi_sq += this_chisq
+
+            ax1.scatter(
+                data_Teff[sel_prot], Prot_residual[sel_prot], color=color,
+                alpha=1, s=25, rasterized=False, label=label, marker='o',
+                edgecolors='k', linewidths=0.3, zorder=zorder
+            )
+            ax1.scatter(
+                data_Teff[sel_prot_fastoutlier],
+                Prot_residual[sel_prot_fastoutlier], color=color, alpha=0.5,
+                s=25, rasterized=False, label=label, marker='X',
+                edgecolors='k', linewidths=0.3, zorder=zorder
+            )
+            ax1.scatter(
+                data_Teff[sel_prot_slowoutlier],
+                Prot_residual[sel_prot_slowoutlier], color=color, alpha=0.5,
+                s=25, rasterized=False, label=label, marker='X',
+                edgecolors='k', linewidths=0.3, zorder=zorder
+            )
+
+            ax1.plot(
+                Teff, Prot-Prot, color=color, linewidth=2, zorder=-1, alpha=0.7
+            )
+
+            N_stars += np.sum(sel_prot)
+
+        k = poly_order + 1
+        AIC = chi_sq + 2*k
+        BIC = chi_sq + k*np.log(N_stars)
+        dof = N_stars - k
+        chi_sq_red = chi_sq / dof
+
+        txt0 = "N$_\star$="+f"{N_stars}, k={k}\n"
+        txt1 = "$\chi^2_r$ = " + f"{chi_sq_red:.2f}\n"
+        txt2 = f"BIC={BIC:.1f}, AIC={AIC:.1f}\n"
+
+        bbox = dict(facecolor='white', alpha=1, pad=0,
+                    edgecolor='white')
+        ax1.text(0.03, 0.97, txt0+txt1+txt2, transform=ax1.transAxes,
+                 ha='left', va='top', color='k', bbox=bbox)
+        ax1.set_xlim([7100, 2900])
+        ax1.set_ylim([-5, 5])
+
+        outdf = pd.DataFrame({
+            'model_id': model_id,
+            'Nstar': N_stars,
+            'k': k,
+            'chi_sq': chi_sq,
+            'chi_sq_red': chi_sq_red,
+            'AIC': AIC,
+            'BIC': BIC
+        }, index=[0])
+        outpath = join(
+            outdir, f"polyorder{poly_order}_modelid_{model_id}_stats.csv"
+        )
+        if not os.path.exists(outpath):
+            outdf.to_csv(outpath, index=False)
+            print(outpath)
+
 
     if isinstance(slow_seq_ages, list):
         Teff = np.linspace(3800, 6200, 100)
@@ -362,6 +466,7 @@ def plot_prot_vs_teff(
         )
     ns = ''
     im = ''
+    sr = ''
     if im is not None:
         im = f"_interpmethod{interp_method}"
     ha = ''
@@ -370,8 +475,12 @@ def plot_prot_vs_teff(
     ly = ''
     if logy:
         ly = 'logy'
+    if show_resid:
+        sr = "_showresid"
 
-    outpath = join(outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}.png')
+    outpath = join(
+        outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}{sr}.png'
+    )
     outpath = outpath.replace(" ", "_")
 
     savefig(fig, outpath, dpi=400, writepdf=writepdf)

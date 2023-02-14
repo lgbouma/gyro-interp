@@ -65,11 +65,6 @@ gp.plot_prot_vs_teff(
 
 ##########################################
 
-for poly_order in [2,3,4,5,6,7,8]:
-    gp.plot_prot_vs_teff(outdir, all_clusters,
-                         model_ids=['120-Myr', '300-Myr', 'Praesepe', 'NGC-6811'],
-                         poly_order=poly_order)
-
 #
 # single clusters, with reference fits
 #
@@ -107,3 +102,26 @@ if do_everything_else:
     gp.plot_prot_vs_teff(outdir, ['Pleiades', 'NGC-3532', 'Group-X', 'Praesepe', 'NGC-6811'])
     gp.plot_prot_vs_teff(outdir, ['Pleiades', 'Blanco-1', 'NGC-3532', 'Group-X', 'Praesepe', 'NGC-6811'])
     gp.plot_prot_vs_teff(outdir, ['Pleiades', 'NGC-3532', 'Group-X', 'NGC-6811'])
+
+
+# chi2, bic, etc
+clusters = [
+    ['Pleiades', 'Blanco-1', 'Psc-Eri'],
+    ['NGC-3532', 'Group-X'],
+    ['Praesepe'],
+    ['NGC-6811'],
+    ['NGC-6819', 'Ruprecht-147']
+]
+model_ids = [
+    ['120-Myr'],
+    ['300-Myr'],
+    ['Praesepe'],
+    ['NGC-6811'],
+    ['2.6-Gyr']
+]
+for poly_order in [2,3,4,5,6,7,8,9]:
+    for _c, model_id in zip(clusters, model_ids):
+        gp.plot_prot_vs_teff(outdir, _c,
+                             model_ids=model_id,
+                             poly_order=poly_order, show_resid=1)
+
