@@ -40,7 +40,7 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
   # uniformly spaced grid between 0 and 2600 megayears
   age_grid = np.linspace(0, 2600, 500)
 
-  # calculate the age posterior at each age in `age_grid`
+  # calculate the age posterior - takes ~30 seconds
   age_posterior = gyro_age_posterior(
       Prot, Teff, Prot_err=Prot_err, Teff_err=Teff_err, age_grid=age_grid
   )

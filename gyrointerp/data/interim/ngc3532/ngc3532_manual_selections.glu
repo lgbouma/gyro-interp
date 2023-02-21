@@ -1,0 +1,3279 @@
+{
+  "Binary": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Binary"
+  },
+  "CLHW": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "CLHW"
+  },
+  "CallbackList": {
+    "_type": "echo.containers.CallbackList",
+    "values": [
+      "ScatterLayerState",
+      "ScatterLayerState_0",
+      "ScatterLayerState_1",
+      "ScatterLayerState_2",
+      "ScatterLayerState_3",
+      "ScatterLayerState_4",
+      "ScatterLayerState_5",
+      "ScatterLayerState_6"
+    ]
+  },
+  "CallbackList_0": {
+    "_type": "echo.containers.CallbackList",
+    "values": [
+      "ScatterLayerState_7",
+      "ScatterLayerState_9",
+      "ScatterLayerState_10",
+      "ScatterLayerState_8",
+      "ScatterLayerState_11",
+      "ScatterLayerState_12",
+      "ScatterLayerState_13",
+      "ScatterLayerState_14"
+    ]
+  },
+  "CallbackList_1": {
+    "_type": "echo.containers.CallbackList",
+    "values": [
+      "ScatterLayerState_15",
+      "ScatterLayerState_16",
+      "ScatterLayerState_17",
+      "ScatterLayerState_18",
+      "ScatterLayerState_19",
+      "ScatterLayerState_20",
+      "ScatterLayerState_21",
+      "ScatterLayerState_22"
+    ]
+  },
+  "CallbackList_2": {
+    "_type": "echo.containers.CallbackList",
+    "values": [
+      "ScatterLayerState_23",
+      "ScatterLayerState_24",
+      "ScatterLayerState_25",
+      "ScatterLayerState_26",
+      "ScatterLayerState_27",
+      "ScatterLayerState_28",
+      "ScatterLayerState_29",
+      "ScatterLayerState_30"
+    ]
+  },
+  "Class": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Class"
+  },
+  "Component": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 1
+  },
+  "Component_0": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 2
+  },
+  "Component_1": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 3
+  },
+  "Component_10": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 12
+  },
+  "Component_11": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 13
+  },
+  "Component_12": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 14
+  },
+  "Component_13": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 15
+  },
+  "Component_14": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 16
+  },
+  "Component_15": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 17
+  },
+  "Component_16": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 18
+  },
+  "Component_17": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 19
+  },
+  "Component_18": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 20
+  },
+  "Component_19": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 21
+  },
+  "Component_2": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 4
+  },
+  "Component_20": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 22
+  },
+  "Component_21": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 23
+  },
+  "Component_22": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 24
+  },
+  "Component_23": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 25
+  },
+  "Component_24": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 26
+  },
+  "Component_25": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 27
+  },
+  "Component_26": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 28
+  },
+  "Component_27": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 29
+  },
+  "Component_28": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 30
+  },
+  "Component_29": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 31
+  },
+  "Component_3": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 5
+  },
+  "Component_30": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 32
+  },
+  "Component_31": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 33
+  },
+  "Component_32": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 34
+  },
+  "Component_33": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 35
+  },
+  "Component_34": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 36
+  },
+  "Component_35": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 37
+  },
+  "Component_36": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 38
+  },
+  "Component_37": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 39
+  },
+  "Component_38": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 40
+  },
+  "Component_39": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 41
+  },
+  "Component_4": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 6
+  },
+  "Component_40": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 42
+  },
+  "Component_41": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 43
+  },
+  "Component_42": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 44
+  },
+  "Component_43": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 45
+  },
+  "Component_44": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 46
+  },
+  "Component_45": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 47
+  },
+  "Component_46": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 48
+  },
+  "Component_47": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 49
+  },
+  "Component_48": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 50
+  },
+  "Component_49": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 51
+  },
+  "Component_5": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 7
+  },
+  "Component_50": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 52
+  },
+  "Component_51": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 53
+  },
+  "Component_52": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 54
+  },
+  "Component_53": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 55
+  },
+  "Component_54": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 56
+  },
+  "Component_55": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 57
+  },
+  "Component_56": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 58
+  },
+  "Component_6": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 8
+  },
+  "Component_7": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 9
+  },
+  "Component_8": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 10
+  },
+  "Component_9": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 11
+  },
+  "CoordinateComponent": {
+    "_type": "glue.core.component.CoordinateComponent",
+    "axis": 0,
+    "world": false
+  },
+  "DE_ICRS": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "DE_ICRS"
+  },
+  "DataCollection": {
+    "_protocol": 4,
+    "_type": "glue.core.data_collection.DataCollection",
+    "cids": [
+      "Pixel Axis 0 [x]",
+      "ID",
+      "GaiaDR2",
+      "CLHW",
+      "RA_ICRS",
+      "DE_ICRS",
+      "__B-V_0",
+      "Vmag",
+      "__V-Ks_0",
+      "Prot",
+      "e_Prot",
+      "P90",
+      "Class",
+      "Binary",
+      "_RA_icrs",
+      "_DE_icrs",
+      "dr2_source_id",
+      "dr3_source_id",
+      "angular_distance",
+      "magnitude_difference",
+      "ra",
+      "dec",
+      "parallax",
+      "parallax_error",
+      "parallax_over_error",
+      "pmra",
+      "pmdec",
+      "ruwe",
+      "phot_g_mean_flux_over_error",
+      "phot_g_mean_mag",
+      "phot_bp_mean_flux_over_error",
+      "phot_rp_mean_flux",
+      "phot_rp_mean_flux_over_error",
+      "phot_bp_rp_excess_factor",
+      "phot_bp_n_contaminated_transits",
+      "phot_bp_n_blended_transits",
+      "phot_rp_n_contaminated_transits",
+      "phot_rp_n_blended_transits",
+      "bp_rp",
+      "bp_g",
+      "g_rp",
+      "radial_velocity",
+      "radial_velocity_error",
+      "rv_method_used",
+      "rv_expected_sig_to_noise",
+      "vbroad",
+      "vbroad_error",
+      "l",
+      "b",
+      "ecl_lon",
+      "ecl_lat",
+      "non_single_star",
+      "teff_gspphot",
+      "teff_gspphot_lower",
+      "teff_gspphot_upper",
+      "azero_gspphot",
+      "ag_gspphot",
+      "ebpminrp_gspphot",
+      "M_G"
+    ],
+    "components": [
+      "CoordinateComponent",
+      "Component",
+      "Component_0",
+      "Component_1",
+      "Component_2",
+      "Component_3",
+      "Component_4",
+      "Component_5",
+      "Component_6",
+      "Component_7",
+      "Component_8",
+      "Component_9",
+      "Component_10",
+      "Component_11",
+      "Component_12",
+      "Component_13",
+      "Component_14",
+      "Component_15",
+      "Component_16",
+      "Component_17",
+      "Component_18",
+      "Component_19",
+      "Component_20",
+      "Component_21",
+      "Component_22",
+      "Component_23",
+      "Component_24",
+      "Component_25",
+      "Component_26",
+      "Component_27",
+      "Component_28",
+      "Component_29",
+      "Component_30",
+      "Component_31",
+      "Component_32",
+      "Component_33",
+      "Component_34",
+      "Component_35",
+      "Component_36",
+      "Component_37",
+      "Component_38",
+      "Component_39",
+      "Component_40",
+      "Component_41",
+      "Component_42",
+      "Component_43",
+      "Component_44",
+      "Component_45",
+      "Component_46",
+      "Component_47",
+      "Component_48",
+      "Component_49",
+      "Component_50",
+      "Component_51",
+      "Component_52",
+      "Component_53",
+      "Component_54",
+      "Component_55",
+      "Component_56"
+    ],
+    "data": [
+      "ngc3532"
+    ],
+    "groups": [
+      "camd_outlier",
+      "ruwe_outlier",
+      "class1_and_class2",
+      "rverror_outlier",
+      "non_single_star_0",
+      "bp_rp_excess_outlier",
+      "Subset 8"
+    ],
+    "links": [],
+    "subset_group_count": 8
+  },
+  "GaiaDR2": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "GaiaDR2"
+  },
+  "ID": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ID"
+  },
+  "LinearSegmentedColormap": {
+    "_type": "matplotlib.colors.LinearSegmentedColormap",
+    "cmap": "gray"
+  },
+  "LoadLog": {
+    "_protocol": 2,
+    "_type": "glue.core.data_factories.helpers.LoadLog",
+    "factory": {
+      "_type": "types.FunctionType",
+      "function": "glue.core.data_factories.tables.tabular_data"
+    },
+    "force_coords": false,
+    "kwargs": [
+      []
+    ],
+    "path": "ngc3532.csv"
+  },
+  "M_G": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "M_G"
+  },
+  "OrState": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_0",
+    "state2": "OrState_0"
+  },
+  "OrState_0": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_1",
+    "state2": "OrState_1"
+  },
+  "OrState_1": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_2",
+    "state2": "OrState_2"
+  },
+  "OrState_10": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_11",
+    "state2": "RoiSubsetState_12"
+  },
+  "OrState_2": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_3",
+    "state2": "OrState_3"
+  },
+  "OrState_3": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_4",
+    "state2": "OrState_4"
+  },
+  "OrState_4": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_5",
+    "state2": "OrState_5"
+  },
+  "OrState_5": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_6",
+    "state2": "OrState_6"
+  },
+  "OrState_6": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_7",
+    "state2": "OrState_7"
+  },
+  "OrState_7": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_8",
+    "state2": "OrState_8"
+  },
+  "OrState_8": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_9",
+    "state2": "OrState_9"
+  },
+  "OrState_9": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_10",
+    "state2": "OrState_10"
+  },
+  "P90": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "P90"
+  },
+  "Pixel Axis 0 [x]": {
+    "_type": "glue.core.component_id.PixelComponentID",
+    "axis": 0,
+    "label": "Pixel Axis 0 [x]"
+  },
+  "PolygonalROI": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDI2LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqEnG3EQlP5P4ScbcRCU/k//K+E6KtY+T8MiVag2U35PxZkkmd1X/U/FmSSZ3Vf9T9Ey61x1e30P0TLrXHV7fQ/Szhx0Yfv8z/x17IkseLxPww9RYBZwe8/VTNf5CL37D9VM1/kIvfsP7hJSjM1tuw/ySIc62Kr7D/+9vpUdTvrPwJAZJf+6+k/AkBkl/7r6T8IiBjSUI7qPwiIGNJQjuo/MDhSMj5c7j9eWqzLPpXyP8Zv4hIaRvQ/xm/iEhpG9D+KCTEk9VT4P4oJMST1VPg/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDI2LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApcmm8fT2b1P1yabx9PZvU/+HdIZdLH9D/4d0hl0sf0P61M43spNfQ/rUzjeyk19D94Xl/agR30P3heX9qBHfQ/KHkZaAb68z/DZzi1FM3zP0NflTFPlPM/OMlHEZSP8z84yUcRlI/zP+MY2w67afM/3k20fl1n8z/urigvdm7zP1LilfB9fvQ/UuKV8H1+9D+BSQsf9Fn2P4FJCx/0WfY/8DRSD81R+D9QewwyYXz4P3A99ZKSivg/cD31kpKK+D/27jKYn+L3P/buMpif4vc/"
+    }
+  },
+  "PolygonalROI_0": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp2N+QB+UEDQHY35AH5QQNAwx7uMW15AkClAsDlteECQKUCwOW14QJAbwyRMJsqBEBvDJEwmyoEQA=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoxkE4+BVgZQDGQTj4FWBlAvLV8eMfJGEBH26qyiTsYQEfbqrKJOxhA2NAmRUlHGUDY0CZFSUcZQA=="
+    }
+  },
+  "PolygonalROI_1": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArdaNChENMEQN1o0KEQ0wRALKnhxs7jBUAsqeHGzuMFQMSOzzitswVAxI7POK2zBUDiqv2EZEsFQOKq/YRkSwVA"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApplRB1JdIYQGmVEHUl0hhAC2i/6DIpGkALaL/oMikaQCZS11LRJRlAJlLXUtElGUC2FsGCrbAYQLYWwYKtsBhA"
+    }
+  },
+  "PolygonalROI_10": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDUsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApYUDf4PqnhP1hQN/g+qeE/T8fRXEyf4j9Px9FcTJ/iP5DW/+zXvuI/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDUsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApfY55XYTYUQF9jnldhNhRARHmG7cI5FUBEeYbtwjkVQF9jnldhNhRA"
+    }
+  },
+  "PolygonalROI_11": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqYw1ACpF3sP5jDUAKkXew/vMN4jadL7T+5w6xMpzrtP5rDHEOkbuw/msMcQ6Ru7D8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqS+jb7ShgVQJL6NvtKGBVAULf92PZrFUDge+cI0/YUQNrcKxO53RRA2twrE7ndFEA="
+    }
+  },
+  "PolygonalROI_12": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDM3LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArawiSIkYTnP9rCJIiRhOc/KsPYYJmT6T8qw9hgmZPpP2jD+HOfK+s/aMP4c58r6z/rw9AbrH3uP+vD0Busfe4/MWI84NvF8D8xYjzg28XwP4RivPnj5fI/hGK8+ePl8j+8Yt5qaVP0P7xi3mppU/Q/BmOUofA39j8sYyJNdC73P5JjNix+xfk/kmM2LH7F+T/WY1ThBIj7P9ZjVOEEiPs/QGSaIY84/j9yZL7wk3v/P0kyWo0LKABATjLyDgxKAEBmMh5WDuMAQGgyt4bO7wBAfjJ9rVCAAUB+Mn2tUIABQJwy2qYTSAJArjI7XNW6AkCuMjtc1boCQAZjlKHwN/Y/BmOUofA39j9OwwDsnIHqP07DAOycgeo/2sIkiJGE5z/awiSIkYTnPw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDM3LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArC3kZLopkPQMLeRkuimQ9AzDyQYr6pEUDMPJBivqkRQBCxW+f11hJAELFb5/XWEkAznFMMde4UQDOcUwx17hRA0M9GimgsFkDQz0aKaCwWQJVcW8ARGhhAlVxbwBEaGEAs8ZJI6z4ZQCzxkkjrPhlAySSGxt58GkCuOm5cQIAbQPdN9daRxhxA90311pHGHEDtQBBOQRUeQO1AEE5BFR5A+q8ZnFjIH0CWI9kfIVUgQCQxLgbikyBApwAMAW+gIEBkvdLeGvQgQBGdZtt4/CBA1Pjorj5pIUDU+OiuPmkhQNqXpKRYgiFAD/t1EN2rHkAP+3UQ3aseQDJrwamRbRNAMmvBqZFtE0DYKaO/Jn0OQNgpo78mfQ5AdCwE2zY6DkB0LATbNjoOQA=="
+    }
+  },
+  "PolygonalROI_2": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoMRhihCdLXPzZ00Xrh5NY/NnTReuHk1j8843TIHFbZPzzjdMgcVtk/glmrEMHU2D+CWasQwdTYPw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApQt/3Y9msVQMWRz540+hVAxZHPnjT6FUDbDb51nF4WQNsNvnWcXhZArhXhx8yVFUCuFeHHzJUVQA=="
+    }
+  },
+  "PolygonalROI_3": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDUsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApKybAzKP3XP0rJsDMo/dc/LoEzxVuR1z/aJMERrGvZP9okwRGsa9k/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDUsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAquFeHHzJUVQFv1dMQqnhVAJPCyjQokFkCOjA1oFIAWQI6MDWgUgBZA"
+    }
+  },
+  "PolygonalROI_4": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArR8UqhffnpP6lHjC/wyOc/qUeML/DI5z8R+d2b5gbnP4XKc9d4mOk/hcpz13iY6T8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAr6rxmcWMgfQEyf8zwXPx5ATJ/zPBc/HkBiG+ITf6MeQMAzjyHyUCBAwDOPIfJQIEA="
+    }
+  },
+  "PolygonalROI_5": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqgjvbd+iHtP6CO9t36Ie0/TXSBXnBt7T8cUyrPEgfvPxxTKs8SB+8/dmA9BCMP7j8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAooGVWy4GAhQCgZVbLgYCFA9rJOcdr/IUBz43B2TfMhQHPjcHZN8yFA+GnjuvVLIUA="
+    }
+  },
+  "PolygonalROI_6": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqkGMGcXXbVP6QYwZxddtU/Ejm2Vo8l1z8SObZWjyXXP87Cfw7rptc/zsJ/Duum1z8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqdOK7mfkoVQJ04ruZ+ShVAHlH3l/AKFkAeUfeX8AoWQKPXadyYYxVAo9dp3JhjFUA="
+    }
+  },
+  "PolygonalROI_7": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqSRTVKw/vtP5JFNUrD++0/oIXDp0CA7j+ghcOnQIDuP1Rzv/plWu4/VHO/+mVa7j/cGoG2b6PtPw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqq/dYr7WgeQFfdaihLcR5AtjtOFyGbHkC2O04XIZseQOICmWIN4x1A4gKZYg3jHUCIQ3FpUdIdQA=="
+    }
+  },
+  "PolygonalROI_8": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAodbEcUR57wPx1sRxRHnvA/yg2WDKjs8T/KDZYMqOzxP0ZJ476uZ/I/9mLFvVmL8D8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqcwpQVO24gQJzClBU7biBAUikLtLFcIUB7OcG1glghQDImOjsxEiBAsJySIQeCHkA="
+    }
+  },
+  "PolygonalROI_9": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDksKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAri+7KpbUDpP+L7sqltQOk/LdH+FRro6D8kSJl6J97pPzJLb5d25Ok/hNfjxa0G6z+klLjB1o3sP7KXjt4llOw/ECfZKay87T8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDksKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApOq/gKh9UZQE6r+AqH1RlA697riHoTG0AMmVFLFqobQLl45Ud0shtA90311pHGHEDWxCF32bAdQNbEIXfZsB1Aa/c0OuzTG0A="
+    }
+  },
+  "Prot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Prot"
+  },
+  "RA_ICRS": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "RA_ICRS"
+  },
+  "RangeSubsetState": {
+    "_type": "glue.core.subset.RangeSubsetState",
+    "att": "ruwe",
+    "hi": 20.27795966466017,
+    "lo": 1.2060519635809739
+  },
+  "RangeSubsetState_0": {
+    "_type": "glue.core.subset.RangeSubsetState",
+    "att": "Class",
+    "hi": 2.289579831932773,
+    "lo": 0.6559663865546218
+  },
+  "RangeSubsetState_1": {
+    "_type": "glue.core.subset.RangeSubsetState",
+    "att": "radial_velocity_error",
+    "hi": 17.20480102624,
+    "lo": 10.993482853120002
+  },
+  "RangeSubsetState_2": {
+    "_type": "glue.core.subset.RangeSubsetState",
+    "att": "non_single_star",
+    "hi": 1.0232,
+    "lo": 0.9608
+  },
+  "RangeSubsetState_3": {
+    "_type": "glue.core.subset.RangeSubsetState",
+    "att": "phot_bp_n_blended_transits",
+    "hi": 52.72129032258064,
+    "lo": 6.615741935483871
+  },
+  "RoiSubsetState": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI",
+    "xatt": "bp_rp",
+    "yatt": "phot_bp_rp_excess_factor"
+  },
+  "RoiSubsetState_0": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_0",
+    "xatt": "__V-Ks_0",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_1": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_1",
+    "xatt": "__V-Ks_0",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_10": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_10",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_11": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_11",
+    "xatt": "bp_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_12": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_12",
+    "xatt": "bp_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_2": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_2",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_3": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_3",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_4": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_4",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_5": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_5",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_6": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_6",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_7": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_7",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_8": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_8",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_9": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_9",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "ScatterLayerState": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.8,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ngc3532",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 1
+    }
+  },
+  "ScatterLayerState_0": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#4eff45",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "camd_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 2
+    }
+  },
+  "ScatterLayerState_1": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fc0016",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ruwe_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 3
+    }
+  },
+  "ScatterLayerState_10": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fc0016",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ruwe_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 4
+    }
+  },
+  "ScatterLayerState_11": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#ff7f00",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "rverror_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 5
+    }
+  },
+  "ScatterLayerState_12": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#6a3d9a",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "non_single_star_1",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 6
+    }
+  },
+  "ScatterLayerState_13": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fb9a99",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "bp_rp_excess_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": false,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 7
+    }
+  },
+  "ScatterLayerState_14": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.5,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#e31a1c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "Subset 8_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": false,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 8
+    }
+  },
+  "ScatterLayerState_15": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.8,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ngc3532",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 1
+    }
+  },
+  "ScatterLayerState_16": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#4eff45",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "camd_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 2
+    }
+  },
+  "ScatterLayerState_17": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fc0016",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ruwe_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 3
+    }
+  },
+  "ScatterLayerState_18": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "class1_and_class2_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 4
+    }
+  },
+  "ScatterLayerState_19": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#ff7f00",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "rverror_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 5
+    }
+  },
+  "ScatterLayerState_2": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "class1_and_class2_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 4
+    }
+  },
+  "ScatterLayerState_20": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#6a3d9a",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "non_single_star_1",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 6
+    }
+  },
+  "ScatterLayerState_21": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fb9a99",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "bp_rp_excess_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 7
+    }
+  },
+  "ScatterLayerState_22": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.5,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#e31a1c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "Subset 8_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 8
+    }
+  },
+  "ScatterLayerState_23": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.8,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ngc3532",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 1
+    }
+  },
+  "ScatterLayerState_24": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#4eff45",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "camd_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 2
+    }
+  },
+  "ScatterLayerState_25": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fc0016",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ruwe_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 3
+    }
+  },
+  "ScatterLayerState_26": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "class1_and_class2_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": false,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 4
+    }
+  },
+  "ScatterLayerState_27": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#ff7f00",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "rverror_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 5
+    }
+  },
+  "ScatterLayerState_28": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#6a3d9a",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "non_single_star_1",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 6
+    }
+  },
+  "ScatterLayerState_29": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fb9a99",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "bp_rp_excess_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": false,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 7
+    }
+  },
+  "ScatterLayerState_3": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#ff7f00",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "rverror_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 5
+    }
+  },
+  "ScatterLayerState_30": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.5,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#e31a1c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "Subset 8_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 8
+    }
+  },
+  "ScatterLayerState_4": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#6a3d9a",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "non_single_star_1",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 6
+    }
+  },
+  "ScatterLayerState_5": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#fb9a99",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "bp_rp_excess_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 7
+    }
+  },
+  "ScatterLayerState_6": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.5,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#e31a1c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "Subset 8_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 8
+    }
+  },
+  "ScatterLayerState_7": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.8,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "ngc3532",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": false,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 1
+    }
+  },
+  "ScatterLayerState_8": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "class1_and_class2_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 2
+    }
+  },
+  "ScatterLayerState_9": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "ID",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 810203.0,
+      "cmap_vmin": 100074.0,
+      "color": "st__#4eff45",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "camd_outlier_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 4,
+      "size_att": "ID",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 810203.0,
+      "size_vmin": 100074.0,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "ID",
+      "vy_att": "ID",
+      "xerr_att": "ID",
+      "xerr_visible": false,
+      "yerr_att": "ID",
+      "yerr_visible": false,
+      "zorder": 3
+    }
+  },
+  "ScatterViewer": {
+    "_protocol": 1,
+    "_type": "glue.viewers.scatter.qt.data_viewer.ScatterViewer",
+    "layers": [
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_0"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_1"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_2"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_3"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_4"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_5"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_6"
+      }
+    ],
+    "pos": [
+      -67,
+      -26
+    ],
+    "session": "Session",
+    "size": [
+      760,
+      433
+    ],
+    "state": {
+      "values": {
+        "angle_unit": "st__radians",
+        "aspect": "st__auto",
+        "dpi": 71.30820648960312,
+        "layers": "CallbackList",
+        "plot_mode": "st__rectilinear",
+        "show_axes": true,
+        "x_att": "__V-Ks_0",
+        "x_axislabel": "st____V-Ks_0",
+        "x_axislabel_size": 10,
+        "x_axislabel_weight": "st__normal",
+        "x_log": false,
+        "x_max": 4.91404,
+        "x_min": 1.05196,
+        "x_ticklabel_size": 8,
+        "y_att": "M_G",
+        "y_axislabel": "st__M_G",
+        "y_axislabel_size": 10,
+        "y_axislabel_weight": "st__normal",
+        "y_log": false,
+        "y_max": 3.688543605122007,
+        "y_min": 10.372446591510915,
+        "y_ticklabel_size": 8
+      }
+    }
+  },
+  "ScatterViewer_0": {
+    "_protocol": 1,
+    "_type": "glue.viewers.scatter.qt.data_viewer.ScatterViewer",
+    "layers": [
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_7"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_8"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_9"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_10"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_11"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_12"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_13"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_14"
+      }
+    ],
+    "pos": [
+      625,
+      20
+    ],
+    "session": "Session",
+    "size": [
+      1008,
+      871
+    ],
+    "state": {
+      "values": {
+        "angle_unit": "st__radians",
+        "aspect": "st__auto",
+        "dpi": 71.30820648960312,
+        "layers": "CallbackList_0",
+        "plot_mode": "st__rectilinear",
+        "show_axes": true,
+        "x_att": "__V-Ks_0",
+        "x_axislabel": "st____V-Ks_0",
+        "x_axislabel_size": 10,
+        "x_axislabel_weight": "st__normal",
+        "x_log": false,
+        "x_max": 4.91404,
+        "x_min": 1.05196,
+        "x_ticklabel_size": 8,
+        "y_att": "Prot",
+        "y_axislabel": "st__Prot",
+        "y_axislabel_size": 10,
+        "y_axislabel_weight": "st__normal",
+        "y_log": false,
+        "y_max": 33.259444,
+        "y_min": -0.745544,
+        "y_ticklabel_size": 8
+      }
+    }
+  },
+  "ScatterViewer_1": {
+    "_protocol": 1,
+    "_type": "glue.viewers.scatter.qt.data_viewer.ScatterViewer",
+    "layers": [
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_15"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_16"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_17"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_18"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_19"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_20"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_21"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_22"
+      }
+    ],
+    "pos": [
+      86,
+      69
+    ],
+    "session": "Session",
+    "size": [
+      479,
+      424
+    ],
+    "state": {
+      "values": {
+        "angle_unit": "st__radians",
+        "aspect": "st__auto",
+        "dpi": 71.30820648960312,
+        "layers": "CallbackList_1",
+        "plot_mode": "st__rectilinear",
+        "show_axes": true,
+        "x_att": "phot_g_mean_mag",
+        "x_axislabel": "st__phot_g_mean_mag",
+        "x_axislabel_size": 10,
+        "x_axislabel_weight": "st__normal",
+        "x_log": false,
+        "x_max": 18.60889212,
+        "x_min": 12.09192588,
+        "x_ticklabel_size": 8,
+        "y_att": "ruwe",
+        "y_axislabel": "st__Log ruwe",
+        "y_axislabel_size": 10,
+        "y_axislabel_weight": "st__normal",
+        "y_log": true,
+        "y_max": 20.899355771915513,
+        "y_min": 0.6,
+        "y_ticklabel_size": 8
+      }
+    }
+  },
+  "ScatterViewer_2": {
+    "_protocol": 1,
+    "_type": "glue.viewers.scatter.qt.data_viewer.ScatterViewer",
+    "layers": [
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_23"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_24"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_25"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_26"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_27"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_28"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_29"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_30"
+      }
+    ],
+    "pos": [
+      426,
+      92
+    ],
+    "session": "Session",
+    "size": [
+      844,
+      782
+    ],
+    "state": {
+      "values": {
+        "angle_unit": "st__radians",
+        "aspect": "st__auto",
+        "dpi": 71.30820648960312,
+        "layers": "CallbackList_2",
+        "plot_mode": "st__rectilinear",
+        "show_axes": true,
+        "x_att": "bp_rp",
+        "x_axislabel": "st__bp_rp",
+        "x_axislabel_size": 10,
+        "x_axislabel_weight": "st__normal",
+        "x_log": false,
+        "x_max": 1.6,
+        "x_min": 0.658145984,
+        "x_ticklabel_size": 8,
+        "y_att": "radial_velocity_error",
+        "y_axislabel": "st__radial_velocity_error",
+        "y_axislabel_size": 10,
+        "y_axislabel_weight": "st__normal",
+        "y_log": false,
+        "y_max": 17.421474916,
+        "y_min": 1.170933184,
+        "y_ticklabel_size": 8
+      }
+    }
+  },
+  "Session": {
+    "_type": "glue.core.session.Session"
+  },
+  "Subset 8": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "Subset 8",
+    "state": "RangeSubsetState_3",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.5,
+      "color": "#e31a1c",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "Subset 8_0"
+    ]
+  },
+  "Subset 8_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "Subset 8",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.5,
+      "color": "#e31a1c",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    }
+  },
+  "Vmag": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Vmag"
+  },
+  "_DE_icrs": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "_DE_icrs"
+  },
+  "_RA_icrs": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "_RA_icrs"
+  },
+  "__B-V_0": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "__B-V_0"
+  },
+  "__V-Ks_0": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "__V-Ks_0"
+  },
+  "__main__": {
+    "_type": "glue.app.qt.application.GlueApplication",
+    "data": "DataCollection",
+    "plugins": [
+      "glue.viewers.profile.qt",
+      "glue.viewers.histogram.qt",
+      "glue.core.data_exporters",
+      "glue.plugins.export_d3po",
+      "glue.plugins.tools",
+      "glue.io.formats.fits",
+      "glue.plugins.wcs_autolinking",
+      "glue.plugins.tools.pv_slicer.qt",
+      "glue.plugins.dendro_viewer.qt",
+      "glue.viewers.scatter.qt",
+      "glue_vispy_viewers.scatter",
+      "glue.plugins.coordinate_helpers",
+      "glue.viewers.image.qt",
+      "glue.io.qt.directory_importer",
+      "glue.viewers.table.qt",
+      "glue_vispy_viewers.volume"
+    ],
+    "session": "Session",
+    "tab_names": [
+      "Tab 1"
+    ],
+    "viewers": [
+      [
+        "ScatterViewer",
+        "ScatterViewer_0",
+        "ScatterViewer_1",
+        "ScatterViewer_2"
+      ]
+    ]
+  },
+  "ag_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ag_gspphot"
+  },
+  "angular_distance": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "angular_distance"
+  },
+  "azero_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "azero_gspphot"
+  },
+  "b": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "b"
+  },
+  "bp_g": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "bp_g"
+  },
+  "bp_rp": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "bp_rp"
+  },
+  "bp_rp_excess_outlier": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "bp_rp_excess_outlier",
+    "state": "RoiSubsetState",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#fb9a99",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "bp_rp_excess_outlier_0"
+    ]
+  },
+  "bp_rp_excess_outlier_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "bp_rp_excess_outlier",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#fb9a99",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    }
+  },
+  "camd_outlier": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "camd_outlier",
+    "state": "OrState",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#4eff45",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 4,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "camd_outlier_0"
+    ]
+  },
+  "camd_outlier_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "camd_outlier",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#4eff45",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 4,
+      "preferred_cmap": null
+    }
+  },
+  "class1_and_class2": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "class1_and_class2",
+    "state": "RangeSubsetState_0",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#000000",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 3,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "class1_and_class2_0"
+    ]
+  },
+  "class1_and_class2_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "class1_and_class2",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#000000",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 3,
+      "preferred_cmap": null
+    }
+  },
+  "dec": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "dec"
+  },
+  "dr2_source_id": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "dr2_source_id"
+  },
+  "dr3_source_id": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "dr3_source_id"
+  },
+  "e_Prot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "e_Prot"
+  },
+  "ebpminrp_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ebpminrp_gspphot"
+  },
+  "ecl_lat": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ecl_lat"
+  },
+  "ecl_lon": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ecl_lon"
+  },
+  "g_rp": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "g_rp"
+  },
+  "l": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "l"
+  },
+  "magnitude_difference": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "magnitude_difference"
+  },
+  "ngc3532": {
+    "_key_joins": [],
+    "_protocol": 5,
+    "_type": "glue.core.data.Data",
+    "components": [
+      [
+        "Pixel Axis 0 [x]",
+        "CoordinateComponent"
+      ],
+      [
+        "ID",
+        "Component"
+      ],
+      [
+        "GaiaDR2",
+        "Component_0"
+      ],
+      [
+        "CLHW",
+        "Component_1"
+      ],
+      [
+        "RA_ICRS",
+        "Component_2"
+      ],
+      [
+        "DE_ICRS",
+        "Component_3"
+      ],
+      [
+        "__B-V_0",
+        "Component_4"
+      ],
+      [
+        "Vmag",
+        "Component_5"
+      ],
+      [
+        "__V-Ks_0",
+        "Component_6"
+      ],
+      [
+        "Prot",
+        "Component_7"
+      ],
+      [
+        "e_Prot",
+        "Component_8"
+      ],
+      [
+        "P90",
+        "Component_9"
+      ],
+      [
+        "Class",
+        "Component_10"
+      ],
+      [
+        "Binary",
+        "Component_11"
+      ],
+      [
+        "_RA_icrs",
+        "Component_12"
+      ],
+      [
+        "_DE_icrs",
+        "Component_13"
+      ],
+      [
+        "dr2_source_id",
+        "Component_14"
+      ],
+      [
+        "dr3_source_id",
+        "Component_15"
+      ],
+      [
+        "angular_distance",
+        "Component_16"
+      ],
+      [
+        "magnitude_difference",
+        "Component_17"
+      ],
+      [
+        "ra",
+        "Component_18"
+      ],
+      [
+        "dec",
+        "Component_19"
+      ],
+      [
+        "parallax",
+        "Component_20"
+      ],
+      [
+        "parallax_error",
+        "Component_21"
+      ],
+      [
+        "parallax_over_error",
+        "Component_22"
+      ],
+      [
+        "pmra",
+        "Component_23"
+      ],
+      [
+        "pmdec",
+        "Component_24"
+      ],
+      [
+        "ruwe",
+        "Component_25"
+      ],
+      [
+        "phot_g_mean_flux_over_error",
+        "Component_26"
+      ],
+      [
+        "phot_g_mean_mag",
+        "Component_27"
+      ],
+      [
+        "phot_bp_mean_flux_over_error",
+        "Component_28"
+      ],
+      [
+        "phot_rp_mean_flux",
+        "Component_29"
+      ],
+      [
+        "phot_rp_mean_flux_over_error",
+        "Component_30"
+      ],
+      [
+        "phot_bp_rp_excess_factor",
+        "Component_31"
+      ],
+      [
+        "phot_bp_n_contaminated_transits",
+        "Component_32"
+      ],
+      [
+        "phot_bp_n_blended_transits",
+        "Component_33"
+      ],
+      [
+        "phot_rp_n_contaminated_transits",
+        "Component_34"
+      ],
+      [
+        "phot_rp_n_blended_transits",
+        "Component_35"
+      ],
+      [
+        "bp_rp",
+        "Component_36"
+      ],
+      [
+        "bp_g",
+        "Component_37"
+      ],
+      [
+        "g_rp",
+        "Component_38"
+      ],
+      [
+        "radial_velocity",
+        "Component_39"
+      ],
+      [
+        "radial_velocity_error",
+        "Component_40"
+      ],
+      [
+        "rv_method_used",
+        "Component_41"
+      ],
+      [
+        "rv_expected_sig_to_noise",
+        "Component_42"
+      ],
+      [
+        "vbroad",
+        "Component_43"
+      ],
+      [
+        "vbroad_error",
+        "Component_44"
+      ],
+      [
+        "l",
+        "Component_45"
+      ],
+      [
+        "b",
+        "Component_46"
+      ],
+      [
+        "ecl_lon",
+        "Component_47"
+      ],
+      [
+        "ecl_lat",
+        "Component_48"
+      ],
+      [
+        "non_single_star",
+        "Component_49"
+      ],
+      [
+        "teff_gspphot",
+        "Component_50"
+      ],
+      [
+        "teff_gspphot_lower",
+        "Component_51"
+      ],
+      [
+        "teff_gspphot_upper",
+        "Component_52"
+      ],
+      [
+        "azero_gspphot",
+        "Component_53"
+      ],
+      [
+        "ag_gspphot",
+        "Component_54"
+      ],
+      [
+        "ebpminrp_gspphot",
+        "Component_55"
+      ],
+      [
+        "M_G",
+        "Component_56"
+      ]
+    ],
+    "label": "ngc3532",
+    "meta": {
+      "_type": "collections.OrderedDict",
+      "contents": {}
+    },
+    "primary_owner": [
+      "Pixel Axis 0 [x]",
+      "ID",
+      "GaiaDR2",
+      "CLHW",
+      "RA_ICRS",
+      "DE_ICRS",
+      "__B-V_0",
+      "Vmag",
+      "__V-Ks_0",
+      "Prot",
+      "e_Prot",
+      "P90",
+      "Class",
+      "Binary",
+      "_RA_icrs",
+      "_DE_icrs",
+      "dr2_source_id",
+      "dr3_source_id",
+      "angular_distance",
+      "magnitude_difference",
+      "ra",
+      "dec",
+      "parallax",
+      "parallax_error",
+      "parallax_over_error",
+      "pmra",
+      "pmdec",
+      "ruwe",
+      "phot_g_mean_flux_over_error",
+      "phot_g_mean_mag",
+      "phot_bp_mean_flux_over_error",
+      "phot_rp_mean_flux",
+      "phot_rp_mean_flux_over_error",
+      "phot_bp_rp_excess_factor",
+      "phot_bp_n_contaminated_transits",
+      "phot_bp_n_blended_transits",
+      "phot_rp_n_contaminated_transits",
+      "phot_rp_n_blended_transits",
+      "bp_rp",
+      "bp_g",
+      "g_rp",
+      "radial_velocity",
+      "radial_velocity_error",
+      "rv_method_used",
+      "rv_expected_sig_to_noise",
+      "vbroad",
+      "vbroad_error",
+      "l",
+      "b",
+      "ecl_lon",
+      "ecl_lat",
+      "non_single_star",
+      "teff_gspphot",
+      "teff_gspphot_lower",
+      "teff_gspphot_upper",
+      "azero_gspphot",
+      "ag_gspphot",
+      "ebpminrp_gspphot",
+      "M_G"
+    ],
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.8,
+      "color": "#000000",
+      "linestyle": "solid",
+      "linewidth": 1,
+      "marker": "o",
+      "markersize": 3,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "camd_outlier_0",
+      "ruwe_outlier_0",
+      "class1_and_class2_0",
+      "rverror_outlier_0",
+      "non_single_star_1",
+      "bp_rp_excess_outlier_0",
+      "Subset 8_0"
+    ],
+    "uuid": "91b2c428-07a5-4bb4-9994-d4170354f627"
+  },
+  "non_single_star": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "non_single_star"
+  },
+  "non_single_star_0": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "non_single_star",
+    "state": "RangeSubsetState_2",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#6a3d9a",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "non_single_star_1"
+    ]
+  },
+  "non_single_star_1": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "non_single_star_0",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#6a3d9a",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    }
+  },
+  "parallax": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "parallax"
+  },
+  "parallax_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "parallax_error"
+  },
+  "parallax_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "parallax_over_error"
+  },
+  "phot_bp_mean_flux_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_mean_flux_over_error"
+  },
+  "phot_bp_n_blended_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_n_blended_transits"
+  },
+  "phot_bp_n_contaminated_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_n_contaminated_transits"
+  },
+  "phot_bp_rp_excess_factor": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_rp_excess_factor"
+  },
+  "phot_g_mean_flux_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_g_mean_flux_over_error"
+  },
+  "phot_g_mean_mag": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_g_mean_mag"
+  },
+  "phot_rp_mean_flux": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_mean_flux"
+  },
+  "phot_rp_mean_flux_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_mean_flux_over_error"
+  },
+  "phot_rp_n_blended_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_n_blended_transits"
+  },
+  "phot_rp_n_contaminated_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_n_contaminated_transits"
+  },
+  "pmdec": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "pmdec"
+  },
+  "pmra": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "pmra"
+  },
+  "ra": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ra"
+  },
+  "radial_velocity": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "radial_velocity"
+  },
+  "radial_velocity_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "radial_velocity_error"
+  },
+  "ruwe": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ruwe"
+  },
+  "ruwe_outlier": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "ruwe_outlier",
+    "state": "RangeSubsetState",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#fc0016",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 4,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "ruwe_outlier_0"
+    ]
+  },
+  "ruwe_outlier_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "ruwe_outlier",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#fc0016",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 4,
+      "preferred_cmap": null
+    }
+  },
+  "rv_expected_sig_to_noise": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "rv_expected_sig_to_noise"
+  },
+  "rv_method_used": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "rv_method_used"
+  },
+  "rverror_outlier": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "rverror_outlier",
+    "state": "RangeSubsetState_1",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#ff7f00",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "rverror_outlier_0"
+    ]
+  },
+  "rverror_outlier_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "rverror_outlier",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#ff7f00",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    }
+  },
+  "teff_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "teff_gspphot"
+  },
+  "teff_gspphot_lower": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "teff_gspphot_lower"
+  },
+  "teff_gspphot_upper": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "teff_gspphot_upper"
+  },
+  "vbroad": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "vbroad"
+  },
+  "vbroad_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "vbroad_error"
+  }
+}

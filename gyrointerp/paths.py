@@ -7,11 +7,11 @@ import os
 from gyrointerp import __path__
 __path__ = list(__path__)
 
-DATADIR = os.path.join(os.path.dirname(__path__[0]), 'data')
+DATADIR = os.path.join(__path__[0], 'data')
 RESULTSDIR = os.path.join(os.path.dirname(__path__[0]), 'results')
 CACHEDIR = os.path.join(os.path.expanduser('~'), '.gyrointerp_cache')
 
-for l in [DATADIR, RESULTSDIR, CACHEDIR]:
+for l in [DATADIR, CACHEDIR]:
     if not os.path.exists(l):
         print(f"Making {l}")
         os.mkdir(l)

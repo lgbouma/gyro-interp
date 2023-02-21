@@ -1,0 +1,1743 @@
+{
+  "CallbackList": {
+    "_type": "echo.containers.CallbackList",
+    "values": [
+      "ScatterLayerState",
+      "ScatterLayerState_0",
+      "ScatterLayerState_1"
+    ]
+  },
+  "CallbackList_0": {
+    "_type": "echo.containers.CallbackList",
+    "values": [
+      "ScatterLayerState_2",
+      "ScatterLayerState_3",
+      "ScatterLayerState_4"
+    ]
+  },
+  "CategoricalComponent": {
+    "_type": "glue.core.component.CategoricalComponent",
+    "log": "LoadLog",
+    "log_item": 2
+  },
+  "CategoricalComponent_0": {
+    "_type": "glue.core.component.CategoricalComponent",
+    "log": "LoadLog",
+    "log_item": 7
+  },
+  "CategoricalComponent_1": {
+    "_type": "glue.core.component.CategoricalComponent",
+    "log": "LoadLog",
+    "log_item": 9
+  },
+  "CategoricalComponent_2": {
+    "_type": "glue.core.component.CategoricalComponent",
+    "log": "LoadLog",
+    "log_item": 10
+  },
+  "CategoricalComponent_3": {
+    "_type": "glue.core.component.CategoricalComponent",
+    "log": "LoadLog",
+    "log_item": 56
+  },
+  "CategoricalComponent_4": {
+    "_type": "glue.core.component.CategoricalComponent",
+    "log": "LoadLog",
+    "log_item": 57
+  },
+  "Component": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 1
+  },
+  "Component_0": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 3
+  },
+  "Component_1": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 4
+  },
+  "Component_10": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 16
+  },
+  "Component_11": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 17
+  },
+  "Component_12": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 18
+  },
+  "Component_13": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 19
+  },
+  "Component_14": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 20
+  },
+  "Component_15": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 21
+  },
+  "Component_16": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 22
+  },
+  "Component_17": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 23
+  },
+  "Component_18": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 24
+  },
+  "Component_19": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 25
+  },
+  "Component_2": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 5
+  },
+  "Component_20": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 26
+  },
+  "Component_21": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 27
+  },
+  "Component_22": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 28
+  },
+  "Component_23": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 29
+  },
+  "Component_24": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 30
+  },
+  "Component_25": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 31
+  },
+  "Component_26": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 32
+  },
+  "Component_27": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 33
+  },
+  "Component_28": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 34
+  },
+  "Component_29": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 35
+  },
+  "Component_3": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 6
+  },
+  "Component_30": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 36
+  },
+  "Component_31": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 37
+  },
+  "Component_32": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 38
+  },
+  "Component_33": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 39
+  },
+  "Component_34": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 40
+  },
+  "Component_35": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 41
+  },
+  "Component_36": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 42
+  },
+  "Component_37": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 43
+  },
+  "Component_38": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 44
+  },
+  "Component_39": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 45
+  },
+  "Component_4": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 8
+  },
+  "Component_40": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 46
+  },
+  "Component_41": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 47
+  },
+  "Component_42": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 48
+  },
+  "Component_43": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 49
+  },
+  "Component_44": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 50
+  },
+  "Component_45": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 51
+  },
+  "Component_46": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 52
+  },
+  "Component_47": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 53
+  },
+  "Component_48": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 54
+  },
+  "Component_49": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 55
+  },
+  "Component_5": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 11
+  },
+  "Component_50": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 58
+  },
+  "Component_6": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 12
+  },
+  "Component_7": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 13
+  },
+  "Component_8": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 14
+  },
+  "Component_9": {
+    "_type": "glue.core.component.Component",
+    "log": "LoadLog",
+    "log_item": 15
+  },
+  "CoordinateComponent": {
+    "_type": "glue.core.component.CoordinateComponent",
+    "axis": 0,
+    "world": false
+  },
+  "DataCollection": {
+    "_protocol": 4,
+    "_type": "glue.core.data_collection.DataCollection",
+    "cids": [
+      "Pixel Axis 0 [x]",
+      "Seq",
+      "n_Seq",
+      "TIC",
+      "Gmag",
+      "__G-K_0",
+      "Per",
+      "n_Per",
+      "e_Per",
+      "Grade",
+      "Sect",
+      "_RA",
+      "_DE",
+      "dr2_source_id",
+      "dr3_source_id",
+      "angular_distance",
+      "magnitude_difference",
+      "ra",
+      "dec",
+      "parallax",
+      "parallax_error",
+      "parallax_over_error",
+      "pmra",
+      "pmdec",
+      "ruwe",
+      "phot_g_mean_flux_over_error",
+      "phot_g_mean_mag",
+      "phot_bp_mean_flux_over_error",
+      "phot_rp_mean_flux",
+      "phot_rp_mean_flux_over_error",
+      "phot_bp_rp_excess_factor",
+      "phot_bp_n_contaminated_transits",
+      "phot_bp_n_blended_transits",
+      "phot_rp_n_contaminated_transits",
+      "phot_rp_n_blended_transits",
+      "bp_rp",
+      "bp_g",
+      "g_rp",
+      "radial_velocity",
+      "radial_velocity_error",
+      "rv_method_used",
+      "rv_expected_sig_to_noise",
+      "vbroad",
+      "vbroad_error",
+      "l",
+      "b",
+      "ecl_lon",
+      "ecl_lat",
+      "non_single_star",
+      "teff_gspphot",
+      "teff_gspphot_lower",
+      "teff_gspphot_upper",
+      "azero_gspphot",
+      "ag_gspphot",
+      "ebpminrp_gspphot",
+      "nbhr_count",
+      "flag_nbhr_count",
+      "flag_bad_gaiamatch",
+      "M_G"
+    ],
+    "components": [
+      "CoordinateComponent",
+      "Component",
+      "CategoricalComponent",
+      "Component_0",
+      "Component_1",
+      "Component_2",
+      "Component_3",
+      "CategoricalComponent_0",
+      "Component_4",
+      "CategoricalComponent_1",
+      "CategoricalComponent_2",
+      "Component_5",
+      "Component_6",
+      "Component_7",
+      "Component_8",
+      "Component_9",
+      "Component_10",
+      "Component_11",
+      "Component_12",
+      "Component_13",
+      "Component_14",
+      "Component_15",
+      "Component_16",
+      "Component_17",
+      "Component_18",
+      "Component_19",
+      "Component_20",
+      "Component_21",
+      "Component_22",
+      "Component_23",
+      "Component_24",
+      "Component_25",
+      "Component_26",
+      "Component_27",
+      "Component_28",
+      "Component_29",
+      "Component_30",
+      "Component_31",
+      "Component_32",
+      "Component_33",
+      "Component_34",
+      "Component_35",
+      "Component_36",
+      "Component_37",
+      "Component_38",
+      "Component_39",
+      "Component_40",
+      "Component_41",
+      "Component_42",
+      "Component_43",
+      "Component_44",
+      "Component_45",
+      "Component_46",
+      "Component_47",
+      "Component_48",
+      "Component_49",
+      "CategoricalComponent_3",
+      "CategoricalComponent_4",
+      "Component_50"
+    ],
+    "data": [
+      "groupx"
+    ],
+    "groups": [
+      "camd_outliers",
+      "rverror_outliers"
+    ],
+    "links": [],
+    "subset_group_count": 2
+  },
+  "Gmag": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Gmag"
+  },
+  "Grade": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Grade"
+  },
+  "LinearSegmentedColormap": {
+    "_type": "matplotlib.colors.LinearSegmentedColormap",
+    "cmap": "gray"
+  },
+  "LoadLog": {
+    "_protocol": 2,
+    "_type": "glue.core.data_factories.helpers.LoadLog",
+    "factory": {
+      "_type": "types.FunctionType",
+      "function": "glue.core.data_factories.tables.tabular_data"
+    },
+    "force_coords": false,
+    "kwargs": [
+      []
+    ],
+    "path": "groupx.csv"
+  },
+  "M_G": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "M_G"
+  },
+  "OrState": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_0",
+    "state2": "OrState_0"
+  },
+  "OrState_0": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_1",
+    "state2": "OrState_1"
+  },
+  "OrState_1": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_2",
+    "state2": "OrState_2"
+  },
+  "OrState_2": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_3",
+    "state2": "OrState_3"
+  },
+  "OrState_3": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_4",
+    "state2": "OrState_4"
+  },
+  "OrState_4": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_5",
+    "state2": "OrState_5"
+  },
+  "OrState_5": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_6",
+    "state2": "OrState_6"
+  },
+  "OrState_6": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_7",
+    "state2": "OrState_7"
+  },
+  "OrState_7": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_8",
+    "state2": "OrState_8"
+  },
+  "OrState_8": {
+    "_type": "glue.core.subset.OrState",
+    "state1": "RoiSubsetState_9",
+    "state2": "RoiSubsetState_10"
+  },
+  "Per": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Per"
+  },
+  "Pixel Axis 0 [x]": {
+    "_type": "glue.core.component_id.PixelComponentID",
+    "axis": 0,
+    "label": "Pixel Axis 0 [x]"
+  },
+  "PolygonalROI": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDE5LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArDIIVVkAEgQNsYI8sT6R1A2xgjyxPpHUD1t/TapgYnQPW39NqmBidAB6AH/h3CKUAHoAf+HcIpQIKrNPg6JStAgqs0+DolK0Bq+0StTF0sQDRZ00/ScixANFnTT9JyLEBTS1ViXpUtQFNLVWJelS1A7g7mzVFDMEDuDubNUUMwQLy/NB5EiTBAvL80HkSJMEDYKWFcVuojQA=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDE5LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApNJhs/rB0fQPFuc2zaFvU/8W5zbNoW9T8hw40xzof0PyHDjTHOh/Q/19ezVaqW/j/X17NVqpb+P9xLP43ozA5A3Es/jejMDkDVDuAvROYYQF9tDQemXh1AX20NB6ZeHUBRP0G9LuAiQFE/Qb0u4CJAHQiM3br3IUAdCIzduvchQG+Hna0NaClAb4edrQ1oKUBvh52tDWgpQA=="
+    }
+  },
+  "PolygonalROI_0": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArES8V4Ucb+P8RLxXhRxv4/uc7MBtEUAEC5zswG0RQAQLlVAn7LggBAuVUCfsuCAEAk05fFCNX/PyTTl8UI1f8/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo+VVfXZxAnQNMnocX/GCdApgL+wzUSKECmAv7DNRIoQC6TUlNA1CZALpNSU0DUJkDmabVuwUomQOZptW7BSiZA"
+    }
+  },
+  "PolygonalROI_1": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApWY/Fb/3TjP1Zj8Vv/dOM/VsUoO3II5T9WxSg7cgjlPw6jjMyH1eY/DqOMzIfV5j/EWkrAROjjPw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAkqtjAH8WQACSq2MAfxZAXh7Ie+3nF0BeHsh77ecXQEi7SEh/CBdASLtISH8IF0CqJhkg9K4UQA=="
+    }
+  },
+  "PolygonalROI_10": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApOoRSZHBDgP06hFJkcEOA/nvOGW9uI4T9bFf95JyDwP1sV/3knIPA/wlVSU/8Y7T/CVVJT/xjtPw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApwvJAE0uTzP3C8kATS5PM/IPbX4Lui/j/sdkOe2u0AQJgsHOV6ywBAYHp8WxCz9D9genxbELP0Pw=="
+    }
+  },
+  "PolygonalROI_2": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApWY/Fb/3TjP1Zj8Vv/dOM/VsUoO3II5T9WxSg7cgjlPw6jjMyH1eY/DqOMzIfV5j/EWkrAROjjPw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDcsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAkqtjAH8WQACSq2MAfxZAXh7Ie+3nF0BeHsh77ecXQEi7SEh/CBdASLtISH8IF0CqJhkg9K4UQA=="
+    }
+  },
+  "PolygonalROI_3": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDUsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp8C4JeJCT0P+lRP1OwzfM/MzhKgIAn9T8zOEqAgCf1PyFX1SzpNfU/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDUsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqEXYkxOuwlQLCCLDME8yRAfrwOgvNIJUB+vA6C80glQO+KP0Oi4yVA"
+    }
+  },
+  "PolygonalROI_4": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArL7RuTNSLeP8vtG5M1It4/MN2Y9upq4D8w3Zj26mrgPw6QuX1beOQ/DpC5fVt45D/mWMWojaTgP8KW2wFfweA/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog1P2gKocRQCDU/aAqhxFA+k/VTqcjE0D6T9VOpyMTQM6J1ufKZBFAzonW58pkEUAUwbCaAI0NQBTBsJoAjQ1A"
+    }
+  },
+  "PolygonalROI_5": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDksKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqOnZIhdd/0P46dkiF13/Q/62QSotwq9j/rZBKi3Cr2Pyc87656dQBAJzzvrnp1AECeyzQFr3wAQIKhN1BvLQBAgqE3UG8tAEA="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDksKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo4tNwnIW0mQDi03CchbSZAmmFkyrqDKUCaYWTKuoMpQP/tnyzc1yhA/+2fLNzXKEDWSAxQrMYoQCXRbBlNgyRAJdFsGU2DJEA="
+    }
+  },
+  "PolygonalROI_6": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoyUqMkilvkPzJSoySKW+Q/MrTaA/3u5T8UK2pJUyPtP35LgaCGEug/fkuBoIYS6D8="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDYsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAqEovDNcEsWQISi8M1wSxZAXh7Ie+3nF0D6T9VOpyMTQApxfm28pxBACnF+bbynEEA="
+    }
+  },
+  "PolygonalROI_7": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDE2LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIApvNY8iw0b1P281jyLDRvU/hgkDnwKGAUCGCQOfAoYBQOi4vDusrQNARvnLK8x2BkDYHr4vcnYHQNgevi9ydgdA7OqvtuaDB0CU3JNBAZEIQJTck0EBkQhArtp4Q7B0DECu2nhDsHQMQAiV9pZuTgZACfweTi17+T8J/B5OLXv5Pw=="
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDE2LCksIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIArTDWTHSDAaQNMNZMdIMBpAcdm9vVNKIUBx2b29U0ohQH4bsxzhkCJAgTwep40+JEDARDG3Ky8lQMBEMbcrLyVAwEQxtysvJUD/TETHyR8mQP9MRMfJHyZAfrwOgvNIJUB+vA6C80glQIHDPA7pDRpALjdeimR7FEAuN16KZHsUQA=="
+    }
+  },
+  "PolygonalROI_8": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp64TTqU13qP3rhNOpTXeo/euE06lNd6j/a3amj4nDwP8VlVj6VfPU/xWVWPpV89T9qRzbeGSbuP2pHNt4ZJu4/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoAUPSY2w4RQABQ9JjbDhFAKPWHdQsgEUCqJhkg9K4UQMaJt52WeRNAxom3nZZ5E0BoC9hTYK8NQGgL2FNgrw1A"
+    }
+  },
+  "PolygonalROI_9": {
+    "_type": "glue.core.roi.PolygonalROI",
+    "vx": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp+v4lDZxrpP36/iUNnGuk/akc23hkm7j9qRzbeGSbuP84R/AUmk+o/zhH8BSaT6j/04Zr6lLTfP/ThmvqUtN8/"
+    },
+    "vy": {
+      "_type": "numpy.ndarray",
+      "data": "k05VTVBZAQB2AHsnZGVzY3InOiAnPGY4JywgJ2ZvcnRyYW5fb3JkZXInOiBGYWxzZSwgJ3NoYXBlJzogKDgsKSwgfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAoc9UnhokkVQBz1SeGiSRVAp0dlYGxxGECnR2VgbHEYQPmRjBnMkxhA+ZGMGcyTGECEovDNcEsWQISi8M1wSxZA"
+    }
+  },
+  "RoiSubsetState": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI",
+    "xatt": "phot_g_mean_mag",
+    "yatt": "radial_velocity_error"
+  },
+  "RoiSubsetState_0": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_0",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_1": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_1",
+    "xatt": "bp_g",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_10": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_10",
+    "xatt": "bp_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_2": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_2",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_3": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_3",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_4": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_4",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_5": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_5",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_6": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_6",
+    "xatt": "g_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_7": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_7",
+    "xatt": "bp_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_8": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_8",
+    "xatt": "bp_rp",
+    "yatt": "M_G"
+  },
+  "RoiSubsetState_9": {
+    "_type": "glue.core.subset.RoiSubsetState",
+    "pretransform": null,
+    "roi": "PolygonalROI_9",
+    "xatt": "bp_rp",
+    "yatt": "M_G"
+  },
+  "ScatterLayerState": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "Seq",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 217,
+      "cmap_vmin": 5,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "groupx",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "Seq",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 217,
+      "size_vmin": 5,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "Seq",
+      "vy_att": "Seq",
+      "xerr_att": "Seq",
+      "xerr_visible": false,
+      "yerr_att": "Seq",
+      "yerr_visible": false,
+      "zorder": 1
+    }
+  },
+  "ScatterLayerState_0": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "Seq",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 217,
+      "cmap_vmin": 5,
+      "color": "st__#e31a1c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "camd_outliers_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "Seq",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 217,
+      "size_vmin": 5,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "Seq",
+      "vy_att": "Seq",
+      "xerr_att": "Seq",
+      "xerr_visible": false,
+      "yerr_att": "Seq",
+      "yerr_visible": false,
+      "zorder": 2
+    }
+  },
+  "ScatterLayerState_1": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "Seq",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 217,
+      "cmap_vmin": 5,
+      "color": "st__#33a02c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "rverror_outliers_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "Seq",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 217,
+      "size_vmin": 5,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "Seq",
+      "vy_att": "Seq",
+      "xerr_att": "Seq",
+      "xerr_visible": false,
+      "yerr_att": "Seq",
+      "yerr_visible": false,
+      "zorder": 3
+    }
+  },
+  "ScatterLayerState_2": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 1.0,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "Seq",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 217,
+      "cmap_vmin": 5,
+      "color": "st__#000000",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "groupx",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 3,
+      "size_att": "Seq",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 217,
+      "size_vmin": 5,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "Seq",
+      "vy_att": "Seq",
+      "xerr_att": "Seq",
+      "xerr_visible": false,
+      "yerr_att": "Seq",
+      "yerr_visible": false,
+      "zorder": 1
+    }
+  },
+  "ScatterLayerState_3": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "Seq",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 217,
+      "cmap_vmin": 5,
+      "color": "st__#e31a1c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "camd_outliers_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "Seq",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 217,
+      "size_vmin": 5,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "Seq",
+      "vy_att": "Seq",
+      "xerr_att": "Seq",
+      "xerr_visible": false,
+      "yerr_att": "Seq",
+      "yerr_visible": false,
+      "zorder": 2
+    }
+  },
+  "ScatterLayerState_4": {
+    "_type": "glue.viewers.scatter.state.ScatterLayerState",
+    "values": {
+      "alpha": 0.49,
+      "cmap": "LinearSegmentedColormap",
+      "cmap_att": "Seq",
+      "cmap_mode": "st__Fixed",
+      "cmap_vmax": 217,
+      "cmap_vmin": 5,
+      "color": "st__#33a02c",
+      "density_contrast": 1.0,
+      "density_map": false,
+      "fill": true,
+      "layer": "rverror_outliers_0",
+      "line_visible": false,
+      "linestyle": "st__solid",
+      "linewidth": 1,
+      "markers_visible": true,
+      "points_mode": "st__auto",
+      "size": 7,
+      "size_att": "Seq",
+      "size_mode": "st__Fixed",
+      "size_scaling": 1,
+      "size_vmax": 217,
+      "size_vmin": 5,
+      "stretch": "st__log",
+      "vector_arrowhead": false,
+      "vector_mode": "st__Cartesian",
+      "vector_origin": "st__middle",
+      "vector_scaling": 0.9770099572992254,
+      "vector_visible": false,
+      "visible": true,
+      "vx_att": "Seq",
+      "vy_att": "Seq",
+      "xerr_att": "Seq",
+      "xerr_visible": false,
+      "yerr_att": "Seq",
+      "yerr_visible": false,
+      "zorder": 3
+    }
+  },
+  "ScatterViewer": {
+    "_protocol": 1,
+    "_type": "glue.viewers.scatter.qt.data_viewer.ScatterViewer",
+    "layers": [
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_0"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_1"
+      }
+    ],
+    "pos": [
+      0,
+      0
+    ],
+    "session": "Session",
+    "size": [
+      753,
+      922
+    ],
+    "state": {
+      "values": {
+        "angle_unit": "st__radians",
+        "aspect": "st__auto",
+        "dpi": 71.30820648960312,
+        "layers": "CallbackList",
+        "plot_mode": "st__rectilinear",
+        "show_axes": true,
+        "x_att": "phot_g_mean_mag",
+        "x_axislabel": "st__phot_g_mean_mag",
+        "x_axislabel_size": 10,
+        "x_axislabel_weight": "st__normal",
+        "x_log": false,
+        "x_max": 18.259637988,
+        "x_min": 5.186697312000001,
+        "x_ticklabel_size": 8,
+        "y_att": "radial_velocity_error",
+        "y_axislabel": "st__radial_velocity_error",
+        "y_axislabel_size": 10,
+        "y_axislabel_weight": "st__normal",
+        "y_log": false,
+        "y_max": 12.947695766399999,
+        "y_min": -0.3233379263999999,
+        "y_ticklabel_size": 8
+      }
+    }
+  },
+  "ScatterViewer_0": {
+    "_protocol": 1,
+    "_type": "glue.viewers.scatter.qt.data_viewer.ScatterViewer",
+    "layers": [
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_2"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_3"
+      },
+      {
+        "_type": "glue.viewers.scatter.layer_artist.ScatterLayerArtist",
+        "state": "ScatterLayerState_4"
+      }
+    ],
+    "pos": [
+      710,
+      18
+    ],
+    "session": "Session",
+    "size": [
+      786,
+      604
+    ],
+    "state": {
+      "values": {
+        "angle_unit": "st__radians",
+        "aspect": "st__auto",
+        "dpi": 71.30820648960312,
+        "layers": "CallbackList_0",
+        "plot_mode": "st__rectilinear",
+        "show_axes": true,
+        "x_att": "__G-K_0",
+        "x_axislabel": "st____G-K_0",
+        "x_axislabel_size": 10,
+        "x_axislabel_weight": "st__normal",
+        "x_log": false,
+        "x_max": 4.5382,
+        "x_min": -0.3002,
+        "x_ticklabel_size": 8,
+        "y_att": "Per",
+        "y_axislabel": "st__Per",
+        "y_axislabel_size": 10,
+        "y_axislabel_weight": "st__normal",
+        "y_log": false,
+        "y_max": 10.3958,
+        "y_min": -0.2908,
+        "y_ticklabel_size": 8
+      }
+    }
+  },
+  "Sect": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Sect"
+  },
+  "Seq": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "Seq"
+  },
+  "Session": {
+    "_type": "glue.core.session.Session"
+  },
+  "TIC": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "TIC"
+  },
+  "_DE": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "_DE"
+  },
+  "_RA": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "_RA"
+  },
+  "__G-K_0": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "__G-K_0"
+  },
+  "__main__": {
+    "_type": "glue.app.qt.application.GlueApplication",
+    "data": "DataCollection",
+    "plugins": [
+      "glue.viewers.scatter.qt",
+      "glue.plugins.wcs_autolinking",
+      "glue.plugins.tools.pv_slicer.qt",
+      "glue.plugins.coordinate_helpers",
+      "glue.viewers.histogram.qt",
+      "glue.io.formats.fits",
+      "glue.plugins.tools",
+      "glue.io.qt.directory_importer",
+      "glue.plugins.export_d3po",
+      "glue.viewers.image.qt",
+      "glue.viewers.table.qt",
+      "glue.core.data_exporters",
+      "glue.viewers.profile.qt",
+      "glue_vispy_viewers.volume",
+      "glue_vispy_viewers.scatter",
+      "glue.plugins.dendro_viewer.qt"
+    ],
+    "session": "Session",
+    "tab_names": [
+      "Tab 1"
+    ],
+    "viewers": [
+      [
+        "ScatterViewer",
+        "ScatterViewer_0"
+      ]
+    ]
+  },
+  "ag_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ag_gspphot"
+  },
+  "angular_distance": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "angular_distance"
+  },
+  "azero_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "azero_gspphot"
+  },
+  "b": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "b"
+  },
+  "bp_g": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "bp_g"
+  },
+  "bp_rp": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "bp_rp"
+  },
+  "camd_outliers": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "camd_outliers",
+    "state": "OrState",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#e31a1c",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "camd_outliers_0"
+    ]
+  },
+  "camd_outliers_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "camd_outliers",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#e31a1c",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    }
+  },
+  "dec": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "dec"
+  },
+  "dr2_source_id": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "dr2_source_id"
+  },
+  "dr3_source_id": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "dr3_source_id"
+  },
+  "e_Per": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "e_Per"
+  },
+  "ebpminrp_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ebpminrp_gspphot"
+  },
+  "ecl_lat": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ecl_lat"
+  },
+  "ecl_lon": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ecl_lon"
+  },
+  "flag_bad_gaiamatch": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "flag_bad_gaiamatch"
+  },
+  "flag_nbhr_count": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "flag_nbhr_count"
+  },
+  "g_rp": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "g_rp"
+  },
+  "groupx": {
+    "_key_joins": [],
+    "_protocol": 5,
+    "_type": "glue.core.data.Data",
+    "components": [
+      [
+        "Pixel Axis 0 [x]",
+        "CoordinateComponent"
+      ],
+      [
+        "Seq",
+        "Component"
+      ],
+      [
+        "n_Seq",
+        "CategoricalComponent"
+      ],
+      [
+        "TIC",
+        "Component_0"
+      ],
+      [
+        "Gmag",
+        "Component_1"
+      ],
+      [
+        "__G-K_0",
+        "Component_2"
+      ],
+      [
+        "Per",
+        "Component_3"
+      ],
+      [
+        "n_Per",
+        "CategoricalComponent_0"
+      ],
+      [
+        "e_Per",
+        "Component_4"
+      ],
+      [
+        "Grade",
+        "CategoricalComponent_1"
+      ],
+      [
+        "Sect",
+        "CategoricalComponent_2"
+      ],
+      [
+        "_RA",
+        "Component_5"
+      ],
+      [
+        "_DE",
+        "Component_6"
+      ],
+      [
+        "dr2_source_id",
+        "Component_7"
+      ],
+      [
+        "dr3_source_id",
+        "Component_8"
+      ],
+      [
+        "angular_distance",
+        "Component_9"
+      ],
+      [
+        "magnitude_difference",
+        "Component_10"
+      ],
+      [
+        "ra",
+        "Component_11"
+      ],
+      [
+        "dec",
+        "Component_12"
+      ],
+      [
+        "parallax",
+        "Component_13"
+      ],
+      [
+        "parallax_error",
+        "Component_14"
+      ],
+      [
+        "parallax_over_error",
+        "Component_15"
+      ],
+      [
+        "pmra",
+        "Component_16"
+      ],
+      [
+        "pmdec",
+        "Component_17"
+      ],
+      [
+        "ruwe",
+        "Component_18"
+      ],
+      [
+        "phot_g_mean_flux_over_error",
+        "Component_19"
+      ],
+      [
+        "phot_g_mean_mag",
+        "Component_20"
+      ],
+      [
+        "phot_bp_mean_flux_over_error",
+        "Component_21"
+      ],
+      [
+        "phot_rp_mean_flux",
+        "Component_22"
+      ],
+      [
+        "phot_rp_mean_flux_over_error",
+        "Component_23"
+      ],
+      [
+        "phot_bp_rp_excess_factor",
+        "Component_24"
+      ],
+      [
+        "phot_bp_n_contaminated_transits",
+        "Component_25"
+      ],
+      [
+        "phot_bp_n_blended_transits",
+        "Component_26"
+      ],
+      [
+        "phot_rp_n_contaminated_transits",
+        "Component_27"
+      ],
+      [
+        "phot_rp_n_blended_transits",
+        "Component_28"
+      ],
+      [
+        "bp_rp",
+        "Component_29"
+      ],
+      [
+        "bp_g",
+        "Component_30"
+      ],
+      [
+        "g_rp",
+        "Component_31"
+      ],
+      [
+        "radial_velocity",
+        "Component_32"
+      ],
+      [
+        "radial_velocity_error",
+        "Component_33"
+      ],
+      [
+        "rv_method_used",
+        "Component_34"
+      ],
+      [
+        "rv_expected_sig_to_noise",
+        "Component_35"
+      ],
+      [
+        "vbroad",
+        "Component_36"
+      ],
+      [
+        "vbroad_error",
+        "Component_37"
+      ],
+      [
+        "l",
+        "Component_38"
+      ],
+      [
+        "b",
+        "Component_39"
+      ],
+      [
+        "ecl_lon",
+        "Component_40"
+      ],
+      [
+        "ecl_lat",
+        "Component_41"
+      ],
+      [
+        "non_single_star",
+        "Component_42"
+      ],
+      [
+        "teff_gspphot",
+        "Component_43"
+      ],
+      [
+        "teff_gspphot_lower",
+        "Component_44"
+      ],
+      [
+        "teff_gspphot_upper",
+        "Component_45"
+      ],
+      [
+        "azero_gspphot",
+        "Component_46"
+      ],
+      [
+        "ag_gspphot",
+        "Component_47"
+      ],
+      [
+        "ebpminrp_gspphot",
+        "Component_48"
+      ],
+      [
+        "nbhr_count",
+        "Component_49"
+      ],
+      [
+        "flag_nbhr_count",
+        "CategoricalComponent_3"
+      ],
+      [
+        "flag_bad_gaiamatch",
+        "CategoricalComponent_4"
+      ],
+      [
+        "M_G",
+        "Component_50"
+      ]
+    ],
+    "label": "groupx",
+    "meta": {
+      "_type": "collections.OrderedDict",
+      "contents": {}
+    },
+    "primary_owner": [
+      "Pixel Axis 0 [x]",
+      "Seq",
+      "n_Seq",
+      "TIC",
+      "Gmag",
+      "__G-K_0",
+      "Per",
+      "n_Per",
+      "e_Per",
+      "Grade",
+      "Sect",
+      "_RA",
+      "_DE",
+      "dr2_source_id",
+      "dr3_source_id",
+      "angular_distance",
+      "magnitude_difference",
+      "ra",
+      "dec",
+      "parallax",
+      "parallax_error",
+      "parallax_over_error",
+      "pmra",
+      "pmdec",
+      "ruwe",
+      "phot_g_mean_flux_over_error",
+      "phot_g_mean_mag",
+      "phot_bp_mean_flux_over_error",
+      "phot_rp_mean_flux",
+      "phot_rp_mean_flux_over_error",
+      "phot_bp_rp_excess_factor",
+      "phot_bp_n_contaminated_transits",
+      "phot_bp_n_blended_transits",
+      "phot_rp_n_contaminated_transits",
+      "phot_rp_n_blended_transits",
+      "bp_rp",
+      "bp_g",
+      "g_rp",
+      "radial_velocity",
+      "radial_velocity_error",
+      "rv_method_used",
+      "rv_expected_sig_to_noise",
+      "vbroad",
+      "vbroad_error",
+      "l",
+      "b",
+      "ecl_lon",
+      "ecl_lat",
+      "non_single_star",
+      "teff_gspphot",
+      "teff_gspphot_lower",
+      "teff_gspphot_upper",
+      "azero_gspphot",
+      "ag_gspphot",
+      "ebpminrp_gspphot",
+      "nbhr_count",
+      "flag_nbhr_count",
+      "flag_bad_gaiamatch",
+      "M_G"
+    ],
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 1.0,
+      "color": "#000000",
+      "linestyle": "solid",
+      "linewidth": 1,
+      "marker": "o",
+      "markersize": 3,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "camd_outliers_0",
+      "rverror_outliers_0"
+    ],
+    "uuid": "f90c6f88-4cea-48eb-a5ac-47da4d3880f5"
+  },
+  "l": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "l"
+  },
+  "magnitude_difference": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "magnitude_difference"
+  },
+  "n_Per": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "n_Per"
+  },
+  "n_Seq": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "n_Seq"
+  },
+  "nbhr_count": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "nbhr_count"
+  },
+  "non_single_star": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "non_single_star"
+  },
+  "parallax": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "parallax"
+  },
+  "parallax_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "parallax_error"
+  },
+  "parallax_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "parallax_over_error"
+  },
+  "phot_bp_mean_flux_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_mean_flux_over_error"
+  },
+  "phot_bp_n_blended_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_n_blended_transits"
+  },
+  "phot_bp_n_contaminated_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_n_contaminated_transits"
+  },
+  "phot_bp_rp_excess_factor": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_bp_rp_excess_factor"
+  },
+  "phot_g_mean_flux_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_g_mean_flux_over_error"
+  },
+  "phot_g_mean_mag": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_g_mean_mag"
+  },
+  "phot_rp_mean_flux": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_mean_flux"
+  },
+  "phot_rp_mean_flux_over_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_mean_flux_over_error"
+  },
+  "phot_rp_n_blended_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_n_blended_transits"
+  },
+  "phot_rp_n_contaminated_transits": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "phot_rp_n_contaminated_transits"
+  },
+  "pmdec": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "pmdec"
+  },
+  "pmra": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "pmra"
+  },
+  "ra": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ra"
+  },
+  "radial_velocity": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "radial_velocity"
+  },
+  "radial_velocity_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "radial_velocity_error"
+  },
+  "ruwe": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "ruwe"
+  },
+  "rv_expected_sig_to_noise": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "rv_expected_sig_to_noise"
+  },
+  "rv_method_used": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "rv_method_used"
+  },
+  "rverror_outliers": {
+    "_type": "glue.core.subset_group.SubsetGroup",
+    "label": "rverror_outliers",
+    "state": "RoiSubsetState",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#33a02c",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    },
+    "subsets": [
+      "rverror_outliers_0"
+    ]
+  },
+  "rverror_outliers_0": {
+    "_type": "glue.core.subset_group.GroupedSubset",
+    "group": "rverror_outliers",
+    "style": {
+      "_type": "glue.core.visual.VisualAttributes",
+      "alpha": 0.4980392156862745,
+      "color": "#33a02c",
+      "linestyle": "solid",
+      "linewidth": 2.5,
+      "marker": "o",
+      "markersize": 7,
+      "preferred_cmap": null
+    }
+  },
+  "teff_gspphot": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "teff_gspphot"
+  },
+  "teff_gspphot_lower": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "teff_gspphot_lower"
+  },
+  "teff_gspphot_upper": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "teff_gspphot_upper"
+  },
+  "vbroad": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "vbroad"
+  },
+  "vbroad_error": {
+    "_type": "glue.core.component_id.ComponentID",
+    "label": "vbroad_error"
+  }
+}
