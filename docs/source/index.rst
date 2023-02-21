@@ -63,6 +63,8 @@ User Guide:
 Changelog:
 ++++++++++
 
-**0.1 (2023-02-21)**
+**0.2 (2023-02-21)**
+* Initial software release to PyPI and github.
 
-* Initial software release.
+**0.1 (2023-02-21)**
+* Initial software release to github.
