@@ -26,8 +26,10 @@ create an `issue on Github <https://github.com/lgbouma/gyro-interp>`_.
 Attribution:
 ++++++++++++
 
-The reference for both the software and method is
-`Bouma, Palumbo & Hillenbrand (2023)<LINKPENDING>`_.
+The reference for both the software and method will be Bouma, Palumbo &
+Hillenbrand (2023).  This manuscript is currently under review at the AAS
+journals; the submitted version is available `at this
+link <https://lgbouma.com/pdfs/BPH23_preprint.pdf>`_.
 
 The references for the rotation period data upon which the code is based are
 as follows.
@@ -61,6 +63,6 @@ User Guide:
 Changelog:
 ++++++++++
 
-**1.0.0 (20XX-YY-ZZ)**
+**0.1 (2023-02-21)**
 
-* Initial release.
+* Initial software release.

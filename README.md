@@ -1,12 +1,13 @@
 <p align="center"><img src="docs/source/gyrointerp_logo.png" alt="gyrointerp" width="70%"/></p>
 
 <img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
+[![Documentation Status](https://readthedocs.org/projects/gyro-interp/badge/?version=latest)](https://gyro-interp.readthedocs.io/en/latest/?badge=latest)
 
 ## Documentation
 
-**The documentation will be hosted on readthedocs when this repository is made
-public.  The source is currently readable locally at ``/docs/``.  A few minimal
-items are included below.**
+The documentation is hosted at
+[gyro-interp.readthedocs.io](https://gyro-interp.readthedocs.io/en/latest/index.html).
+A minimal example to get you started is below.
 
 
 ## Install
@@ -52,5 +53,5 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
   print(f"Age = {result['median']} +{result['+1sigma']} -{result['-1sigma']} Myr.")
 ```
 
-The documentation contains a few more extensive examples, as well as discussion
-of important caveats.
+[The documentation](https://gyro-interp.readthedocs.io/en/latest/index.html)
+contains more extensive examples, as well as discussion of important caveats.
