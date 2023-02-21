@@ -1,7 +1,7 @@
 <p align="center"><img src="docs/source/gyrointerp_logo.png" alt="gyrointerp" width="70%"/></p>
 
 <img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
-[![Documentation Status](https://readthedocs.org/projects/gyro-interp/badge/?version=latest)](https://gyro-interp.readthedocs.io/en/latest/?badge=latest)
+<img src="https://readthedocs.org/projects/gyro-interp/badge/?version=latest">
 
 ## Documentation
 
