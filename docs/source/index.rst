@@ -64,7 +64,9 @@ Changelog:
 ++++++++++
 
 **0.2 (2023-02-21)**
+
 * Initial software release to PyPI and github.
 
 **0.1 (2023-02-21)**
+
 * Initial software release to github.

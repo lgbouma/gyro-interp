@@ -10,16 +10,9 @@ A minimal example to get you started is below.
 
 
 ## Install
-Preferred installation method:
+Preferred installation method is through PyPI:
 ```shell
 pip install gyrointerp
-```
-
-Or 
-```shell
-git clone https://github.com/lgbouma/gyro-interp
-cd gyro-interp
-python setup.py install
 ```
 
 ## Minimal Example
