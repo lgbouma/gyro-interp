@@ -1,0 +1,3 @@
+include data/literature/*
+include data/interim/*/*csv
+include data/interim/*/*txt
