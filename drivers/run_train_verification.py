@@ -2,10 +2,19 @@
 What ages do we get for the clusters that we trained this model on?  How
 precise are the inferred cluster ages?  If someone wanted to infer the age of a
 cluster using gyrointerp, are there any issues they should be aware of?
+
+Contents:
+    calc_posteriors
+    plot_posteriors
+    make_posterior_samples
+    stack_posteriors
+    run_posteriorstacker
 """
 
 import os
 from os.path import join
+import matplotlib as mpl
+mpl.use("agg")
 import pandas as pd, numpy as np, matplotlib.pyplot as plt
 from gyrointerp.getters import _get_cluster_Prot_Teff_data
 from gyrointerp.gyro_posterior import gyro_age_posterior_list
@@ -228,10 +237,10 @@ def run_posteriorstacker(samples_path, low=0, high=3000, nbins=11,
 
     # `pip install posteriorstacker`
     import ultranest, ultranest.stepsampler
-
     __version__ = '0.6.1'
 
     data = np.loadtxt(samples_path)
+    print(f"Loaded {samples_path}")
     basename = os.path.basename(samples_path).replace(".txt", "")
     outdir = os.path.dirname(samples_path)
     Nobj, Nsamples = data.shape
