@@ -172,10 +172,9 @@ def is_star_ok(csvpath):
 
 def make_posterior_samples(N_samples=400):
 
-    #clusters = ['M34-no-binaries', 'M34']
-    #clusters = ['M37', 'M37-no-binaries']
-    clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+    clusters = ['M34-no-binaries', 'M34', 'M37', 'M37-no-binaries']
+    #clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+    #            'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
 
     for cluster in clusters:
 
@@ -387,10 +386,11 @@ def run_posteriorstacker(samples_path, low=0, high=3000, nbins=11,
 
 def stack_posteriors(N_sample_list):
 
-    for N_samples in [200, 400, 600, 800]:
+    for N_samples in N_sample_list:
 
-        clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                    'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+        clusters = ['M34-no-binaries', 'M34', 'M37', 'M37-no-binaries']
+        #clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+        #            'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
 
         for cluster in clusters:
 
@@ -408,11 +408,57 @@ def stack_posteriors(N_sample_list):
                                  verbose=True, name='Age [Myr]')
 
 
+def evaluate_posterior_stacker(N_sample_list):
+
+    _dfs = []
+
+    for N_samples in N_sample_list:
+
+        clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                    'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+
+        for cluster in clusters:
+
+            cstr = cluster.replace(" ", "_")
+
+            outdir = join(RESULTSDIR, "train_verification_stacker")
+            assert os.path.exists(outdir)
+            outdir = join(outdir, cstr)
+            assert os.path.exists(outdir)
+            outdir = join(
+                outdir, f"{cstr}_agepost_{N_samples}_samples_out_gauss", "info"
+            )
+            assert os.path.exists(outdir)
+
+            csvpath = join(outdir, f"post_summary.csv")
+            assert os.path.exists(csvpath)
+
+            df = pd.read_csv(csvpath)
+            df['cluster'] = cluster
+            df['N_samples'] = N_samples
+
+            _dfs.append(df)
+
+    df = pd.concat(_dfs)
+    df = df.sort_values(by=['cluster','N_samples'])
+
+    df['mean_-1sig'] = df['mean_errlo'] - df['mean_median']
+    df['mean_+1sig'] = df['mean_errup'] - df['mean_median']
+
+    selcols = ['cluster', 'N_samples', 'mean_median', 'mean_-1sig',
+               'mean_+1sig']
+    print(df[selcols].round(0))
+
+    sdf = df[df.N_samples == 800]
+    print(sdf[selcols].round(0))
+
+
 if __name__ == "__main__":
     do_calc = 0
     do_plot = 0
     do_postsamplemaker = 0
     do_posteriorstacker = 1
+    do_evaluate_poststacker = 0
     N_sample_list = [200, 400, 600, 800]
 
     if do_calc:
@@ -424,3 +470,5 @@ if __name__ == "__main__":
             make_posterior_samples(N_samples=N_samples)
     if do_posteriorstacker:
         stack_posteriors(N_sample_list)
+    if do_evaluate_poststacker:
+        evaluate_posterior_stacker(N_sample_list)
