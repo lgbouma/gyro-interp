@@ -85,10 +85,10 @@ def log_likelihood(theta):
         sigma_period = 0.51
         parameters = {
             'a0': 1,
-            'a1': sample[0],
-            'y_g': sample[1],
-            'logk0': sample[2],
-            'logk1': sample[3],
+            'a1': a1,
+            'y_g': y_g,
+            'logk0': logk0,
+            'logk1': logk1,
             'l_hidden': -2*sigma_period,
             'k_hidden': np.pi # a joke, but it works
         }

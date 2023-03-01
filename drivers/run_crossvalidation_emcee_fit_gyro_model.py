@@ -4,8 +4,9 @@ Run MCMC to get best-fit a1, y_g, logk0, logk1, logf, and their uncertainties.
 "300-Myr", and "Praesepe" datasets, per the referee's suggestion).
 
 Usage:
-    First, runi
-    Check modelid and grid matches what you want.  Then:
+    First, run plot_crossvalidation_cdf_fast_slow_ratio.py.
+    Then:
+    Check that modelid matches what you want.  Then:
     $ python -u run_crossvalidation_emcee_fit_gyro_model.py &> logs/logname.log &
 """
 
@@ -93,10 +94,10 @@ def log_likelihood(theta):
         sigma_period = 0.51
         parameters = {
             'a0': 1,
-            'a1': sample[0],
-            'y_g': sample[1],
-            'logk0': sample[2],
-            'logk1': sample[3],
+            'a1': a1,
+            'y_g': y_g,
+            'logk0': logk0,
+            'logk1': logk1,
             'l_hidden': -2*sigma_period,
             'k_hidden': np.pi # a joke, but it works
         }
@@ -264,6 +265,8 @@ def main(xvalset_id):
         txt = "\mathrm{{{3}}} = {0:.3f}_{{-{1:.3f}}}^{{{2:.3f}}}"
         txt = txt.format(mcmc[1], q[0], q[1], labels[i])
         print(txt)
+
+    del datasets
 
 
 
