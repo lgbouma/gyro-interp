@@ -551,12 +551,16 @@ def plot_cdf_fast_slow_ratio(
     model_ids=['α Per', '120-Myr', '300-Myr', 'Praesepe'],
     reference_clusters=['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                         'Group-X', 'Praesepe', 'NGC-6811'],
-    include_binaries=0
+    include_binaries=0,
+    xvalset_id=None
     ):
     """
     Plot the cumulative distribution functions for various cluster, showing the
     cdf(Teff) for the fast and slow sequence at various times.  This plot did
     not make the manuscript.
+
+    NOTE: If `xvalset_id` is an integer between 0 and 4 inclusive, the relevant
+    ratios will be calculated for the k-folds cross-validation subsets.
     """
 
     # model_ids: iterable of strings, to be called by
@@ -564,6 +568,8 @@ def plot_cdf_fast_slow_ratio(
 
     # Get data
     d = _get_cluster_Prot_Teff_data()
+    if isinstance(xvalset_id, int):
+        d = _given_data_get_crossval_subset(xvalset_id, d)
 
     # Make plot
     set_style("clean")
@@ -745,8 +751,12 @@ def plot_cdf_fast_slow_ratio(
             'count_slow_seq': h_vals_ss,
         })
         ib = '' if not include_binaries else '_includebinaries'
-        csvpath = os.path.join(RESULTSDIR, 'cdf_fast_slow_ratio',
-                               f'{model_id}_cdf_fast_slow_ratio_data{ib}.csv')
+        xv = '' if not isinstance(xvalset_id, int) else 'crossvalidation_'
+        x = ''
+        if isinstance(xvalset_id, int):
+            x = f"_xvalset_id{xvalset_id}"
+        csvpath = os.path.join(RESULTSDIR, f'{xv}cdf_fast_slow_ratio',
+                               f'{model_id}_cdf_fast_slow_ratio_data{ib}{x}.csv')
         outdf.to_csv(csvpath, index=False)
         LOGINFO(f"Wrote {csvpath}")
 
@@ -765,7 +775,7 @@ def plot_cdf_fast_slow_ratio(
     if isinstance(model_ids, list):
         m = f"_models_poly{poly_order}_" + "_".join(model_ids)
 
-    outpath = join(outdir, f'{b}cdf_fast_slow_ratio_{basename}{m}{ib}.png')
+    outpath = join(outdir, f'{b}cdf_fast_slow_ratio_{basename}{m}{ib}{x}.png')
 
     savefig(fig, outpath, dpi=400, writepdf=False)
 
@@ -2299,3 +2309,46 @@ def plot_prot_vs_time_fixed_teff(
 
     fig.tight_layout(h_pad=0.2, w_pad=0.2)
     savefig(fig, outpath, dpi=400, writepdf=1)
+
+
+def _given_data_get_crossval_subset(xvalset_id, d):
+    """
+    Implementation of a naive k-fold cross-validation, where given the merged
+    rotation period datasets from _get_cluster_Prot_Teff_data (``d``), 20% of
+    stars are randomly dropped based on the ``xvalset_id``, which is an integer
+    between 0 and 4 inclusive.  This is one way of verifying that the
+    uncertainties being quoted on the hyperparameters are accurate. (...)
+    """
+
+    xval_d = deepcopy(d)
+
+    # e.g. key/value: 'α Per': [df_aper, cmap[0], '80 Myr α Per', z0+12, "o"],
+    for reference_cluster, v in xval_d.items():
+
+        df = v[0]
+
+        if df is None:
+            continue
+
+        sel = df.flag_benchmark_period
+
+        sdf = df[sel].reset_index(drop=True)
+        sdf['index'] = sdf.index
+
+        N_stars_total = len(sdf)
+
+        # drop ~20% of stars per set
+        N_drop = int( 0.2 * N_stars_total )
+
+        # 5 x N_drop array containing indices to drop for each "xvalset_id"
+        np.random.seed(42)
+        drop_inds = np.random.choice(
+            np.arange(N_stars_total), size=(5, N_drop), replace=False
+        )
+
+        # drop the relevant (randomly selected but rng-seeded) 20% of stars
+        to_drop = drop_inds[xvalset_id, :]
+        xval_df = sdf[~sdf.index.isin(to_drop)]
+        xval_d[reference_cluster][0] = xval_df
+
+    return xval_d
