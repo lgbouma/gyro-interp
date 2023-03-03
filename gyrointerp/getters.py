@@ -63,7 +63,7 @@ try:
         given_source_ids_get_neighbor_counts
     )
     HAVE_GAIA_UTILS = 1
-except AssertionError as e:
+except (ModuleNotFoundError, AssertionError) as e:
     # if cdips is not installed (github.com/lgbouma/cdips), and specifically if
     # the gaia credentials have not been correctly configured at
     # ~/.gaia_credentials per ``cdips.utils.gaiaqueries``, suppress the
