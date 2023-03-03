@@ -94,7 +94,7 @@ def log_likelihood(theta):
         }
 
         h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
-            age, parameters=parameters
+            age, popn_parameters=parameters
         )
 
         model_midpoints = teff_midway

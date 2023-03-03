@@ -103,7 +103,7 @@ def log_likelihood(theta):
         }
 
         h_vals_ss, h_vals_fs, teff_midway = _get_model_histogram(
-            age, parameters=parameters
+            age, popn_parameters=parameters
         )
 
         model_midpoints = teff_midway
@@ -129,12 +129,12 @@ def main(xvalset_id):
 
     OVERWRITE = 0 # whether to overwrite the MCMC samples for modelid
     #FIXME
-    # DEBUGGING
-    n_steps = 100
-    discard = 10
-    ## PRODUCTION
-    #n_steps = 32000 # number of MCMC steps.  10k is 100 minutes.  30k+2k burn.
-    #discard = 2000
+    ## DEBUGGING
+    #n_steps = 100
+    #discard = 10
+    # PRODUCTION
+    n_steps = 32000 # number of MCMC steps.  10k is 100 minutes.  30k+2k burn.
+    discard = 2000
     outdir = os.path.join(LOCALDIR, "gyrointerp", modelid)
     if not os.path.exists(outdir): os.mkdir(outdir)
 
@@ -187,7 +187,7 @@ def main(xvalset_id):
     #######################################
     model_ids = ['120-Myr', '300-Myr', 'Praesepe']
     mstr = "_".join(model_ids)
-    pklpath = os.path.join(outdir, f'fit_{mstr}.pkl')
+    pklpath = os.path.join(outdir, f'fit_{mstr}_xvalset{xvalset_id}.pkl')
 
     if OVERWRITE:
         if os.path.exists(pklpath): os.remove(pklpath)
@@ -225,11 +225,15 @@ def main(xvalset_id):
             pickle.dump(outdict, f)
             print(f"Wrote {pklpath}")
 
-        tau = sampler.get_autocorr_time()
+        tau = 0
+        try:
+            tau = sampler.get_autocorr_time()
+        except Exception as e:
+            print(e)
         print(tau)
 
         outdir = os.path.join(RESULTSDIR, "crossvalidation_emcee_fit_gyro_model")
-        outtxt = os.path.join(outdir, "tau_estimate.txt")
+        outtxt = os.path.join(outdir, f"tau_estimate_xvalset{xvalset_id}.txt")
         with open(outtxt, 'w') as f:
             f.writelines(repr(tau))
         print(f"Wrote {outtxt}")
@@ -249,7 +253,7 @@ def main(xvalset_id):
     if not os.path.exists(outdir): os.mkdir(outdir)
 
     # corner plot
-    outpath = os.path.join(outdir, "corner.png")
+    outpath = os.path.join(outdir, f"corner_xvalset{xvalset_id}.png")
     labels = ["a1", "y_g", "logk0", "logk1", "logf"]
     if not os.path.exists(outpath):
         fig = corner.corner(

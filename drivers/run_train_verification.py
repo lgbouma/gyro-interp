@@ -414,8 +414,9 @@ def evaluate_posterior_stacker(N_sample_list):
 
     for N_samples in N_sample_list:
 
-        clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
-                    'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+        clusters = ['M34-no-binaries', 'M34', 'M37', 'M37-no-binaries']
+        #clusters = ['Pleiades', 'α Per', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+        #            'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
 
         for cluster in clusters:
 
@@ -457,8 +458,8 @@ if __name__ == "__main__":
     do_calc = 0
     do_plot = 0
     do_postsamplemaker = 0
-    do_posteriorstacker = 1
-    do_evaluate_poststacker = 0
+    do_posteriorstacker = 0
+    do_evaluate_poststacker = 1
     N_sample_list = [200, 400, 600, 800]
 
     if do_calc:
