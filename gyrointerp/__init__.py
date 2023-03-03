@@ -1,4 +1,4 @@
-__version__ = 0.2
+__version__ = 0.3
 
 # the basic logging styles common to all gyro-interp modules
 log_sub = '{'

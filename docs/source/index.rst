@@ -63,6 +63,11 @@ User Guide:
 Changelog:
 ++++++++++
 
+**0.3 (2023-03-03)**
+
+* Bugfix a ModuleNotFoundError for calls to ``gyrointerp.plotting``
+* Add "posterior stacker" and cross-validation drivers.
+
 **0.2 (2023-02-21)**
 
 * Initial software release to PyPI and github.
