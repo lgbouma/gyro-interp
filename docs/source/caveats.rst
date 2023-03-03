@@ -40,7 +40,8 @@ A few ways to determine whether your star might be a binary include:
 
 * Obtain spectra, and check if they are double-lined, or if they show
   significant radial variations over time.  The *radial_velocity_error* column
-  in Gaia DR3 can help diagnose the latter case, though it also scales with 
+  in Gaia DR3 can help diagnose the latter case, although care should be taken
+  for stars that are faint and have low S/N spectra.
 
 * Query the Gaia point source catalog in a local spatial volume around your
   star.  With the resulting sample of stars, check whether your star is an

@@ -76,6 +76,11 @@ Gyrochronal ages for many stars
 Given the rotation periods, temperatures, and uncertainties for many stars,
 what are the implied age posteriors?
 
+In the example below, we will calculate age posteriors using the
+``gyro_age_posterior_list`` function.  We will do this for a number of stars
+equal to the number of cores on your computer, so that the runtime should be
+roughly the same as for the single-star example above.
+
 .. code-block:: python
 
   import os
@@ -124,8 +129,8 @@ In this example we guarded the multiprocessing being executed in
 ``gyro_age_posterior_list`` in a ``__main__`` block, per the suggestion in the
 `multiprocessing docs
 <https://docs.python.org/3/library/multiprocessing.html>`_.  This example also
-takes about 30 seconds to run on my laptop.  Compared to the single-star case,
-this means that the multithreading is doing what we want.
+takes about 30 seconds to run on my laptop.  Since this is the same runtime as
+the single-star case, this means that the multithreading is doing what we want.
 
 
 .. _visual interpolation:
@@ -138,6 +143,18 @@ star has a rotation period that corresponds to lots of possible ages, we should
 be sure that that this expectation is being mirrored in the age posteriors!
 Accounting for this type of intrinsic population level scatter is one of the
 main goals of the BPH23 model.
+
+In this example, we will compare the rotation periods of a few stars that are
+known to have transiting planets against the reference cluster datasets.
+To make the plot, let's first install a package to automate the matplotlib
+style-setting:
+
+.. code-block:: bash
+  
+    $ pip install aesthetic==0.4
+
+We can then use the ``plot_prot_vs_teff`` function under
+``gyrointerp.plotting``:
 
 .. code-block:: python
 

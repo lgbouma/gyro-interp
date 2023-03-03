@@ -24,7 +24,7 @@ systems will be upper limits, which may or may not be useful for you!
 
 Once stars begin getting this young, there are other age-dating techniques that
 may be more constraining.  For instance, you might search spectra for lithium
-absorption, searching broadband photometry for near-infrared excesses, or
+absorption, check broadband photometry for near-infrared excesses, or
 analyze HR diagrams for evidence of pre-main-sequence evolution.
 
 What happens for stars older than 2.6 Gyr?
