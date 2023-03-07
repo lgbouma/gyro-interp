@@ -151,7 +151,7 @@ style-setting:
 
 .. code-block:: bash
   
-    $ pip install aesthetic==0.4
+    $ pip install aesthetic
 
 We can then use the ``plot_prot_vs_teff`` function under
 ``gyrointerp.plotting``:
