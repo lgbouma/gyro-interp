@@ -1012,7 +1012,9 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
 
     if os.path.exists(cachepath) and not overwrite:
         LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
-        return pd.read_csv(cachepath)
+        return pd.read_csv(
+            cachepath, dtype={'dr2_source_id':str, 'dr3_source_id':str}
+        )
 
     table_path = os.path.join(DATADIR, "literature",
                               "Rampalli_2021_apjac0c1et3_mrt.txt")
@@ -1216,6 +1218,7 @@ def get_Praesepe_Rampalli_2021(overwrite=0):
     )
 
     mdf['dr2_source_id'] = mdf.dr2_source_id.astype(str)
+    mdf = mdf.drop({'source_id'}, axis='columns')
 
     mdf.to_csv(cachepath, index=False)
     LOGINFO(f"Wrote {cachepath}")

@@ -85,6 +85,7 @@ mdf = mdf.rename({
     'non_single_star': 'dr3_non_single_star'
 }, axis='columns')
 
+mdf['Prot'] = mdf['Prot'].round(decimals=4)
 mdf['Teff_Curtis20'] = mdf.Teff_Curtis20.round(decimals=1)
 mdf['dr2_bp_rp'] = mdf.dr2_bp_rp.round(decimals=3)
 mdf['dr3_phot_g_mean_mag'] = mdf.dr3_phot_g_mean_mag.round(decimals=3)
