@@ -8,10 +8,20 @@ if not os.path.exists(PLOTDIR):
     os.mkdir(PLOTDIR)
 outdir = PLOTDIR
 
-# figure 1a
-all_clusters1 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
-                 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
+all_clusters1 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                 'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
 slow_seq_ages = list(np.arange(100, 2700, 100))
+
+# figure 1a variants for talks
+gp.plot_prot_vs_teff(
+    outdir, all_clusters1, slow_seq_ages=[80, 120, 300, 670, 1000, 2600]
+)
+gp.plot_prot_vs_teff(
+    outdir, all_clusters1, slow_seq_ages=slow_seq_ages
+)
+assert 0
+
+# figure 1a
 for logy in [0, 1]:
     gp.plot_prot_vs_teff(
         outdir, all_clusters1, slow_seq_ages=slow_seq_ages, logy=logy
@@ -28,6 +38,7 @@ for logy in [0, 1]:
     gp.plot_prot_vs_teff(
         outdir, all_clusters, model_ids=model_ids, logy=logy
     )
+
 assert 0
 
 # just models
