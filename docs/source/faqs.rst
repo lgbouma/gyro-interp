@@ -42,3 +42,11 @@ that are uniformly distributed at ages older than 4 Gyr.
 
 So, the age posteriors for such systems will be lower limits, and they may or
 may not be useful for you!
+
+Are there movies?
++++++++++++++++++++++++++++++++++++++++++++
+
+Yes!  `This movie <https://lgbouma.com/movies/model_prot_vs_teff.mp4>`_ shows
+random draws from the model over the first two gigayears.  `This movie
+<https://lgbouma.com/movies/prot_teff_model_data.gif>`_ compares these random
+draws to available cluster data at fixed timesteps.
