@@ -74,6 +74,7 @@ for c, bibcode in clusters.items():
 
     _sdf = _df[selcols]
     _sdf['Prot_provenance'] = bibcode[0]
+    _sdf['cluster'] = c
 
     dfs.append(_sdf)
 
