@@ -47,3 +47,42 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
 
 [The documentation](https://gyro-interp.readthedocs.io/en/latest/index.html)
 contains more extensive examples, as well as discussion of important caveats.
+
+
+## Attribution
+
+If you use the code in your work, please reference
+```
+@ARTICLE{2023arXiv230308830B,
+       author = {{Bouma}, Luke G. and {Palumbo}, Elsa K. and {Hillenbrand}, Lynne A.},
+        title = "{The Empirical Limits of Gyrochronology}",
+      journal = {arXiv e-prints},
+         year = 2023,
+        month = mar,
+          eid = {arXiv:2303.08830},
+        pages = {arXiv:2303.08830},
+          doi = {10.48550/arXiv.2303.08830},
+archivePrefix = {arXiv},
+       eprint = {2303.08830},
+ primaryClass = {astro-ph.SR},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2023arXiv230308830B}
+}
+```
+This bibtex entry will be updated once the manuscript clears production.
+
+If your result is particularly dependent on the rotation data from any
+one cluster, we also encourage you to refer to the relevant study:
+
+* α Per: [Boyle & Bouma (2023)](https://ui.adsabs.harvard.edu/abs/2022arXiv221109822B/abstract)
+* Pleiades: [Rebull et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016AJ....152..113R/abstract)
+* Blanco-1: [Gillen et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020MNRAS.492.1008G/abstract)
+* Psc-Eri: [Curtis et al. (2019a)](https://ui.adsabs.harvard.edu/abs/2019AJ....158...77C/abstract)
+* NGC-3532: [Fritzewski et al. (2022)](https://ui.adsabs.harvard.edu/abs/2021A%26A...652A..60F/abstract)
+* Group-X: [Messina et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022A%26A...657L...3M/abstract)
+* Praesepe: [Rampalli et al. (2021)](https://ui.adsabs.harvard.edu/abs/2021ApJ...921..167R/abstract)
+* NGC-6811: [Curtis et al. (2019b)](https://ui.adsabs.harvard.edu/abs/2019ApJ...879...49C/abstract)
+* NGC-6819: [Meibom et al. (2015)](https://ui.adsabs.harvard.edu/abs/2015Natur.517..589M/abstract)
+* Ruprecht-147 [Curtis et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract)
+* M67: [Barnes et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract) and [Dungee et al (2022)](https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract).
+
+

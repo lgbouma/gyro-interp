@@ -26,12 +26,31 @@ create an `issue on Github <https://github.com/lgbouma/gyro-interp>`_.
 Attribution:
 ++++++++++++
 
-The reference for both the software and method will be `Bouma, Palumbo &
-Hillenbrand (2023) <https://arxiv.org/abs/2303.08830>`_.  This manuscript has
-been accepted for publication at ApJL, and is in the production phase.
+The reference for both the software and method is `Bouma, Palumbo & Hillenbrand
+(2023) <https://arxiv.org/abs/2303.08830>`_.  This manuscript has been accepted
+for publication at ApJL, and is in production.
 
-The references for the rotation period data upon which the code is based are
-as follows.
+The relevant bibtex entry, which will be updated once the manuscript clears production, is below.
+
+.. code-block:: latex
+
+  @ARTICLE{2023arXiv230308830B,
+         author = {{Bouma}, Luke G. and {Palumbo}, Elsa K. and {Hillenbrand}, Lynne A.},
+          title = "{The Empirical Limits of Gyrochronology}",
+        journal = {arXiv e-prints},
+           year = 2023,
+          month = mar,
+            eid = {arXiv:2303.08830},
+          pages = {arXiv:2303.08830},
+            doi = {10.48550/arXiv.2303.08830},
+  archivePrefix = {arXiv},
+         eprint = {2303.08830},
+   primaryClass = {astro-ph.SR},
+         adsurl = {https://ui.adsabs.harvard.edu/abs/2023arXiv230308830B}
+  }
+
+If your result is particularly dependent on the rotation data from any
+one cluster, we also encourage you to refer to the relevant study:
 
 * α Per: `Boyle & Bouma (2023) <https://ui.adsabs.harvard.edu/abs/2022arXiv221109822B/abstract>`_
 * Pleiades: `Rebull et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016AJ....152..113R/abstract>`_
