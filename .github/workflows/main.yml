@@ -46,7 +46,6 @@ jobs:
         python -m pip install -U astroquery
         python -m pip install -U numpy
         python -m pip install -U pandas
-        python -m pip install -U matplotlib
         python -m pip install -U cdips==0.4
         #python -m pip install -U pymc3
         #python -m pip install -U corner
@@ -54,7 +53,8 @@ jobs:
         #python -m pip install -U lightkurve
         #python -m pip install -U xarray==0.16.0
         python -m pip install -U astrobase
-        python -m pip install -U aesthetic==0.4
+        python -m pip install -U matplotlib
+        python -m pip install -U aesthetic
 
     - name: "Install package"
       run: pip install -e .
