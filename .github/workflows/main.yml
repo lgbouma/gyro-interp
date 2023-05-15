@@ -53,6 +53,7 @@ jobs:
         #python -m pip install -U lightkurve
         #python -m pip install -U xarray==0.16.0
         python -m pip install -U astrobase
+        python -m pip install -U wheel
         python -m pip install -U matplotlib
         python -m pip install -U aesthetic
 
