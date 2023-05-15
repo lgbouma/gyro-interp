@@ -6,7 +6,7 @@ calculates gyrochronal ages by interpolating between open cluster rotation
 sequences.
 
 ``gyrointerp`` packages the model from `Bouma, Palumbo & Hillenbrand (2023)
-<https://arxiv.org/abs/2303.08830>`_ into a fast and easy-to-use framework.
+<https://ui.adsabs.harvard.edu/abs/2023ApJ...947L...3B>`_ into a fast and easy-to-use framework.
 The documentation below will walk you through the most common use-cases.  For
 brevity, we'll refer to that paper as BPH23.
 
@@ -27,26 +27,28 @@ Attribution:
 ++++++++++++
 
 The reference for both the software and method is `Bouma, Palumbo & Hillenbrand
-(2023) <https://arxiv.org/abs/2303.08830>`_.  This manuscript has been accepted
-for publication at ApJL, and is in production.
-
-The relevant bibtex entry, which will be updated once the manuscript clears production, is below.
+(2023) <https://ui.adsabs.harvard.edu/abs/2023ApJ...947L...3B>`_.  
+The relevant bibtex entry is as follows.
 
 .. code-block:: latex
 
-  @ARTICLE{2023arXiv230308830B,
+  @ARTICLE{2023ApJ...947L...3B,
          author = {{Bouma}, Luke G. and {Palumbo}, Elsa K. and {Hillenbrand}, Lynne A.},
           title = "{The Empirical Limits of Gyrochronology}",
-        journal = {arXiv e-prints},
+        journal = {\apjl},
+       keywords = {Stellar ages, Stellar rotation, Field stars, Bayesian statistics, 1581, 1629, 2103, 1900, Astrophysics - Solar and Stellar Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
            year = 2023,
-          month = mar,
-            eid = {arXiv:2303.08830},
-          pages = {arXiv:2303.08830},
-            doi = {10.48550/arXiv.2303.08830},
+          month = apr,
+         volume = {947},
+         number = {1},
+            eid = {L3},
+          pages = {L3},
+            doi = {10.3847/2041-8213/acc589},
   archivePrefix = {arXiv},
          eprint = {2303.08830},
    primaryClass = {astro-ph.SR},
-         adsurl = {https://ui.adsabs.harvard.edu/abs/2023arXiv230308830B}
+         adsurl = {https://ui.adsabs.harvard.edu/abs/2023ApJ...947L...3B},
+        adsnote = {Provided by the SAO/NASA Astrophysics Data System}
   }
 
 If your result is particularly dependent on the rotation data from any

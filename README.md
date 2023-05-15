@@ -53,22 +53,25 @@ contains more extensive examples, as well as discussion of important caveats.
 
 If you use the code in your work, please reference
 ```
-@ARTICLE{2023arXiv230308830B,
+@ARTICLE{2023ApJ...947L...3B,
        author = {{Bouma}, Luke G. and {Palumbo}, Elsa K. and {Hillenbrand}, Lynne A.},
         title = "{The Empirical Limits of Gyrochronology}",
-      journal = {arXiv e-prints},
+      journal = {\apjl},
+     keywords = {Stellar ages, Stellar rotation, Field stars, Bayesian statistics, 1581, 1629, 2103, 1900, Astrophysics - Solar and Stellar Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
          year = 2023,
-        month = mar,
-          eid = {arXiv:2303.08830},
-        pages = {arXiv:2303.08830},
-          doi = {10.48550/arXiv.2303.08830},
+        month = apr,
+       volume = {947},
+       number = {1},
+          eid = {L3},
+        pages = {L3},
+          doi = {10.3847/2041-8213/acc589},
 archivePrefix = {arXiv},
        eprint = {2303.08830},
  primaryClass = {astro-ph.SR},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2023arXiv230308830B}
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2023ApJ...947L...3B},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 ```
-This bibtex entry will be updated once the manuscript clears production.
 
 If your result is particularly dependent on the rotation data from any
 one cluster, we also encourage you to refer to the relevant study:
@@ -84,5 +87,3 @@ one cluster, we also encourage you to refer to the relevant study:
 * NGC-6819: [Meibom et al. (2015)](https://ui.adsabs.harvard.edu/abs/2015Natur.517..589M/abstract)
 * Ruprecht-147 [Curtis et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract)
 * M67: [Barnes et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract) and [Dungee et al (2022)](https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract).
-
-
