@@ -160,7 +160,8 @@ def plot_prot_vs_teff(
     custom_stardict=None,
     interp_method='pchip_m67',
     show_binaries=0, poly_order=7,
-    hide_ax=0, logo_colors=0, logy=0, writepdf=1, show_resid=0):
+    hide_ax=0, logo_colors=0, logy=0, writepdf=1, show_resid=0, smallfigsizex=0
+    ):
     """
     Plot rotation periods versus temperatures for known reference clusters.
     This the plotter used for Figure 1 of BPH23.  To make analogous figures
@@ -238,6 +239,10 @@ def plot_prot_vs_teff(
             ``reference_clusters``.  The number of points and free parameters
             (from ``poly_order``) will be used to calculate the reduced χ^2,
             and the BIC.
+
+        smallfigsizex (bool):
+            This option, if true, shrinks the figure's x aspect ratio for
+            visualization purposes.
     """
     # Get data
     N_colors = 6
@@ -248,7 +253,10 @@ def plot_prot_vs_teff(
 
     if not show_resid:
         # default figsize is 6.4 x 4.8
-        fig, ax = plt.subplots()
+        if not smallfigsizex:
+            fig, ax = plt.subplots()
+        else:
+            fig, ax = plt.subplots(figsize=(0.8*5.85, 0.8*6.35))
     else:
         fig, axs = plt.subplots(figsize=(6.4, 4.8*2), nrows=2)
         ax = axs[0]
@@ -416,17 +424,23 @@ def plot_prot_vs_teff(
 
     if not hide_ax:
         if not logy:
-            ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
-                      borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
-                      frameon=False)
+            if not smallfigsizex:
+                ax.legend(loc='upper left', fontsize='x-small', handletextpad=0.1,
+                          borderaxespad=1., borderpad=0.5, fancybox=True, framealpha=0.8,
+                          frameon=False)
 
         ax.set_xlabel("Effective Temperature [K]")
         ax.set_ylabel("Rotation Period [days]")
 
     ax.set_xlim([7100, 2900])
-    ax.set_xticks([7000, 6000, 5000, 4000, 3000])
-    minor_xticks = np.arange(3000, 7100, 100)[::-1]
-    ax.set_xticks(minor_xticks, minor=True)
+    if not smallfigsizex:
+        ax.set_xticks([7000, 6000, 5000, 4000, 3000])
+        minor_xticks = np.arange(3000, 7100, 100)[::-1]
+        ax.set_xticks(minor_xticks, minor=True)
+    else:
+        ax.set_xticks([7000, 5000, 3000])
+        minor_xticks = np.arange(3000, 7100, 500)[::-1]
+        ax.set_xticks(minor_xticks, minor=True)
 
     if not logy:
         ax.set_ylim([-0.5, 16])
@@ -441,7 +455,8 @@ def plot_prot_vs_teff(
             ax.set_ylim([0.1, 30])
 
     if not hide_ax:
-        _given_ax_append_spectral_types(ax)
+        if not smallfigsizex:
+            _given_ax_append_spectral_types(ax)
     if hide_ax:
         ax.set_axis_off()
 
@@ -467,6 +482,7 @@ def plot_prot_vs_teff(
     ns = ''
     im = ''
     sr = ''
+    sm = ''
     if im is not None:
         im = f"_interpmethod{interp_method}"
     ha = ''
@@ -477,9 +493,11 @@ def plot_prot_vs_teff(
         ly = 'logy'
     if show_resid:
         sr = "_showresid"
+    if smallfigsizex:
+        sm = "_smallfigsizex"
 
     outpath = join(
-        outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}{sr}.png'
+        outdir, f'{b}prot_vs_teff_{basename}{s}{m}{ss}{ha}{ly}{im}{sr}{sm}.png'
     )
     outpath = outpath.replace(" ", "_")
 
@@ -2037,6 +2055,7 @@ def plot_empirical_limits_of_gyrochronology(
 
         _sptypes=['G2V','K0V','K5V','M0V']
         _given_ax_append_spectral_types(ax, _sptypes=_sptypes)
+
     elif 'both' in imagestr:
         axs[0].set_ylabel("Rotation Period [days]")
         for ax in axs[:-1]:
