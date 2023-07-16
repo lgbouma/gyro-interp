@@ -4,11 +4,11 @@ Plot Teff vs time for stars of different masses, using the data from Choi+2016
 
 Generated using the web interpolator,
 https://waps.cfa.harvard.edu/MIST/interp_tracks.html,
-with 0.4-1.2 Msun, spaced by 0.1 Msun.
+with 0.2-1.2 Msun, spaced by 0.1 Msun.
 """
 from read_mist_model import ISO, EEP
 import numpy as np, matplotlib.pyplot as plt, pandas as pd
-from gyrointerp.paths import DATADIR, RESULTSDIR
+from gyrointerp.paths import RESULTSDIR
 import os
 from aesthetic.plot import set_style, savefig
 from scipy.interpolate import make_interp_spline, BSpline
@@ -17,8 +17,9 @@ from matplotlib import cm
 
 # solar metallicity default isochrone from
 # https://waps.cfa.harvard.edu/MIST/model_grids.html
-masses = np.round(np.arange(0.4, 1.2+0.1, 0.1),1).astype(str)
-eep_paths = sorted(glob(os.path.join( DATADIR, 'mist', "*.track.eep")))
+masses = np.round(np.arange(0.2, 1.2+0.1, 0.1),1).astype(str)
+SECRETDATADIR = '../secret_data/'
+eep_paths = sorted(glob(os.path.join( SECRETDATADIR, 'mist', "*.track.eep")))
 
 dfd = {}
 
