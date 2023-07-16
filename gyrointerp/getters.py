@@ -104,7 +104,6 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     df_r147 = get_Ruprecht147(overwrite=overwrite)
 
     # tested, manuscript
-    #cmap = cm.Spectral(np.linspace(0,1,N_colors))
     #cmap = cm.terrain(np.linspace(0,0.8,N_colors))
     #cmap = cm.Accent(np.linspace(0,0.6,N_colors))
     #cmap = cm.hsv(np.linspace(0,0.8,N_colors))
@@ -118,6 +117,11 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     if logo_colors:
         # ADOPTED LOGO COLORS
         cmap = [None, "#ffb3ba", None, "#ffffba","#bae1ff", None]
+
+    manual_colors = 0
+    if manual_colors:
+        cmap = cm.RdYlBu(np.linspace(0,1,N_colors))
+        cmap = [None, cmap[0], None, cmap[1], cmap[2], None]
 
     # contents:
     # prot/teff dataframe, RGB color, label, zorder
