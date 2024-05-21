@@ -1,6 +1,6 @@
 """
-This module contains reusable helper functions.  The most generally useful one
-will be ``get_summary_statistics``.
+This module contains reusable helper functions.  The most broadly
+useful one will be ``get_summary_statistics``.
 """
 #############
 ## LOGGING ##
@@ -30,17 +30,23 @@ LOGEXCEPTION = LOGGER.exception
 #############
 ## IMPORTS ##
 #############
+import warnings
 import os
 from os.path import join
 import numpy as np, pandas as pd
+from scipy.interpolate import interp1d
+from scipy.integrate import quad, cumtrapz, IntegrationWarning
 
-def get_summary_statistics(age_grid, age_post, N=int(1e5)):
+warnings.filterwarnings(
+    "ignore", category=IntegrationWarning
+)
+
+def get_summary_statistics(age_grid, age_post):
     """
-    Given an age posterior probability density, ``age_post``, over a grid over
-    ages, ``age_grid``, determine summary statistics for the posterior (its
-    median, mean, +/-1 and 2-sigma intervals, etc).  Do this by sampling `N`
-    times from the posterior, with replacement, while weighting by the
-    probability.
+    Given an age posterior probability density, ``age_post``, over a
+    grid over ages, ``age_grid``, determine summary statistics for the
+    posterior (its median, mean, +/-1 and 2-sigma intervals, etc).  Do
+    this by interpolating over the posterior probability function.
 
     Args:
 
@@ -57,7 +63,6 @@ def get_summary_statistics(age_grid, age_post, N=int(1e5)):
             work.  Generally, this helper function works for any grid and
             probability distribution.
 
-
     Returns:
 
         dict : summary_statistics
@@ -70,11 +75,17 @@ def get_summary_statistics(age_grid, age_post, N=int(1e5)):
     """
     # This function is a thin wrapper to _given_grid_post_get_summary_statistics
     return _given_grid_post_get_summary_statistics(
-        age_grid, age_post, N=N
+        age_grid, age_post
     )
 
 
-def _given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
+def _deprecated_given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
+    """
+    yields results consistent within 10% of the interpolation-based
+    _given_grid_post_get_summary_statistics implementation below;
+    deprecated however because this approach yields quantization at
+    the grid level.
+    """
 
     age_peak = int(age_grid[np.argmax(age_post)])
 
@@ -127,6 +138,103 @@ def _given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
     }
 
     return outdict
+
+
+def _given_grid_post_get_summary_statistics(age_grid, age_post):
+
+    if not np.all(np.isfinite(age_post)):
+        outdict = {
+            'median': np.nan,
+            'peak': np.nan,
+            'mean': np.nan,
+            '+1sigma': np.nan,
+            '-1sigma': np.nan,
+            '+2sigma': np.nan,
+            '-2sigma': np.nan,
+            '+3sigma': np.nan,
+            '-3sigma': np.nan,
+            '+1sigmapct': np.nan,
+            '-1sigmapct': np.nan,
+        }
+        return outdict
+
+    age_peak = int(age_grid[np.argmax(age_post)])
+
+    # Normalize the posterior probability (PDF)
+    age_pdf = age_post / np.trapz(age_post, age_grid)
+
+    # Calculate the cumulative distribution function (CDF)
+    age_cdf = cumtrapz(age_pdf, age_grid, initial=0)
+
+    # Create interpolation functions for PDF and CDF
+    pdf_interp = interp1d(age_grid, age_pdf, kind='quadratic')
+    cdf_interp = interp1d(age_grid, age_cdf, kind='quadratic')
+
+    # Calculate the median age
+    median_age = _find_percentile(cdf_interp, age_grid, 0.5)
+
+    # Calculate the mean age
+    mean_age = _calculate_mean(pdf_interp, age_grid)
+
+    # Calculate the +/- 1, 2, and 3 sigma intervals
+    p1sig, m1sig = _find_sigma_interval(cdf_interp, age_grid, 0.6827)
+    p2sig, m2sig = _find_sigma_interval(cdf_interp, age_grid, 0.9545)
+    p3sig, m3sig = _find_sigma_interval(cdf_interp, age_grid, 0.9973)
+
+    outdict = {
+        'median': np.round(median_age, 2),
+        'peak': np.round(age_peak, 2),
+        'mean': np.round(mean_age, 2),
+        '+1sigma': np.round(p1sig, 2),
+        '-1sigma': np.round(m1sig, 2),
+        '+2sigma': np.round(p2sig, 2),
+        '-2sigma': np.round(m2sig, 2),
+        '+3sigma': np.round(p3sig, 2),
+        '-3sigma': np.round(m3sig, 2),
+        '+1sigmapct': np.round(p1sig / median_age, 2),
+        '-1sigmapct': np.round(m1sig / median_age, 2),
+    }
+
+    return outdict
+
+
+def _find_percentile(cdf_interp, age_grid, percentile):
+    def objective(x):
+        return cdf_interp(x) - percentile
+
+    return _find_root(objective, age_grid[0], age_grid[-1])
+
+
+def _calculate_mean(pdf_interp, age_grid):
+    def integrand(x):
+        return x * pdf_interp(x)
+
+    mean, _ = quad(integrand, age_grid[0], age_grid[-1])
+    return mean
+
+
+def _find_sigma_interval(cdf_interp, age_grid, sigma_fraction):
+    median = _find_percentile(cdf_interp, age_grid, 0.5)
+    p_sigma = _find_percentile(cdf_interp, age_grid, 0.5 + sigma_fraction / 2)
+    m_sigma = _find_percentile(cdf_interp, age_grid, 0.5 - sigma_fraction / 2)
+    return p_sigma - median, median - m_sigma
+
+
+def _find_root(func, a, b, tol=1e-6):
+    fa, fb = func(a), func(b)
+    assert fa * fb <= 0, "Root not bracketed"
+
+    while abs(b - a) > tol:
+        c = (a + b) / 2
+        fc = func(c)
+        if fc == 0:
+            return c
+        elif fa * fc < 0:
+            b, fb = c, fc
+        else:
+            a, fa = c, fc
+
+    return (a + b) / 2
 
 
 def prepend_colstr(colstr, df):
