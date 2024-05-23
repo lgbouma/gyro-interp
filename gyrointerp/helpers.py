@@ -1,6 +1,8 @@
 """
-This module contains reusable helper functions.  The most broadly
-useful one will be ``get_summary_statistics``.
+Helper functions for other parts of gyro-interp.  Useful contents:
+
+    | ``get_summary_statistics``
+    | ``sample_ages_from_pdf``
 """
 #############
 ## LOGGING ##
@@ -77,6 +79,58 @@ def get_summary_statistics(age_grid, age_post):
     return _given_grid_post_get_summary_statistics(
         age_grid, age_post
     )
+
+
+def sample_ages_from_pdf(age_grid, age_post, n_samples=1000):
+    """
+    Draw samples from a given age posterior probability density function (PDF)
+    using quadratic interpolation.
+
+    Args:
+
+        age_grid (np.ndarray):
+            Array of ages (in megayears) representing the grid points of the
+            PDF.
+
+        age_post (np.ndarray):
+            Array of posterior probabilities corresponding to the age grid
+            points.
+
+        n_samples (int, optional):
+            Number of samples to draw from the PDF. Default is 1000.
+
+    Returns:
+
+        np.ndarray : age_samples
+
+            Numpy array of shape (n_samples,) containing the drawn age samples
+            from the PDF.
+    """
+    # Normalize the posterior probability (PDF)
+    age_pdf = age_post / np.trapz(age_post, age_grid)
+
+    # Create a quadratic interpolation function for the PDF.  Go linear to
+    # avoid negative values.
+    pdf_interp = interp1d(age_grid, age_pdf, kind='linear')
+
+    # Generate a fine grid of ages for sampling.  For an age_grid spanning 0 to
+    # 5000 Myr, hard-coding n_grid = 1,000,000 implies a grid resolution of
+    # 0.005 Myr, which is sufficiently small that the implied truncation error
+    # downstream will be negligble.
+    n_grid = 1000000
+    age_fine_grid = np.linspace(age_grid[0], age_grid[-1], n_grid)
+
+    # Evaluate the interpolated PDF on the fine grid
+    pdf_fine = pdf_interp(age_fine_grid)
+
+    # Normalize the interpolated PDF
+    pdf_fine /= np.trapz(pdf_fine, age_fine_grid)
+
+    # Generate random samples from the interpolated PDF
+    age_samples = np.random.choice(age_fine_grid, size=n_samples,
+                                   p=pdf_fine/pdf_fine.sum())
+
+    return age_samples
 
 
 def _deprecated_given_grid_post_get_summary_statistics(age_grid, age_post, N=int(1e5)):
@@ -167,8 +221,8 @@ def _given_grid_post_get_summary_statistics(age_grid, age_post):
     age_cdf = cumtrapz(age_pdf, age_grid, initial=0)
 
     # Create interpolation functions for PDF and CDF
-    pdf_interp = interp1d(age_grid, age_pdf, kind='quadratic')
-    cdf_interp = interp1d(age_grid, age_cdf, kind='quadratic')
+    pdf_interp = interp1d(age_grid, age_pdf, kind='linear')
+    cdf_interp = interp1d(age_grid, age_cdf, kind='linear')
 
     # Calculate the median age
     median_age = _find_percentile(cdf_interp, age_grid, 0.5)
