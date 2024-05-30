@@ -17,6 +17,8 @@ reference open clusters when calibrating the gyrochronal model.
 # For alpha-Per, E(B-V) = 0.090 from Gaia Collab+2018 -> A_V = 0.279
 #
 # For M34, E(B-V) = 0.07 from Meibom+2011 -> A_V = 0.217
+#
+# For M67, E(B-V) = 0.04 from Gruner+2023 / Taylor2007 -> A_V = 0.124.
 
 extinction_A_V_dict = {
     "Pleiades": 0.12,
@@ -30,4 +32,5 @@ extinction_A_V_dict = {
     'Ruprecht-147': 0.30, # Curtis+2020, table 5
     'NGC-6819': 0.44, # Curtis+2020, table 5 (Meibom+2015 periods)
     'M34': 0.217, # Meibom+2011
+    'M67': 0.124
 }
