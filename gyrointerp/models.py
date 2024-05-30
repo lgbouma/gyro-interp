@@ -81,7 +81,7 @@ def teff_zams(age, bounds_error='limit'):
     bad = (age < 80) | (age > 1000)
     if bounds_error == 'nan':
         teff0[bad] = np.nan
-    elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
+    elif bounds_error == 'limit' or bounds_error in ['4gyrlimit', '4gyrextrap']:
         teff0[age < 80] = max_teff
         teff0[age > 1000] = min_teff
 
@@ -118,7 +118,7 @@ def _teff_0(age, bounds_error='4gyrlimit'):
     bad = (age < 120) | (age > 1000)
     if bounds_error == 'nan':
         teff0[bad] = np.nan
-    elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
+    elif bounds_error == 'limit' or bounds_error in ['4gyrlimit', '4gyrextrap']:
         teff0[age < 120] = c
         teff0[age > 1000] = -(1000-120) * slope + c
 
@@ -148,7 +148,7 @@ def g_lineardecay(age, bounds_error='4gyrlimit', y_g=1/2):
 
     if bounds_error == 'nan':
         c_uniform[bad] = np.nan
-    elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
+    elif bounds_error == 'limit' or bounds_error in ['4gyrlimit', '4gyrextrap']:
         c_uniform[age < 120] = c
         c_uniform[age > 1000] = -(1000-120) * slope + c
 
@@ -166,9 +166,9 @@ def slow_sequence_residual(
     teff_grid = np.linspace(3800, 6200, 1001),
     poly_order=7, n=None,
     reference_model_ids=[
-        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
+        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr', 'M67'
     ],
-    reference_ages=[80, 120, 300, 670, 1000, 2600],
+    reference_ages=[80, 120, 300, 670, 1000, 2600, 4000],
     popn_parameters='default',
     verbose=True,
     bounds_error='4gyrlimit', interp_method='pchip_m67'):
@@ -349,9 +349,9 @@ def slow_sequence_residual(
 def slow_sequence(
     Teff, age, poly_order=7,
     reference_model_ids=[
-        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr'
+        'α Per', '120-Myr', '300-Myr', 'Praesepe', 'NGC-6811', '2.6-Gyr', 'M67'
     ],
-    reference_ages=[80, 120, 300, 670, 1000, 2600],
+    reference_ages=[80, 120, 300, 670, 1000, 2600, 4000],
     verbose=True,
     bounds_error='4gyrlimit',
     interp_method='pchip_m67',
@@ -377,9 +377,10 @@ def slow_sequence(
             ``['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532', 'Group-X',
             'Praesepe', 'NGC-6811', '120-Myr', '300-Myr', '2.6-Gyr',
             'NGC-6819', 'Ruprecht-147', 'M67']``
-            The default is set as described in the manuscript, to enable
-            gyro-age derivations between 0.08-2.6 Gyr.  Note that "120-Myr" and
-            "300-Myr" are concenations of the relevant clusters.
+            As of gyro-interp v0.4 (i.e., June 2024), the default is set to
+            enable gyro-age derivations between 0.08-4 Gyr, and non-physical
+            extrapolations past 4 Gyr.  Note that "120-Myr" and "300-Myr" are
+            concenations of the relevant clusters.
 
         reference_ages (iterable of floats):
             Ages (units of Myr) corresponding to ``reference_model_ids``.
@@ -395,9 +396,11 @@ def slow_sequence(
             Polynomials (PCHIP) to interpolate over not only 0.8-2.6 Gyr, but
             also sets the gradient in Prot vs Time in the 1-2.6 Gyr interval
             based on the observations of M67 from `Barnes+2016
-            <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_
-            and `Dungee+2022
-            <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_.
+            <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_,
+            `Dungee+2022
+            <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_,
+            and `Gruner+2023
+            <https://ui.adsabs.harvard.edu/abs/2023A%26A...672A.159G/abstract>`_.
             This yields an evolution of the rotation period envelope that is
             smooth and by design fits the cluster data from the age of
             alpha-Per through M67.  Other available interpolation methods
@@ -407,16 +410,18 @@ def slow_sequence(
             you are doing, "pchip_m67" is recommended.
 
         bounds_error (str):
-            How will you extrapolate at <0.08 Gyr and >2.6 Gyr?  Available
-            options are "nan", "limit" or "4gyrlimit".  If "limit", then
-            extrapolate by returning the fixed limiting rotation period at the
-            oldest or youngest cluster given in
-            ``models.slow_sequence.reference_model_ids``.  If "4gyrlimit" (the
-            suggested default), extrapolate out to 4 Gyr by also including M67.
-            Past 4Gyr, use the same behavior as "limit".  If one is interested
-            in obtaining unbiased ages near the recommended 2.6 Gyr limit of
-            this code, use "4gyrlimit".  Finally, if "nan", ages above or below
-            the minimum reference age return NaNs.
+            How will you extrapolate at the oldest and youngest clusters?  By
+            default, this means at <0.08 Gyr and >4 Gyr.  Available options are
+            "nan", "limit", "4gyrlimit", and "4gyrextrap".  Default
+            "4gyrlimit" behavior at the old end is to not extrapolate at all, which
+            means that this choice yields biased uncertainties at >~3.5 Gyr.
+            If "4gyrextrap" is instead used, this will extrapolate by returning
+            the rotation period linearly extrapolated from the Prot vs time
+            slope at any temperature at 4 Gyr.  At the young end, the ansatz
+            for both methods is that the period does not change.  In detail,
+            this is physically wrong; the posterior in this regime is formally
+            an age upper limit.  Finally, if "nan", ages above or below the
+            minimum reference age return NaNs.
 
         n (None, int, or float):
             Power-law index analogous to the Skumanich braking index, but
@@ -502,14 +507,17 @@ def slow_sequence(
                 LOGWARNING("Warning! Star is younger than the youngest reference cluster.")
             if bounds_error == 'nan':
                 periods.append(np.nan)
-            elif bounds_error == 'limit' or bounds_error == '4gyrlimit':
+            elif bounds_error in ['limit', '4gyrlimit', '4gyrextrap']:
                 periods.append(youngest_model[ix])
             else:
                 raise NotImplementedError
 
         # special case for if the star has a longer period than would be expected
         # if it were the age of the oldest reference cluster
-        elif age > reference_ages[-1] and bounds_error != '4gyrlimit':
+        elif (
+            age > reference_ages[-1] and
+            bounds_error not in ['4gyrlimit', '4gyrextrap']
+        ):
             if verbose:
                 LOGWARNING("Warning! Star is older than the oldest reference cluster.")
             if bounds_error == 'nan':
@@ -533,7 +541,7 @@ def slow_sequence(
 
             # first identify the youngest cluster older than this star and the
             # oldest cluster younger than this star
-            if bounds_error == "4gyrlimit" and age >= max(reference_ages):
+            if bounds_error in ["4gyrlimit", "4gyrextrap"] and age >= max(reference_ages):
                 # special case: extrapolate based on oldest two clusters
                 # needed for interpolation methods that require a rotation
                 # period interval: "alt", "diff", and "skumanich_vary_n".
@@ -585,7 +593,8 @@ def slow_sequence(
                 fn = PchipInterpolator(reference_ages, options)
 
             elif interp_method == "pchip_m67":
-                fn = PchipInterpolator(all_reference_ages, all_options)
+                fn = PchipInterpolator(all_reference_ages, all_options,
+                                       extrapolate=True)
 
             elif "skumanich_fix_n" in interp_method:
                 # skumanich_fix_n_{FLOAT_SPECIFYING_N}
@@ -599,7 +608,20 @@ def slow_sequence(
 
             # overwrite if necessary based on bounds_error
             if bounds_error == "4gyrlimit" and age > 4000:
+                if verbose:
+                    LOGINFO("Star is older than the oldest reference cluster...")
+                    LOGINFO("\t...You have chosen to not attempt extrapolation.")
                 period = fn(4000)
+            elif bounds_error == "4gyrextrap" and age > 4000:
+                # extrapolate based on local slope
+                if verbose:
+                    LOGINFO("Star is older than the oldest reference cluster.")
+                    LOGINFO("\t...You have chosen to extrapolate based on "
+                            "spin-down rate at M67.")
+                xmin, xmax = 3990, 4000
+                fn2 = interp1d([xmin, xmax], [fn(xmin), fn(xmax)],
+                               kind='linear', fill_value='extrapolate')
+                period = fn2(age)
 
             periods.append(period)
 
