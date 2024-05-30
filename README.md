@@ -67,9 +67,8 @@ could modify the following lines:
 ```
 
 ⚠️  Please do not use this code to try to infer ages of stars older than 4 Gyr.
-This is gyrochronology by interpolation.  The extrapolation model, which is
-used to give smooth uncertainties near M67, has no physical content beyond 4
-Gyr.
+This is gyrochronology by interpolation.  The extrapolation model invoked by
+using `bounds_error='4gyrextrap'` has no physical content beyond 4 Gyr.
 
 [The documentation](https://gyro-interp.readthedocs.io/en/latest/index.html)
 contains more extensive examples, as well as discussion of important caveats.
