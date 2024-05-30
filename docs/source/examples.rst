@@ -1,12 +1,12 @@
 Examples
 ========================================
 
-Gyrochronal age for one star
+Rotation-based age for one star
 ++++++++++++++++++++++++++++++++++++++++
 
 Given a single star's rotation period, effective temperature, and
-uncertainties, what is the gyrochronological age posterior over a grid spanning
-0 to 2.6 Gyr?
+uncertainties, what is the rotation-based age posterior over a grid spanning 0
+to 2.6 Gyr?
 
 .. code-block:: python
 
@@ -69,8 +69,47 @@ period and temperature overlap with the era of "`stalled spin-down
 <https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract>`_".
 
 
+Age for an older star
+++++++++++++++++++++++++++++++++++++++++
+The oldest stars for which ``gyro-interp`` gives well-calibrated results are 
+4 Gyr old, which is the age of M67, the oldest calibration cluster.  For a
+longer rotation period, you could run
 
-Gyrochronal ages for many stars
+.. code-block:: python
+
+  import numpy as np
+  from gyrointerp import gyro_age_posterior
+
+  # units: days
+  Prot, Prot_err = 31, 3
+
+  # units: kelvin
+  Teff, Teff_err = 5000, 100
+
+  # uniformly spaced grid between 0 and 5000 megayears
+  age_grid = np.linspace(0, 5000, 500)
+
+  # calculate the age posterior at each age in `age_grid`
+  age_posterior = gyro_age_posterior(
+      Prot, Teff,
+      Prot_err=Prot_err, Teff_err=Teff_err,
+      age_grid=age_grid,
+      bounds_error='4gyrextrap'
+  )
+
+The above example corresponds to a star that sits near the M67 rotation
+sequence (e.g., `Gruner+2023
+<https://ui.adsabs.harvard.edu/abs/2023A%26A...672A.159G/abstract>`_).  In this
+example, we called the keyword argument ``bounds_error`` and set it to
+``'4gyrextrap'``.  For the invested user, the origin of this setting is
+discussed in `this documentation note
+<https://docs.google.com/document/d/1X_tOf1y1e8yvRZFo7NgPTsOSSR5p2J1wsyb1NT3DDB4/edit?usp=sharing>`_,
+and in the `docstrings
+<https://gyro-interp.readthedocs.io/en/latest/gyrointerp.html#gyrointerp.gyro_posterior.gyro_age_posterior>`_.
+ 
+
+
+Ages for many stars
 ++++++++++++++++++++++++++++++++++++++++
 
 Given the rotation periods, temperatures, and uncertainties for many stars,

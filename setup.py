@@ -48,7 +48,7 @@ EXTRAS_REQUIRE = {
 ###############
 
 # run setup.
-version = 0.3
+version = 0.4
 setup(
     name='gyrointerp',
     version=version,
@@ -69,7 +69,7 @@ setup(
     url='https://github.com/lgbouma/gyro-interp',
     download_url=f'https://github.com/lgbouma/gyro-interp/archive/refs/tags/v{str(version).replace(".","")}.tar.gz',
     author='Luke Bouma',
-    author_email='luke@astro.caltech.edu',
+    author_email='bouma.luke@gmail.com',
     license='MIT',
     packages=[
         'gyrointerp',

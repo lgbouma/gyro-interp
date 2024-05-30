@@ -6,10 +6,10 @@ Stellar Evolution
 
 This code models the ensemble evolution of rotation periods for main-sequence
 stars with temperatures of 3800-6200 K (masses of 0.5-1.2 solar).  The 
-calibration data for the model span 0.08-2.6 Gyr.  At younger ages, rotation
+calibration data for the model span 0.08-4 Gyr.  At younger ages, rotation
 periods are less predictive of age, and other age indicators may be more
-useful.  At older ages, the effects of stellar evolution begin to become
-important, especially for the more massive stars.
+useful.  At older ages, the effects of stellar evolution become important,
+especially for the more massive stars.
 
 If you have auxiliary data, such as stellar surface gravities derived from
 spectra, they can help determine whether your star might have undergone

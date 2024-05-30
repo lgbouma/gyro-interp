@@ -83,6 +83,12 @@ User Guide:
 Changelog:
 ++++++++++
 
+**0.4 (2024-05-30)**
+
+* Add ``bounds_error = '4gyrextrap'`` option for 2.6-4 Gyr extrapolation.  The rationale for this update is documented at `this google doc <https://docs.google.com/document/d/1X_tOf1y1e8yvRZFo7NgPTsOSSR5p2J1wsyb1NT3DDB4/edit?usp=sharing>`_.
+* Refactor ``helpers.get_summary_statistics`` for better numerical precision.
+* Add Gruner+2023 M67 data.
+
 **0.3 (2023-03-03)**
 
 * Bugfix a ModuleNotFoundError for calls to ``gyrointerp.plotting``

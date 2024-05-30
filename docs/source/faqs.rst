@@ -31,17 +31,23 @@ What happens for stars older than 2.6 Gyr?
 +++++++++++++++++++++++++++++++++++++++++++
 
 For stars older than 2.6 Gyr, we have implemented a few possible extrapolation
-approaches.  Our default adopted approach, the ``pchip_m67`` extrapolation,
-provides one plausible interpolation between 2.6 and 4 Gyr based on the M67
-data, though it is subject to larger systematic errors than e.g., our model
-between 1 and 2.6 Gyr because the change of the slope in rotation period versus
-time is not as well-constrained.  After 4 Gyr, as for α Per we simply force the
-mean model’s rotation period to equal the highest reference rotation period
-values, but now as set by M67.  This yields posterior probability distributions
-that are uniformly distributed at ages older than 4 Gyr.
+approaches.  Our default adopted approach is to say "please do not try to
+compute ages for such stars", because their spindown rates are currently less
+well-constrained by the data.  This default decision corresponds to calling
+``gyro_age_posteriors`` with ``interp_method=='pchip_m67'`` and
+``bounds_error=='4gyrlimit'``.
+This yields posterior probability distributions
+that are uniformly distributed at ages older than 4 Gyr - in other words, these
+uncertainties are biased near the 4 Gyr boundary!
 
-So, the age posteriors for such systems will be lower limits, and they may or
-may not be useful for you!
+If you really wish to push the old age limit, this can be done up to 4 Gyr by
+setting ``interp_method=='pchip_m67'`` and ``bounds_error=='4gyrextrap'``.  For
+the invested user, the origin of this setting is discussed in `this
+documentation note
+<https://docs.google.com/document/d/1X_tOf1y1e8yvRZFo7NgPTsOSSR5p2J1wsyb1NT3DDB4/edit?usp=sharing>`_.
+This gives accurate and unbiased ages that reproduce the cluster data up to 4
+Gyr.  Beyond 4 Gyr, other age-dating methods might be a safer choice.
+
 
 Are there movies?
 +++++++++++++++++++++++++++++++++++++++++++
