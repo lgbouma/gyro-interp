@@ -16,6 +16,10 @@ all_clusters2 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
 gp.plot_prot_vs_teff(
     outdir, all_clusters2, slow_seq_ages=[80, 120, 300, 670, 1000, 2600, 4000]
 )
+slow_seq_ages = list(np.arange(250, 4250, 250))
+gp.plot_prot_vs_teff(
+    outdir, all_clusters2, slow_seq_ages=slow_seq_ages
+)
 
 gp.plot_prot_vs_teff(
     outdir, ['Blanco-1', 'Psc-Eri', 'Praesepe', 'NGC-6811'], smallfigsizex=1
