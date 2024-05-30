@@ -89,7 +89,7 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     It also defines the colors / labels / zorders used across many plots in the
     BPH23 manuscript.
     """
-    assert N_colors in [5,6]
+    assert N_colors in [5,6,7]
 
     overwrite = 0
 
@@ -103,6 +103,7 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     df_6811 = get_NGC6811(overwrite=overwrite)
     df_6819 = get_NGC6819(overwrite=overwrite)
     df_r147 = get_Ruprecht147(overwrite=overwrite)
+    df_m67 = get_M67(overwrite=overwrite)
 
     # tested, manuscript
     #cmap = cm.terrain(np.linspace(0,0.8,N_colors))
@@ -113,7 +114,9 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
     #cmap = cm.tab20c(np.linspace(0.1,1,N_colors))
 
     # adopted, manuscript
-    cmap = ["#5CC8CB", "#2B64C6", "#F9E16A", "#81C83D", '#EC702D', '#E9A2AE']
+    cmap = ["#5CC8CB", "#2B64C6", "#F9E16A",
+            "#81C83D", '#EC702D', '#E9A2AE',
+            "k"]
 
     if logo_colors:
         # ADOPTED LOGO COLORS
@@ -138,6 +141,7 @@ def _get_cluster_Prot_Teff_data(N_colors=5, logo_colors=0):
         'NGC-6811': [df_6811, cmap[4], '1 Gyr NGC-6811', z0+8, "o"],
         'NGC-6819': [df_6819, cmap[5], '2.5 Gyr NGC-6819', z0+10, "8"],
         'Ruprecht-147': [df_r147, cmap[5], '2.7 Gyr Rup-147', z0+10, "o"],
+        'M67': [df_m67, cmap[6], '4 Gyr M67', z0+12, "o"],
         '120-Myr': [None, cmap[1], '', None, None],
         '300-Myr': [None, cmap[2], '', None, None],
         '2.6-Gyr': [None, cmap[5], '', None, None],

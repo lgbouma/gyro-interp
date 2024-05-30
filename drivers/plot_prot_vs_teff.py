@@ -9,11 +9,19 @@ if not os.path.exists(PLOTDIR):
 outdir = PLOTDIR
 
 # figure 1a variants for talks
+# ...with M67
+all_clusters2 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
+                 'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147',
+                 'M67']
 gp.plot_prot_vs_teff(
-    outdir, ['Blanco-1', 'Psc-Eri', 'Praesepe', 'NGC-6811'],
-    smallfigsizex=1
+    outdir, all_clusters2, slow_seq_ages=[80, 120, 300, 670, 1000, 2600, 4000]
 )
 
+gp.plot_prot_vs_teff(
+    outdir, ['Blanco-1', 'Psc-Eri', 'Praesepe', 'NGC-6811'], smallfigsizex=1
+)
+
+# the standard <=2.7 gyr clusters
 all_clusters1 = ['α Per', 'Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                  'Group-X', 'Praesepe', 'NGC-6811', 'NGC-6819', 'Ruprecht-147']
 slow_seq_ages = list(np.arange(100, 2700, 100))

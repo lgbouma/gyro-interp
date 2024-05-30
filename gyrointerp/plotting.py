@@ -160,7 +160,8 @@ def plot_prot_vs_teff(
     custom_stardict=None,
     interp_method='pchip_m67',
     show_binaries=0, poly_order=7,
-    hide_ax=0, logo_colors=0, logy=0, writepdf=1, show_resid=0, smallfigsizex=0
+    hide_ax=0, logo_colors=0, logy=0, writepdf=1, show_resid=0,
+    smallfigsizex=0
     ):
     """
     Plot rotation periods versus temperatures for known reference clusters.
@@ -245,7 +246,7 @@ def plot_prot_vs_teff(
             visualization purposes.
     """
     # Get data
-    N_colors = 6
+    N_colors = 7
     d = _get_cluster_Prot_Teff_data(N_colors=N_colors, logo_colors=logo_colors)
 
     # Make plot
@@ -418,7 +419,7 @@ def plot_prot_vs_teff(
             _m = v["m"]
             _c = v["c"]
             ax.scatter(
-                _Teff, _Prot, color=_c, alpha=1, s=90, marker=_m,
+                _Teff, _Prot, color=_c, alpha=1, s=150, marker=_m,
                 edgecolors='k', linewidths=0.3, zorder=999, label=name
             )
 
@@ -447,12 +448,17 @@ def plot_prot_vs_teff(
         ax.set_yticks([0, 5, 10, 15])
         if 'Ruprecht-147' in reference_clusters:
             ax.set_ylim([-0.5, 28])
-            ax.set_yticks([0, 5, 10, 15, 20, 25])
+            ax.set_yticks(np.arange(0,30,5))
+        if 'M67' in reference_clusters:
+            ax.set_yticks(np.arange(0,50,5))
+            ax.set_ylim([0, 45])
     else:
         ax.set_yscale("log")
         ax.set_ylim([0.1, 50])
         if 'Ruprecht-147' in reference_clusters:
             ax.set_ylim([0.1, 30])
+        if 'M67' in reference_clusters:
+            ax.set_ylim([0.1, 45])
 
     if not hide_ax:
         if not smallfigsizex:
@@ -2165,11 +2171,17 @@ def plot_n_vs_teff_vs_time(
 
 
 def plot_prot_vs_time_fixed_teff(
-    outdir, teff, interp_methods, xscale='log'
+    outdir, teff, interp_methods, xscale='log', bounds_errors=None,
+    ages=np.linspace(50, 5000, 300)
     ):
     """
     Generates the first figure in the Appendix of BPH23.
     """
+
+    if bounds_errors is not None:
+        assert len(interp_methods) == len(bounds_errors)
+    elif bounds_errors is None:
+        bounds_errors = ['4gyrlimit']*len(interp_methods)
 
     # github.com/lgbouma/gilly, setup.py installable
     from gilly.gyrochronology import (
@@ -2180,16 +2192,14 @@ def plot_prot_vs_time_fixed_teff(
         get_interp_BmV_from_Teff, get_interp_BpmRp_from_Teff
     )
 
-    ages = np.linspace(50, 5000, 300)
-
     # get slow sequence evolution tracks
     Protd = {}
-    for interp_method in interp_methods:
+    for interp_method, bounds_error in zip(interp_methods, bounds_errors):
         Protd[interp_method] = []
         for age in ages:
             Protd[interp_method].append(
                 slow_sequence(teff, age, interp_method=interp_method,
-                              bounds_error='4gyrlimit')
+                              bounds_error=bounds_error)
             )
 
     BmV = float(get_interp_BmV_from_Teff(teff))
@@ -2237,12 +2247,12 @@ def plot_prot_vs_time_fixed_teff(
         reference_Prots.append(Prot_model)
 
     dProtd = {}
-    for interp_method in interp_methods:
+    for interp_method, bounds_error in zip(interp_methods, bounds_errors):
         dProtd[interp_method] = []
         for age in reference_ages:
             dProtd[interp_method].append(
                 slow_sequence(teff, age, interp_method=interp_method,
-                              bounds_error='4gyrlimit')
+                              bounds_error=bounds_error)
             )
 
     #
