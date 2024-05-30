@@ -2,11 +2,21 @@
 
 [<img src="https://readthedocs.org/projects/gyro-interp/badge/?version=latest">](https://gyro-interp.readthedocs.io/en/latest/index.html) <img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
 
+## Purpose
+Observations have shown that stars with the same age and mass can have a wide
+range of rotation periods.  The purpose of this code is to compute the
+posterior probability for a star's age given its observed rotation period and
+effective temperature.  This is achieved by marginalizing over all possible
+ages that might explain the observed stellar properties with a parametric
+model that has been fitted to not only the mean rotation periods, but also the
+intrinsic scatter in observed open cluster rotation sequences.
+
 ## Documentation
 
 The documentation is hosted at
 [gyro-interp.readthedocs.io](https://gyro-interp.readthedocs.io/en/latest/index.html).
 A minimal example to get you started is below.
+The method is described in detail in [Bouma, Palumbo & Hillenbrand (2023)](https://ui.adsabs.harvard.edu/abs/2023ApJ...947L...3B/abstract).
 
 
 ## Install
@@ -15,10 +25,9 @@ Preferred installation method is through PyPI:
 pip install gyrointerp
 ```
 
-## Minimal Example
-Given a single star's rotation period, effective temperature, and
-uncertainties, what is the gyrochronological age posterior over a grid spanning
-0 to 2.6 Gyr?
+## Minimal Examples
+Given a star's rotation period, effective temperature, and uncertainties, what
+is the gyrochronological age posterior over a grid spanning 0 to 2.6 Gyr?
 
 ```python
   import numpy as np
@@ -44,6 +53,23 @@ uncertainties, what is the gyrochronological age posterior over a grid spanning
 
   print(f"Age = {result['median']} +{result['+1sigma']} -{result['-1sigma']} Myr.")
 ```
+
+If you were interested in a slower-rotating star that might be closer to 4 Gyr
+old, which is the oldest age out to which `gyro-interp` is calibrated, you
+could modify the following lines:
+```python
+  age_grid = np.linspace(0, 5000, 500)
+
+  age_posterior = gyro_age_posterior(
+      Prot, Teff, Prot_err=Prot_err, Teff_err=Teff_err, age_grid=age_grid, 
+      verbose=False, bounds_error='4gyrextrap'
+  )
+```
+
+⚠️  Please do not use this code to try to infer ages of stars older than 4 Gyr.
+This is gyrochronology by interpolation.  The extrapolation model, which is
+used to give smooth uncertainties near M67, has no physical content beyond 4
+Gyr.
 
 [The documentation](https://gyro-interp.readthedocs.io/en/latest/index.html)
 contains more extensive examples, as well as discussion of important caveats.
@@ -86,4 +112,4 @@ one cluster, we also encourage you to refer to the relevant study:
 * NGC-6811: [Curtis et al. (2019b)](https://ui.adsabs.harvard.edu/abs/2019ApJ...879...49C/abstract)
 * NGC-6819: [Meibom et al. (2015)](https://ui.adsabs.harvard.edu/abs/2015Natur.517..589M/abstract)
 * Ruprecht-147 [Curtis et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract)
-* M67: [Barnes et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract) and [Dungee et al (2022)](https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract).
+* M67: [Barnes et al. (2016)](https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract), [Dungee et al (2022)](https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract), and [Gruner et al (2023)](https://ui.adsabs.harvard.edu/abs/2023A%26A...672A.159G/abstract).
