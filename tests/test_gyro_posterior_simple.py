@@ -1,6 +1,7 @@
 """
-This test checks that a star that visually appears to overlap with NGC-3532
-gets an age near 300 Myr, with a statistical precision between 16-33%.
+This test checks that stars that visually overlap with NGC-3532 and
+Ruprecht-147 get ages near 300 Myr and 2.6 Gyr, with a statistical precision
+between 16-33%.
 """
 import os, pytest
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
