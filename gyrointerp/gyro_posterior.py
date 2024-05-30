@@ -227,7 +227,7 @@ def gyro_age_posterior(
 
     If Prot_err and Teff_err are not specified, they are assumed to be 1%
     relative and 100 K, respectively.  Spectroscopic temperature are
-    acceptable, though the preferred effective temperature
+    acceptable.  The preferred photometric effective temperature
     scale is implemented in ``gyrointerp.teff``, in the
     ``given_dr2_BpmRp_AV_get_Teff_Curtis2020`` function.  This requires an
     accurate estimate for the reddening.  Whatever your effective
@@ -256,7 +256,10 @@ def gyro_age_posterior(
             is 500 points uniformly distributed between 0 and 3000 Myr:
             ``np.linspace(0, 3000, 500)``, assuming that the default choices
             of ``bounds_error == '4gyrlimit'`` and ``interp_method ==
-            'pchip_m67'`` are being used.
+            'pchip_m67'`` are being used.  If you wish to derive ages out to 4
+            Gyr (the current upper boundary of plausibility, set by the age of
+            M67), then set age_grid to ``np.linspace(0, 5000, 500)``, and set
+            ``bounds_error == '4gyrextrap'``.
 
         interp_method (str):
             How will you interpolate between the polynomial fits to the
@@ -277,17 +280,18 @@ def gyro_age_posterior(
             you are doing, "pchip_m67" is recommended.
 
         bounds_error (str):
-            How will you extrapolate at <0.08 Gyr and >2.6 Gyr?  Available
-            options are "nan", "limit" or "4gyrlimit".  If "limit", then
-            extrapolate by returning the fixed limiting rotation period at the
-            oldest or youngest cluster given in
-            ``models.slow_sequence.reference_model_ids``.  If "4gyrlimit" (the
-            suggested default), extrapolate out to 4 Gyr by also including M67.
-            Past 4Gyr, use the same behavior as "limit".  If one is interested
-            in obtaining unbiased ages near the recommended 2.6 Gyr limit of
-            this code, use "4gyrlimit", otherwise "limit" will overestimate the
-            probability density beyond 2.6 Gyr.  Finally, if "nan", ages above
-            or below the minimum reference age return NaNs.
+            How will you extrapolate at the oldest and youngest clusters?  By
+            default, this means at <0.08 Gyr and >4 Gyr.  Available options are
+            "nan", "limit", "4gyrlimit", and "4gyrextrap".  Default
+            "4gyrlimit" behavior at the old end is to not extrapolate at all, which
+            means that this choice yields biased uncertainties at >~3.5 Gyr.
+            If "4gyrextrap" is instead used, this will extrapolate by returning
+            the rotation period linearly extrapolated from the Prot vs time
+            slope at any temperature at 4 Gyr.  At the young end, the ansatz
+            for both methods is that the period does not change.  In detail,
+            this is physically wrong; the posterior in this regime is formally
+            an age upper limit.  Finally, if "nan", ages above or below the
+            minimum reference age return NaNs.
 
         n (None, int, or float):
             Power-law index analogous to the Skumanich braking index, but
@@ -362,6 +366,17 @@ def gyro_age_posterior(
             "on this scale."
         )
         Prot_err = 0.03
+
+    if max(age_grid) > 4000 and bounds_error != '4gyrextrap':
+        LOGWARNING(
+            f"WARNING: Your age grid has a maximum of {max(age_grid)} "
+            f"but you set bounds_error = {bounds_error}.  This can give "
+            f"biased uncertainties at the old end.  You can fix this by "
+            f"setting bounds_error to '4gyrextrap', which will give non-biased "
+            f"uncertainties out to 4 Gyr.  Please do not try to use this code "
+            f"to derive ages for stars older than 4 Gyr; it is not calibrated "
+            f"in that age regime."
+        )
 
     assert isinstance(N_grid, (int, str))
 
