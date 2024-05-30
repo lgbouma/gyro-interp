@@ -21,6 +21,7 @@ Get and clean individual cluster data:
     | get_NGC6811
     | get_NGC6819
     | get_Ruprecht147
+    | get_M67
 """
 #############
 ## LOGGING ##
@@ -1732,3 +1733,90 @@ def get_alphaPer_construct(overwrite=0):
     LOGINFO(f"Wrote {cachepath}")
 
     return mdf
+
+
+def get_M67(overwrite=0):
+    """
+    Return concatenation of Barnes+2016, Dungee+2022, and Gruner+2023 M67
+    sequences, with keys:
+    "Prot", "Teff_Curtis20", "flag_benchmark_period" (for gyro calibration).
+    """
+
+    cluster = 'M67'
+    outdir = os.path.join(DATADIR, "interim", cluster)
+    if not os.path.exists(outdir): os.mkdir(outdir)
+    cachepath = os.path.join(outdir, "M67_supplemented.csv")
+
+    if os.path.exists(cachepath) and not overwrite:
+        LOGINFO(f"Found {cachepath}, and not overwrite; returning.")
+        return pd.read_csv(
+            cachepath, dtype={'dr2_source_id':str, 'dr3_source_id':str}
+        )
+
+    table_path = os.path.join(
+        DATADIR, "literature", "Dungee_2022_apjac90bet2_mrt.txt"
+    )
+    t = Table.read(table_path, format='cds')
+    df_d22 = t.to_pandas()
+    df_d22 = df_d22[df_d22.converged == 'True']
+    df_d22['Teff_Curtis20'] = given_dr2_BpmRp_AV_get_Teff_Curtis2020(
+        np.array(df_d22["gaiaBPmag"]) - np.array(df_d22["gaiaRPmag"]),
+        extinction_A_V_dict['M67']
+    )
+
+    csvpath = os.path.join(
+        DATADIR, "literature", "Gruner_Barnes_Weingrill_2023_M67_tableC2.csv"
+    )
+    df_g23 = pd.read_csv(csvpath)
+    df_g23['Teff_Curtis20'] = given_dr2_BpmRp_AV_get_Teff_Curtis2020(
+        np.array(df_g23["(BP-RP)0"]), 0
+    )
+
+    csvpath = os.path.join(
+        DATADIR, "literature",
+        "Barnes_2016_apj523472t1_ascii_X_DR2_supplemented.txt"
+    )
+    df_b16 = pd.read_csv(csvpath)
+    df_b16['Teff_Curtis20'] =  given_dr2_BpmRp_AV_get_Teff_Curtis2020(
+        np.array(df_b16["bp_rp"]), extinction_A_V_dict['M67']
+    )
+
+    DEBUG_PLOT = 1
+    if DEBUG_PLOT:
+        from gyrointerp.models import slow_sequence
+        import matplotlib.pyplot as plt
+        plt.close("all")
+        fig,ax = plt.subplots()
+        ax.scatter(df_d22['Teff_Curtis20'], df_d22['prot'])
+        ax.scatter(df_g23['Teff_Curtis20'], df_g23['period'])
+        ax.scatter(df_b16['Teff_Curtis20'], df_b16['P'])
+        _teffs = np.linspace(3800,6200,500)
+        ax.plot(
+            _teffs, slow_sequence(_teffs, 4000), c='k', zorder=-1, lw=0.5
+        )
+        ax.update({
+            'xlim': ax.get_xlim()[::-1]
+        })
+        outpath = os.path.join(RESULTSDIR, "debug", "M67_lit_data.png")
+        fig.savefig(outpath, bbox_inches='tight')
+
+    df_d22 = df_d22.rename({'prot':'Prot'}, axis='columns')
+    df_g23 = df_g23.rename({'period':'Prot'}, axis='columns')
+    df_b16 = df_b16.rename({'P':'Prot'}, axis='columns')
+
+    outdf = pd.concat((
+        df_b16[['Teff_Curtis20', 'Prot']],
+        df_d22[['Teff_Curtis20', 'Prot']],
+        df_g23[['Teff_Curtis20', 'Prot']]
+    ))
+    # This seems to be concensus from Gruner+2023 and Dungee+2022.
+    outdf['flag_benchmark_period'] = (
+        (outdf.Prot > 12)
+        &
+        (outdf.Prot < 60)
+    )
+
+    outdf.to_csv(cachepath, index=False)
+    LOGINFO(f"Wrote {cachepath}")
+
+    return outdf
