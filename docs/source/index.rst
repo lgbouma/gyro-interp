@@ -64,7 +64,7 @@ one cluster, we also encourage you to refer to the relevant study:
 * NGC-6811: `Curtis et al. (2019b) <https://ui.adsabs.harvard.edu/abs/2019ApJ...879...49C/abstract>`_
 * NGC-6819: `Meibom et al. (2015) <https://ui.adsabs.harvard.edu/abs/2015Natur.517..589M/abstract>`_
 * Ruprecht-147 `Curtis et al. (2020) <https://ui.adsabs.harvard.edu/abs/2020ApJ...904..140C/abstract>`_
-* M67: `Barnes et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_ and `Dungee et al (2022) <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_.
+* M67: `Barnes et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_, `Dungee et al (2022) <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_, and `Gruner et al. (2023) <https://ui.adsabs.harvard.edu/abs/2023A%26A...672A.159G/abstract>`_.
 
 
 User Guide:
