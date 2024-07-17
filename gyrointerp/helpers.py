@@ -37,7 +37,17 @@ import os
 from os.path import join
 import numpy as np, pandas as pd
 from scipy.interpolate import interp1d
-from scipy.integrate import quad, cumtrapz, IntegrationWarning
+from scipy.integrate import quad, IntegrationWarning
+
+from scipy import __version__ as scipyversion
+from packaging import version
+scipy_ver = version.parse(scipyversion)
+
+# Per https://docs.scipy.org/doc/scipy/release/1.12.0-notes.html
+if scipy_ver >= version.parse("1.12.0"):
+    from scipy.integrate import cumulative_trapezoid as integration_func
+else:
+    from scipy.integrate import cumtrapz as integration_func
 
 warnings.filterwarnings(
     "ignore", category=IntegrationWarning
@@ -218,7 +228,7 @@ def _given_grid_post_get_summary_statistics(age_grid, age_post):
     age_pdf = age_post / np.trapz(age_post, age_grid)
 
     # Calculate the cumulative distribution function (CDF)
-    age_cdf = cumtrapz(age_pdf, age_grid, initial=0)
+    age_cdf = integration_func(age_pdf, age_grid, initial=0)
 
     # Create interpolation functions for PDF and CDF
     pdf_interp = interp1d(age_grid, age_pdf, kind='linear')
