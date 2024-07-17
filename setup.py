@@ -40,7 +40,6 @@ INSTALL_REQUIRES = [
 EXTRAS_REQUIRE = {
     'all':[
         'cdips',
-        #'corner'
     ]
 }
 
