@@ -31,9 +31,9 @@ def readme():
 
 INSTALL_REQUIRES = [
     'numpy>=1.4.0',
-    'scipy>=1.7.0,<1.13.0',
-    'pandas==1.2.4',
-    'astropy>=1.3',
+    'scipy>=1.7.0',
+    'pandas>=1.2.4',
+    'astropy>=4.0.4',
     'matplotlib',
 ]
 
