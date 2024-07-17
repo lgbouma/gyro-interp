@@ -8,6 +8,9 @@ pytest
 pytest-cov
 cdips>=0.2
 
+# You need to install gyrointerp, via pip, for documentation to build
+gyrointerp>=0.4
+
 # Documentation
 sphinx
 sphinx-rtd-theme
