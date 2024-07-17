@@ -83,6 +83,13 @@ User Guide:
 Changelog:
 ++++++++++
 
+**0.5 (2024-07-17)**
+
+* Make ``helpers.get_summary_statistics`` agnostic to scipy version.
+* Clarify `setup.py` dependencies
+* Bugfix ReadTheDocs auto-documentation.
+* Move `requirements.txt` to `docs/requirements.txt`.
+
 **0.4 (2024-05-30)**
 
 * Add ``bounds_error = '4gyrextrap'`` option for 2.6-4 Gyr extrapolation.  The rationale for this update is documented at `this google doc <https://docs.google.com/document/d/1X_tOf1y1e8yvRZFo7NgPTsOSSR5p2J1wsyb1NT3DDB4/edit?usp=sharing>`_.
