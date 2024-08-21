@@ -25,8 +25,8 @@ def test_gyro_posterior_old():
 
     assert abs(r['median'] - 4000) < 200
     assert abs(r['mean'] - 4000) < 200
-    assert 200 < r['+1sigma'] < 700
-    assert 200 < r['-1sigma'] < 700
+    assert 400 < r['+1sigma'] < 1000
+    assert 400 < r['-1sigma'] < 1000
 
     print(r)
 

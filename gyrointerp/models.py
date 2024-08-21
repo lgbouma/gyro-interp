@@ -157,6 +157,29 @@ def g_lineardecay(age, bounds_error='4gyrlimit', y_g=1/2):
 
     return c_uniform
 
+
+def get_sigma_period_given_age(age: float) -> float:
+    """
+    Interpolates sigma_period (the intrinsic scatter in the gaussian
+    distribution) for a given age using PCHIP interpolation based on predefined
+    age and sigma_period data points.  This emulates a ~5-10% level of
+    differential rotation.
+
+    Args:
+        age (float): The age at which to interpolate sigma_period.
+
+    Returns:
+        float: The interpolated sigma_period corresponding to the given age.
+    """
+    age_values = np.array([0, 1000, 2600, 4000, 5000, 10000])
+    sigma_period_values = np.array([0.51, 0.51, 1.4, 1.7, 2, 5])
+
+    interpolator = PchipInterpolator(age_values, sigma_period_values)
+    sigma_period = interpolator(age)
+    return sigma_period
+
+
+
 ########
 # core #
 ########
@@ -191,6 +214,11 @@ def slow_sequence_residual(
           "slow" end to yield a smoother transition to the gaussian.
 
     Args:
+
+        age (int or float):
+            An integer or float corresponding to the age for which we want a
+            rotation period.  Units: Myr (=10^6 years).
+
         teff_grid (np.ndarray):
             As in ``models.slow_sequence``.
 
@@ -229,8 +257,11 @@ def slow_sequence_residual(
 
     assert len(reference_ages) == len(reference_model_ids)
 
-    # The intrinsic width (RMS) of the slow sequence, in units of days.
-    sigma_period = 0.51
+    # Define the intrinsic width (RMS) of the slow sequence, in units of days.
+    # Nominal at <1 Gyr; see BPH2023
+    _sigma_period = 0.51
+    # Larger at 1-10 Gyr.
+    sigma_period = get_sigma_period_given_age(age)
 
     if popn_parameters == "default":
         # from run_emcee_fit_gyro_model; MAP-values
@@ -240,7 +271,7 @@ def slow_sequence_residual(
         y_g = 0.673
         k0 = np.e**-4.885
         k1 = np.e**-6.240
-        l_hidden = -2*sigma_period
+        l_hidden = -2*_sigma_period
         k_hidden = np.pi # a joke, but it works
 
     elif isinstance(popn_parameters, dict):
@@ -618,19 +649,42 @@ def slow_sequence(
                     LOGINFO("Star is older than the oldest reference cluster.")
                     LOGINFO("\t...You have chosen to extrapolate based on "
                             "spin-down rate at M67.")
+
+                # linear extrapolation
                 xmin, xmax = 3990, 4000
                 fn2 = interp1d([xmin, xmax], [fn(xmin), fn(xmax)],
                                kind='linear', fill_value='extrapolate')
                 period = fn2(age)
 
+                ## if you wanted log-log extrapolation
+                ## note however that for sun-like stars, this gives worse
+                ## disagreement at late times than linear!
+                #xmin, xmax = 3990, 4000
+                #fn2 = interp1d([np.log(xmin), np.log(xmax)],
+                #               [np.log(fn(xmin)), np.log(fn(xmax))],
+                #               kind='linear', fill_value='extrapolate')
+                #period = np.exp ( fn2(np.log(age)) )
+
+
             periods.append(period)
 
-    Prot_slow_sequence = np.array(periods)
+    Prot_slow_sequence = flatten_list(periods)
 
     if Prot_slow_sequence.shape[-1] == 1:
         Prot_slow_sequence = Prot_slow_sequence.flatten()
 
     return Prot_slow_sequence
+
+
+def flatten_list(input_list):
+    """Flatten a list containing NaNs and single-element arrays to a 1D numpy array."""
+    flattened = []
+    for item in input_list:
+        if isinstance(item, np.ndarray):
+            flattened.append(item.item())  # Extract the scalar value from the array
+        else:
+            flattened.append(item)  # Append NaNs or other non-array items directly
+    return np.array(flattened)
 
 
 def reference_cluster_slow_sequence(
