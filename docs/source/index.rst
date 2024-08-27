@@ -23,6 +23,20 @@ create an `issue on Github <https://github.com/lgbouma/gyro-interp>`_.
    :width: 50%
    :align: center
 
+User Guide:
+++++++++++++
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Contents:
+
+    installation
+    examples
+    caveats
+    faqs
+    gyrointerp
+
+
 Attribution:
 ++++++++++++
 
@@ -67,21 +81,15 @@ one cluster, we also encourage you to refer to the relevant study:
 * M67: `Barnes et al. (2016) <https://ui.adsabs.harvard.edu/abs/2016ApJ...823...16B/abstract>`_, `Dungee et al (2022) <https://ui.adsabs.harvard.edu/abs/2022ApJ...938..118D/abstract>`_, and `Gruner et al. (2023) <https://ui.adsabs.harvard.edu/abs/2023A%26A...672A.159G/abstract>`_.
 
 
-User Guide:
-++++++++++++
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Contents:
-
-    installation
-    examples
-    caveats
-    faqs
-    gyrointerp
 
 Changelog:
 ++++++++++
+
+**0.6 (2024-08-27)**
+
+* Increase assumed gaussian scatter around mean at >1 Gyr to better fit
+  Ruprecht-147 and M67.  The rationale and
+  impact are `documented here <https://docs.google.com/document/d/1gFByxGojpRXakcVrjVNHL5dzu56J7tlyEvBIxd1UAnE/edit?usp=sharing>`_.
 
 **0.5 (2024-07-17)**
 
@@ -108,3 +116,4 @@ Changelog:
 **0.1 (2023-02-21)**
 
 * Initial software release to github.
+
