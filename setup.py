@@ -48,7 +48,7 @@ EXTRAS_REQUIRE = {
 ###############
 
 # run setup.
-version = 0.5
+version = 0.6
 setup(
     name='gyrointerp',
     version=version,

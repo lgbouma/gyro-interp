@@ -1,4 +1,4 @@
-__version__ = 0.5
+__version__ = 0.6
 __uri__ = "https://gyro-interp.readthedocs.io/"
 __author__ = "Luke Bouma"
 __email__ = "bouma.luke@gmail.com"
