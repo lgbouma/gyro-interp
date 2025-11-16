@@ -63,6 +63,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.ticker import ScalarFormatter
 from matplotlib.lines import Line2D
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from matplotlib import rcParams
 
 from numpy import array as nparr
 
@@ -161,7 +162,7 @@ def plot_prot_vs_teff(
     interp_method='pchip_m67',
     show_binaries=0, poly_order=7,
     hide_ax=0, logo_colors=0, logy=0, writepdf=1, show_resid=0,
-    smallfigsizex=0
+    smallfigsizex=0, arial_font=1
     ):
     """
     Plot rotation periods versus temperatures for known reference clusters.
@@ -251,6 +252,8 @@ def plot_prot_vs_teff(
 
     # Make plot
     set_style("science")
+    if arial_font:
+        rcParams['font.family'] = 'Arial'
 
     if not show_resid:
         # default figsize is 6.4 x 4.8
@@ -418,10 +421,32 @@ def plot_prot_vs_teff(
             _Teff = v["Teff"]
             _m = v["m"]
             _c = v["c"]
+            if "Prot_err" in v:
+                Prot_err = v["Prot_err"]
+            else:
+                Prot_err = 0
+            if "Teff_err" in v:
+                Teff_err = v["Teff_err"]
+            else:
+                Teff_err = 0
             ax.scatter(
                 _Teff, _Prot, color=_c, alpha=1, s=150, marker=_m,
-                edgecolors='k', linewidths=0.3, zorder=999, label=name
+                edgecolors='k', linewidths=0.3, zorder=999#, label=name
             )
+            #ax.errorbar(
+            #    _Teff, _Prot,
+            #    xerr=Teff_err,
+            #    yerr=Prot_err,
+            #    fmt=_m,  # Marker style
+            #    color=_c,  # Marker face color
+            #    alpha=1,
+            #    markersize=np.sqrt(150),  # Convert area to size
+            #    markeredgecolor='k',  # Edge color
+            #    markeredgewidth=0.3,  # Edge width
+            #    zorder=999,
+            #    label=name,
+            #    linestyle='',  # No connecting lines between markers
+            #)
 
     if not hide_ax:
         if not logy:
@@ -987,6 +1012,7 @@ def plot_data_vs_model_prot(
     reference_clusters=['Pleiades', 'Blanco-1', 'Psc-Eri', 'NGC-3532',
                         'Group-X', 'Praesepe', 'NGC-6811'],
     include_binaries=0,
+    arial_font=1
     ):
     """
     Figure 2 of BPH23.  9 (or 12)-panel plot.  This is a dense plot that
@@ -1004,6 +1030,8 @@ def plot_data_vs_model_prot(
 
     # Make plot
     set_style("clean")
+    if arial_font:
+        rcParams['font.family'] = 'Arial'
 
     # Each mean model gets its own (data-model) vs Teff axis
     factor = 0.8
@@ -1134,7 +1162,7 @@ def plot_data_vs_model_prot(
         sigma_period = 0.51
         for ix in range(N_to_show):
             if ix % 8 == 0:
-                LOGINFO(age, ix)
+                LOGINFO(f"{age}, {ix}")
             sample = sel_samples[ix, :]
             #a1, y_g, logk0, logk1, logf = theta
             popn_parameters = {
@@ -1177,7 +1205,7 @@ def plot_data_vs_model_prot(
 
     outpath = join(outdir, f'data_vs_model_{basename}{m}{ib}.png'.
                    replace(" ", "_"))
-    savefig(fig, outpath, dpi=400, writepdf=1)
+    savefig(fig, outpath, dpi=600, writepdf=1)
 
 
 def _plot_slow_sequence_residual(
@@ -1390,7 +1418,8 @@ def plot_age_posteriors(
     Prots, Teff, outdir,
     age_grid=np.linspace(0, 2600, 500),
     bounds_error='limit',
-    full_mcmc=False
+    full_mcmc=False,
+    arial_font=0
     ):
     """
     Top panels of Figure 3 in BPH23.
@@ -1457,6 +1486,9 @@ def plot_age_posteriors(
     #
     plt.close("all")
     set_style('clean')
+    if arial_font:
+        rcParams['font.family'] = 'Arial'
+
     fig, ax = plt.subplots(figsize=(2, 2))
 
     N_colors = len(Prots)
@@ -2172,7 +2204,7 @@ def plot_n_vs_teff_vs_time(
 
 def plot_prot_vs_time_fixed_teff(
     outdir, teff, interp_methods, xscale='log', bounds_errors=None,
-    ages=np.linspace(50, 5000, 300)
+    ages=np.linspace(50, 5000, 300), yscale='linear'
     ):
     """
     Generates the first figure in the Appendix of BPH23.
@@ -2262,7 +2294,7 @@ def plot_prot_vs_time_fixed_teff(
     outpath = os.path.join(
         outdir,
         f'prot_vs_time_teff{teff:.1f}_'
-        f'{"_".join(all_methods).replace(" ","_")}_xscale{xscale}.png'
+        f'{"_".join(all_methods).replace(" ","_")}_xscale{xscale}_yscale{yscale}.png'
     )
 
     #
@@ -2298,6 +2330,7 @@ def plot_prot_vs_time_fixed_teff(
     ax.update({
         'ylabel': '$P_{\mathrm{rot}}$ [days]',
         'xscale': xscale,
+        'yscale': yscale,
     })
     for axis in [ax.xaxis, ax.yaxis]:
         axis.set_major_formatter(ScalarFormatter())

@@ -12,5 +12,6 @@ for xscale in ['linear', 'log']:
         gp.plot_prot_vs_time_fixed_teff(
             PLOTDIR, teff, ['pchip_m67', 'pchip_m67'], xscale=xscale,
             bounds_errors=['4gyrlimit', '4gyrextrap'],
-            ages=np.linspace(50, 10000, 300)
+            ages=np.linspace(50, 10000, 300),
+            yscale='linear'
         )

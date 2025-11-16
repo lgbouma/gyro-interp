@@ -673,7 +673,7 @@ def gyro_age_posterior_mcmc(
 def gyro_age_posterior_list(
     cache_id, Prots, Teffs, Prot_errs=None, Teff_errs=None,
     star_ids=None, age_grid=np.linspace(0, 3000, 500), N_grid='default',
-    bounds_error='4gyrlimit', interp_method='pchip_m67', nworkers=None
+    bounds_error='4gyrextrap', interp_method='pchip_m67', nworkers=None
     ):
     """
     Given rotation periods and effective temperatures for many stars, run them
