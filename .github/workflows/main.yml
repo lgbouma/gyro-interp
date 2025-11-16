@@ -54,7 +54,7 @@ jobs:
         python -m pip install -U astrobase
         python -m pip install -U wheel
         python -m pip install -U matplotlib
-        python -m pip install -U aesthetic
+        python -m pip install -U aesthetic --no-build-isolation
 
     - name: "Install package"
       run: pip install -e .
