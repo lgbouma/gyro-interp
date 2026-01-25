@@ -81,6 +81,10 @@ from scipy.interpolate import interp1d
 # pip install aesthetic
 from aesthetic.plot import set_style, savefig
 
+nptrapz = getattr(np, "trapezoid", None)
+if nptrapz is None:
+    nptrapz = np.trapz
+
 ###########
 # helpers #
 ###########
@@ -995,12 +999,12 @@ def _get_model_histogram(age, bounds_error='limit', popn_parameters='default'):
         # "Fast sequence" selection
         sel_fs = (y_grid < -2)
 
-        N_ss_teff = np.trapz(resid_y_Teff[sel_ss, :], y_grid[sel_ss], axis=0)
-        N_ss = np.trapz(N_ss_teff[sel_teff], teff_grid[sel_teff])
+        N_ss_teff = nptrapz(resid_y_Teff[sel_ss, :], y_grid[sel_ss], axis=0)
+        N_ss = nptrapz(N_ss_teff[sel_teff], teff_grid[sel_teff])
         hist_ss_vals.append(N_ss)
 
-        N_fs_teff = np.trapz(resid_y_Teff[sel_fs, :], y_grid[sel_fs], axis=0)
-        N_fs = np.trapz(N_fs_teff[sel_teff], teff_grid[sel_teff])
+        N_fs_teff = nptrapz(resid_y_Teff[sel_fs, :], y_grid[sel_fs], axis=0)
+        N_fs = nptrapz(N_fs_teff[sel_teff], teff_grid[sel_teff])
         hist_fs_vals.append(N_fs)
 
     return np.array(hist_ss_vals), np.array(hist_fs_vals), teff_midway
@@ -1237,14 +1241,14 @@ def _plot_slow_sequence_residual(
             num, denom = 26, 133
 
         sel = (teff_grid > teff_limit)
-        resid_ygrid = np.trapz(resid_y_Teff[:,sel], teff_grid[sel], axis=1)
+        resid_ygrid = nptrapz(resid_y_Teff[:,sel], teff_grid[sel], axis=1)
 
         # sum of all counts within the "fast sequence" region
         sel = (y_grid < -2)
-        s0 = np.trapz(resid_ygrid[sel], y_grid[sel], axis=0)
+        s0 = nptrapz(resid_ygrid[sel], y_grid[sel], axis=0)
 
         # sum of all counts in the slow sequence
-        s1 = np.trapz(resid_ygrid[~sel], y_grid[~sel], axis=0)
+        s1 = nptrapz(resid_ygrid[~sel], y_grid[~sel], axis=0)
 
         r_obs = num/denom
         r_model = s0/(s0+s1)
@@ -1256,7 +1260,7 @@ def _plot_slow_sequence_residual(
         )
         LOGINFO(msg)
 
-    resid_Teff = np.trapz(resid_y_Teff, y_grid, axis=0)
+    resid_Teff = nptrapz(resid_y_Teff, y_grid, axis=0)
     resid_Teffs.append(resid_Teff)
 
     norm = LogNorm(vmin=1e-2, vmax=1)

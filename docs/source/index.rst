@@ -85,6 +85,10 @@ one cluster, we also encourage you to refer to the relevant study:
 Changelog:
 ++++++++++
 
+**0.7 (2026-01-25)**
+
+* Update deprecated `numpy 2.4 <https://numpy.org/devdocs/release/2.4.0-notes.html>`_ np.trapz calls.
+
 **0.6 (2024-08-27)**
 
 * Increase assumed gaussian scatter around mean at >1 Gyr to better fit

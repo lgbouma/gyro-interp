@@ -49,6 +49,10 @@ from gyrointerp.helpers import get_summary_statistics
 from datetime import datetime
 import multiprocessing as mp
 
+nptrapz = getattr(np, "trapezoid", None)
+if nptrapz is None:
+    nptrapz = np.trapz
+
 def _agethreaded_gyro_age_posterior(
     Prot, Teff, Prot_err=None, Teff_err=None,
     age_grid=np.linspace(0, 3000, 500),
@@ -200,7 +204,7 @@ def _gyro_age_posterior_worker(task):
 
     integrand = resid_y_Teff * gaussian_Prots * gaussian_teff[None, :]
 
-    p_age = np.trapz(np.trapz(integrand, teff_grid, axis=1), y_grid)
+    p_age = nptrapz(nptrapz(integrand, teff_grid, axis=1), y_grid)
 
     if verbose:
         LOGINFO(f"{datetime.now().isoformat()} end 2")
@@ -472,7 +476,7 @@ def gyro_age_posterior(
     p_ages = np.vstack(p_ages).flatten()
 
     # return a normalized probability distribution.
-    p_ages /= np.trapz(p_ages, age_grid)
+    p_ages /= nptrapz(p_ages, age_grid)
 
     return p_ages
 
@@ -667,7 +671,7 @@ def gyro_age_posterior_mcmc(
         numerator = np.sum(np.isclose(age_samples, age))
         p_ages.append(numerator/denominator)
 
-    return p_ages / np.trapz(p_ages, age_grid)
+    return p_ages / nptrapz(p_ages, age_grid)
 
 
 def gyro_age_posterior_list(

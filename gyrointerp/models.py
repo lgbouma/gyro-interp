@@ -49,6 +49,10 @@ from copy import deepcopy
 from scipy.interpolate import interp1d, PchipInterpolator
 from scipy.stats import norm, uniform
 
+nptrapz = getattr(np, "trapezoid", None)
+if nptrapz is None:
+    nptrapz = np.trapz
+
 ###########
 # helpers #
 ###########
@@ -367,7 +371,7 @@ def slow_sequence_residual(
     resid_y_Teff_0 = a0*gaussian_y_Teff + a1_prefactor*uniform_y_Teff_1
 
     # marginalize over y_grid
-    resid_Teff_0 = np.trapz(resid_y_Teff_0, y_grid, axis=0)
+    resid_Teff_0 = nptrapz(resid_y_Teff_0, y_grid, axis=0)
 
     # normalize to ensure uniform distribution over Teff
     resid_y_Teff = (1/resid_Teff_0[None,:])*(
