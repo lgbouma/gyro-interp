@@ -49,6 +49,10 @@ if scipy_ver >= version.parse("1.12.0"):
 else:
     from scipy.integrate import cumtrapz as integration_func
 
+nptrapz = getattr(np, "trapezoid", None)
+if nptrapz is None:
+    nptrapz = np.trapz
+
 warnings.filterwarnings(
     "ignore", category=IntegrationWarning
 )
@@ -117,7 +121,7 @@ def sample_ages_from_pdf(age_grid, age_post, n_samples=1000):
             from the PDF.
     """
     # Normalize the posterior probability (PDF)
-    age_pdf = age_post / np.trapz(age_post, age_grid)
+    age_pdf = age_post / nptrapz(age_post, age_grid)
 
     # Create a quadratic interpolation function for the PDF.  Go linear to
     # avoid negative values.
@@ -134,7 +138,7 @@ def sample_ages_from_pdf(age_grid, age_post, n_samples=1000):
     pdf_fine = pdf_interp(age_fine_grid)
 
     # Normalize the interpolated PDF
-    pdf_fine /= np.trapz(pdf_fine, age_fine_grid)
+    pdf_fine /= nptrapz(pdf_fine, age_fine_grid)
 
     # Generate random samples from the interpolated PDF
     age_samples = np.random.choice(age_fine_grid, size=n_samples,
@@ -225,7 +229,7 @@ def _given_grid_post_get_summary_statistics(age_grid, age_post):
     age_peak = int(age_grid[np.argmax(age_post)])
 
     # Normalize the posterior probability (PDF)
-    age_pdf = age_post / np.trapz(age_post, age_grid)
+    age_pdf = age_post / nptrapz(age_post, age_grid)
 
     # Calculate the cumulative distribution function (CDF)
     age_cdf = integration_func(age_pdf, age_grid, initial=0)
