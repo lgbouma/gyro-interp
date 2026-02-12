@@ -145,7 +145,7 @@ def _get_SpType_Teff_correspondence(
 
     Teffs = []
     for sptype in sptypes:
-        Teffs.append(float(sdf.loc[sdf.SpT==sptype]['Teff']))
+        Teffs.append(float(sdf.loc[sdf.SpT==sptype]['Teff'].iloc[0]))
 
     sptypes = [s.replace('V','') for s in sptypes]
 
