@@ -82,7 +82,7 @@ def _given_VmKs_get_Teff(VmKs):
     mamajekpath = os.path.join(DATADIR, "literature",
                                "EEM_dwarf_UBVIJHK_colors_Teff_20220416.txt")
     mamajek_df = pd.read_csv(
-        mamajekpath, comment='#', delim_whitespace=True
+        mamajekpath, comment='#', sep=r"\s+"
     )
     sel = (
         (mamajek_df['V-Ks'] != ".....")
@@ -115,7 +115,7 @@ def _given_GmKs_get_Teff(GmKs):
     mamajekpath = os.path.join(DATADIR, "literature",
                                "EEM_dwarf_UBVIJHK_colors_Teff_20220416.txt")
     mamajek_df = pd.read_csv(
-        mamajekpath, comment='#', delim_whitespace=True
+        mamajekpath, comment='#', sep=r"\s+"
     )
     sel = (
         (mamajek_df['G-V'] != ".....")
