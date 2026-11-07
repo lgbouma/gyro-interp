@@ -123,7 +123,7 @@ def _load_PecautMamajek_table():
     )
 
     mamajek_df = pd.read_csv(
-        mamajekpath, comment='#', delim_whitespace=True
+        mamajekpath, comment='#', sep=r'\s+'
     )
     mamajek_df = mamajek_df[mamajek_df.Teff < 41000]
     mamajek_df = mamajek_df.reset_index(drop=True)
@@ -145,7 +145,7 @@ def _get_SpType_Teff_correspondence(
 
     Teffs = []
     for sptype in sptypes:
-        Teffs.append(float(sdf.loc[sdf.SpT==sptype]['Teff']))
+        Teffs.append(float(sdf.loc[sdf.SpT==sptype]['Teff'].iloc[0]))
 
     sptypes = [s.replace('V','') for s in sptypes]
 
