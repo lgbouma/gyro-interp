@@ -85,6 +85,10 @@ one cluster, we also encourage you to refer to the relevant study:
 Changelog:
 ++++++++++
 
+**0.8 (2026-11-21)**
+
+* Support pandas 3, which removed the ``delim_whitespace`` argument to ``read_csv``.
+
 **0.7 (2026-01-25)**
 
 * Update deprecated `numpy 2.4 <https://numpy.org/devdocs/release/2.4.0-notes.html>`_ np.trapz calls.
