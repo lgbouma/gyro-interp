@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/source/gyrointerp_logo.png" alt="gyrointerp" width="70%"/></p>
 
-[<img src="https://readthedocs.org/projects/gyro-interp/badge/?version=latest">](https://gyro-interp.readthedocs.io/en/latest/index.html) <img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
+[<img src="https://img.shields.io/readthedocs/gyro-interp/latest?label=docs">](https://gyro-interp.readthedocs.io/en/latest/index.html) <img src="https://github.com/lgbouma/gyro-interp/workflows/Tests/badge.svg">
 
 ## Purpose
 Observations have shown that stars with the same age and mass can have a wide
