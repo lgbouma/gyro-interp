@@ -530,7 +530,7 @@ def get_Blanco1(overwrite=0):
 
     csvpath = os.path.join(DATADIR, "literature",
                             "Gillen_2020_Blanco1_table1.dat")
-    df = pd.read_csv(csvpath, delim_whitespace=True)
+    df = pd.read_csv(csvpath, sep=r"\s+")
 
     dr2_source_ids = np.array(df.Gaia_ID).astype(np.int64)
     df['dr2_source_id'] = dr2_source_ids
